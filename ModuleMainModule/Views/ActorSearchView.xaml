@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="ModuleMainModule.Views.ActorSearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:ModuleMainModule.Converters"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:ImageUrlConverter x:Key="PathConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" LastChildFill="True">
+            <TextBox Width="200" Text="{Binding Path = ActorName, UpdateSourceTrigger=LostFocus}"></TextBox>
+            <Button FontSize="10" Command="{Binding Path = NameSearch}">Искать!</Button>
+        </DockPanel>
+        <ListBox Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = PopularActors, UpdateSourceTrigger= PropertyChanged}" SelectedItem="{Binding Path=SelectedSearchedActor}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" MinWidth="100">
+                        <Image Height="70" Width="70" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
+                        <TextBlock Margin="3" FontSize="12" Text="{Binding Path = Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

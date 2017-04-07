@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="ModuleMainModule.Views.ShowsList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:ModuleMainModule.Converters"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             Height="auto" Width="auto">
+    <UserControl.Resources>
+        <converters:ImageUrlConverter x:Key="PathConverter"/>
+    </UserControl.Resources>
+    <DockPanel LastChildFill="True">
+        <Button Height="35" DockPanel.Dock="Bottom" FontSize="14" Content="Подробная информация" Command="{Binding NavigateCommandShowDirectShow}" CommandParameter="{Binding Path=Id}"/>
+        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" CanContentScroll="True">
+            <ListBox ItemsSource="{Binding Path=Shows}" SelectedItem="{Binding Path=SelectedShow, Mode=TwoWay}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Background" Value="#4C000000"/>
+                    <Setter Property="Foreground" Value="#FF000000"></Setter>
+                    <Setter Property="Margin" Value="1"/>
+                    <Setter Property="Padding" Value="1"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal"  Margin="5">
+                        <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}" Height="100" Width="100"/>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding Path = Name}" Margin="3" FontSize="14"/>
+                            <TextBlock Text="{Binding Path = OriginalName}" Margin="3" FontSize="14"/>
+                            <TextBlock Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}" Margin="3" FontSize="14"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Path = VoteAverage}" Margin="3" FontSize="14"/>
+                                <!--<Button Grid.Column="1" FontSize="12" Content="Подробная информация" Command="{Binding Path=ShowDirectShow}" ></Button>-->
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

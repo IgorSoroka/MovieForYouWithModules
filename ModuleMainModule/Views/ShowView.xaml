@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="ModuleMainModule.Views.ShowView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:ModuleMainModule.Converters"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             Height="auto" Width="auto">
+    <UserControl.Resources>
+        <converters:ImageUrlConverter x:Key="PathConverter"/>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
+        <Grid Background="#4C000000">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid DataContext="{Binding Path=DirectShow}" MinHeight="150" MaxHeight="300">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+                <Image Margin="3" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
+                <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <TextBlock FontSize="14" Text="{Binding Path = Name}"/>
+                    <Label>Сюжет</Label>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="130" MaxHeight="250" >
+                        <TextBlock TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Grid>
+            <StackPanel Grid.Row="1">
+                <Label>Состав</Label>
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Crew}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Background" Value="#4C000000"/>
+                            <Setter Property="Foreground" Value="#FF000000"/>
+                            <Setter Property="Margin" Value="1"/>
+                            <Setter Property="Padding" Value="1"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" Background="#4C000000"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel MinWidth="150" Orientation="Vertical">
+                                <Image Height="70" Width="70" Source="{Binding Profile, Converter={StaticResource PathConverter}}"/>
+                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Path = Name}"/>
+                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Path = Job}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+            <StackPanel Grid.Row="2">
+                <Label>В главных ролях</Label>
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Cast}" SelectedItem="{Binding Path=SelectedActor, Mode=TwoWay}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Background" Value="#4C000000"/>
+                            <Setter Property="Foreground" Value="#FF000000"/>
+                            <Setter Property="Margin" Value="1"/>
+                            <Setter Property="Padding" Value="1"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" Background="#4C000000"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel MinWidth="150" Orientation="Vertical">
+                                <Image Height="70" Width="70" Source="{Binding Profile, Converter={StaticResource PathConverter}}"/>
+                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Path = Name}"/>
+                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Path = Character}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button FontSize="16" Height="35" Command="{Binding NavigateCommandShowDirectActor}" CommandParameter="{Binding Path=Id}">Подробная информация о выбранном актере</Button>
+            </StackPanel>
+            <StackPanel Grid.Row="3" DataContext="{Binding Path=DirectShow}">
+                <Label FontSize="12">О фильме</Label>
+                <Label FontSize="10">Оригинальное название</Label>
+                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = OriginalName}"/>
+                <Label FontSize="10">Премьера</Label>
+                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}"/>
+                <Label FontSize="10">Домашняя страница</Label>
+                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = HomePage}"/>
+                <Button FontSize="16" Height="35">Смотреть трейлер</Button>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
