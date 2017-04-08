@@ -15,7 +15,6 @@ namespace TestModule
         private readonly IRegionManager _regionManager;
         
         public DelegateCommand<string> NavigateCommandMain { get; private set; }
-
         public DelegateCommand<string> NavigateCommandListShow { get; private set; }
         public DelegateCommand<string> NavigateCommandListMovie { get; private set; }
 
@@ -23,7 +22,6 @@ namespace TestModule
         {
             _regionManager = regionManager;
             NavigateCommandMain = new DelegateCommand<string>(NavigateMain);
-
             NavigateCommandListShow = new DelegateCommand<string>(NavigateListShow);
             NavigateCommandListMovie = new DelegateCommand<string>(NavigateListMovie);
         }

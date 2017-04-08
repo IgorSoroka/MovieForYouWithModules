@@ -87,6 +87,19 @@ namespace ModuleMainModule.ViewModels
                 if (type == "Now")
                     GetNowPlayingMovies();
             }
+
+            var genre = navigationContext.Parameters["genre"] as string;
+            if (genre != null)
+            {
+                GetMoviesByGenre(genre);
+            }
+        }
+
+        private async void GetMoviesByGenre(string genre)
+        {
+            int genreNumber = RepositoryGenres.GetGenreId(genre);
+            List<Movie> moviesTest = await Data.GetListOfMoviesByGenre(genreNumber);
+            Movies = new ObservableCollection<Movie>(moviesTest);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

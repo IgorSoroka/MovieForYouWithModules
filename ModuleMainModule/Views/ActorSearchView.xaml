@@ -20,7 +20,7 @@
             <TextBox Width="200" Text="{Binding Path = ActorName, UpdateSourceTrigger=LostFocus}"></TextBox>
             <Button FontSize="10" Command="{Binding Path = NameSearch}">Искать!</Button>
         </DockPanel>
-        <ListBox Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = PopularActors, UpdateSourceTrigger= PropertyChanged}" SelectedItem="{Binding Path=SelectedSearchedActor}">
+        <ListBox Background="#4C000000" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = PopularActors, UpdateSourceTrigger= PropertyChanged}" SelectedItem="{Binding Path=SelectedSearchedActor}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True"/>

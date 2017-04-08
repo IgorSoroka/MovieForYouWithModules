@@ -7,8 +7,8 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid >
+             Width="auto" Height="auto">
+    <Grid Background="#4C000000">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -17,7 +17,7 @@
         <Border  Width="auto" Height="auto" BorderBrush="DarkGray" BorderThickness="2" CornerRadius="5">
             <DockPanel LastChildFill="True">
                 <TextBox FontSize="14" Width="200" Text="{Binding Path = Name, UpdateSourceTrigger=LostFocus}"></TextBox>
-                <Button FontSize="12" Command="{Binding Path = NameSearch}">Найти!</Button>
+                <Button FontSize="12" Command="{Binding Path = NavigateCommandNameSearch}">Найти!</Button>
             </DockPanel>
         </Border>
         <Border Grid.Row="1" Width="auto" Height="auto" BorderBrush="DarkGray" BorderThickness="2" CornerRadius="5">
@@ -40,16 +40,16 @@
                     </DockPanel>
                 </Grid>
                 <Label FontSize="12">Рейтинг</Label>
-                <wpf:Slider Margin="5" Minimum="0" Maximum="10" TickPlacement="Both" TickFrequency="1"  Value="{Binding Path=SelectedRating, UpdateSourceTrigger=PropertyChanged}">
+                <wpf:Slider Foreground="Black" Margin="5" Minimum="0" Maximum="10" TickPlacement="Both" TickFrequency="1"  Value="{Binding Path=SelectedRating, UpdateSourceTrigger=PropertyChanged}">
                 </wpf:Slider>
-                <Button FontSize="14" Command="{Binding Path = Search}">Найти</Button>
+                <Button FontSize="14" Command="{Binding Path = NavigateCommandSearch}">Найти</Button>
             </StackPanel>
         </Border>
         <Border Grid.Row="2" Width="auto" Height="auto" BorderBrush="DarkGray" BorderThickness="2" CornerRadius="5">
             <StackPanel Orientation="Vertical">
                 <Label FontSize="12">Поиск фильмов по жанру</Label>
                 <ComboBox ItemsSource="{Binding Path=Genres}" SelectedItem="{Binding Path=SelectGenre, Mode=TwoWay}"></ComboBox>
-                <Button FontSize="14" Command="{Binding Path = GenreSearch}">Найти</Button>
+                <Button FontSize="14" Command="{Binding Path = NavigateCommandGenreSearch}">Поиск по жанру</Button>
             </StackPanel>
         </Border>
     </Grid>
