@@ -11,13 +11,27 @@
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
-    <Grid>
-        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path=ActorsList}" SelectedItem="{Binding Path=SelectedSearchedActor, Mode=TwoWay}">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="True"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
+    <DockPanel Background="#4C000000">
+        <Button Height="35" DockPanel.Dock="Bottom" FontSize="14" Content="Подробная информация" Command="{Binding NavigateCommandShowDirectActor}" CommandParameter="{Binding Path=Id}"/>
+        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" CanContentScroll="True">
+        <ListBox ItemsSource="{Binding Path=ActorsList}" SelectedItem="{Binding Path=SelectedSearchedActor, Mode=TwoWay}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Background" Value="#4C000000"/>
+                    <Setter Property="Foreground" Value="#FF000000"></Setter>
+                    <Setter Property="Margin" Value="1"/>
+                    <Setter Property="Padding" Value="1"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5">
@@ -27,5 +41,6 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-    </Grid>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

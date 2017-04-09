@@ -47,3 +47,5 @@ d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\Newtons
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\Hasseware.Net.TMDb.xml
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\Newtonsoft.Json.xml
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\MainModule.csprojResolveAssemblyReference.cache
+d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\StartView.g.cs
+d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\StartView.baml

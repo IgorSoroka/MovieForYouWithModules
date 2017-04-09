@@ -102,7 +102,7 @@
     <Compile Include="Model\RepositoryGenres.cs" />
     <Compile Include="ModuleAModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\ActorSearchViewViewModel.cs" />
+    <Compile Include="ViewModels\ActorSearchViewModel.cs" />
     <Compile Include="ViewModels\ActorsListViewModel.cs" />
     <Compile Include="ViewModels\ActorViewModel.cs" />
     <Compile Include="ViewModels\MovieListViewModel.cs" />
@@ -110,6 +110,7 @@
     <Compile Include="ViewModels\MovieViewModel.cs" />
     <Compile Include="ViewModels\ShowsListViewModel.cs" />
     <Compile Include="ViewModels\ShowViewModel.cs" />
+    <Compile Include="ViewModels\StartViewModel.cs" />
     <Compile Include="Views\ActorSearchView.xaml.cs">
       <DependentUpon>ActorSearchView.xaml</DependentUpon>
     </Compile>
@@ -133,6 +134,9 @@
     </Compile>
     <Compile Include="Views\ShowView.xaml.cs">
       <DependentUpon>ShowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StartView.xaml.cs">
+      <DependentUpon>StartView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StartView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

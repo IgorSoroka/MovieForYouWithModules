@@ -93,6 +93,77 @@ namespace ModuleMainModule.ViewModels
             {
                 GetMoviesByGenre(genre);
             }
+
+            var name = navigationContext.Parameters["name"] as string;
+            if (name != null)
+            {
+                GetMoviesByName(name);
+            }
+
+            int selectedYear = (int)navigationContext.Parameters["SelectedYear"];
+            int selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
+            int selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
+            decimal selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
+
+            if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
+            {
+                GetMoviesByOnlyRating(selectedRating);
+            }
+            else if (selectedYear != 0)
+            {
+                GetMoviesByYearAndRating(selectedYear, selectedRating);
+            }
+            else if (selectedFirstYear != 0 && selectedLastYear != 0)
+            {
+                GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
+            }
+            else if (selectedFirstYear == 0 || selectedLastYear == 0)
+            {
+                if (selectedFirstYear != 0 && selectedLastYear == 0)
+                {
+                    GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating);
+                }
+                else if (selectedFirstYear == 0 && selectedLastYear != 0)
+                {
+                    GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating);
+                }
+            }
+        }
+
+        private async void GetMoviesByFLastYearAndRating(int selectedLastYear, decimal selectedRating)
+        {
+            List<Movie> moviesTest = await Data.GetSearchedMoviesLastYear(selectedLastYear, selectedRating);
+            Movies = new ObservableCollection<Movie>(moviesTest);
+        }
+
+        private async void GetMoviesByFirstYearAndRating(int selectedFirstYear, decimal selectedRating)
+        {
+            List<Movie> moviesTest = await Data.GetSearchedMoviesFirstYear(selectedFirstYear, selectedRating);
+            Movies = new ObservableCollection<Movie>(moviesTest);
+        }
+
+        private async void GetMoviesByFirstLastYearAndRating(int selectedFirstYear, int selectedLastYear, decimal selectedRating)
+        {
+            List<Movie> moviesTest = await Data.GetSearchedMovies(selectedFirstYear, selectedLastYear, selectedRating);
+            Movies = new ObservableCollection<Movie>(moviesTest);
+        }
+
+        private async void GetMoviesByYearAndRating(int selectedYear, decimal selectedRating)
+        {
+            List<Movie> moviesTest = await Data.GetSearchedMovies(selectedYear, selectedRating);
+            Movies = new ObservableCollection<Movie>(moviesTest);
+        }
+
+        private async void GetMoviesByOnlyRating(decimal selectedRating)
+        {
+            List<Movie> moviesTest = await Data.GetSearchedMovies(selectedRating);
+            Movies = new ObservableCollection<Movie>(moviesTest);
+        }
+
+        private async void GetMoviesByName(string name)
+        {
+            List<Movie> moviesTest = await Data.GetMoviesByName(name);
+            Movies = new ObservableCollection<Movie>(moviesTest);
         }
 
         private async void GetMoviesByGenre(string genre)

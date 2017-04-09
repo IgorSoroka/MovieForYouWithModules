@@ -16,8 +16,8 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition  Width="Auto"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition  Width="*"/>
         </Grid.ColumnDefinitions>
         <ribbon:Ribbon Grid.ColumnSpan="2" Background="#FF595959">
             <ribbon:Ribbon.ApplicationMenu>
@@ -71,19 +71,11 @@
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
         </ribbon:Ribbon>
-
-        <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True">
-                <ContentControl  prism:RegionManager.RegionName="ListRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" MaxWidth="350"/>
+        <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Background="#4C000000">
+                <ContentControl  prism:RegionManager.RegionName="ListRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="0">
-            <WrapPanel DockPanel.Dock="Bottom">
-                <!--<Button DockPanel.Dock="Bottom" FontSize="16" x:Name="TraillerShow"  Command="{Binding Path=VideoPlay}">Смотреть трейлер</Button>
-                <Button DockPanel.Dock="Bottom" FontSize="16" Command="{Binding Path = MovieNameSearch}">Поиск фильма(имя)</Button>
-                <Button DockPanel.Dock="Bottom" FontSize="16" Command="{Binding Path = ActorNameSearch}">Поиск актера(имя)</Button>
-                <Button DockPanel.Dock="Bottom" FontSize="16" Command="{Binding Path = GenreSearch}">Поиск фильма(жанр)</Button>
-                <Button DockPanel.Dock="Bottom" FontSize="16" Command="{Binding Path = Search}">Поиск фильма(год-рейтинг)</Button>-->
-            </WrapPanel>
-            <ContentControl  prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" />
+            <ContentControl  prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
         </DockPanel>
     </Grid>
 </Window>

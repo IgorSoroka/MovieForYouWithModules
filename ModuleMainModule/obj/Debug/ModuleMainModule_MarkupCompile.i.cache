@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-8-1651465699
+9-270089567
 1-70516471
-28328641377
+30-1528589338
 78680865604
-Views\ActorSearchView.xaml;Views\ActorsList.xaml;Views\ActorView.xaml;Views\MovieSearchView.xaml;Views\MoviesList.xaml;Views\MovieView.xaml;Views\ShowsList.xaml;Views\ShowView.xaml;
+Views\ActorSearchView.xaml;Views\ActorsList.xaml;Views\ActorView.xaml;Views\MovieSearchView.xaml;Views\MoviesList.xaml;Views\MovieView.xaml;Views\ShowsList.xaml;Views\ShowView.xaml;Views\StartView.xaml;
 
 True
 

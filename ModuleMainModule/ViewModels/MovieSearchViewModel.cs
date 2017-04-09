@@ -49,9 +49,9 @@ namespace ModuleMainModule.ViewModels
         private void Search()
         {
             var parameters = new NavigationParameters();
-            parameters.Add("SelectedYear", SelectedYear);
-            parameters.Add("SelectedFirstYear", SelectedFirstYear);
-            parameters.Add("SelectedLastYear", SelectedLastYear);
+            parameters.Add("SelectedYear", SelectedYear ?? 0);
+            parameters.Add("SelectedFirstYear", SelectedFirstYear ?? 0);
+            parameters.Add("SelectedLastYear", SelectedLastYear ?? 0);
             parameters.Add("SelectedRating", SelectedRating);
 
             _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);

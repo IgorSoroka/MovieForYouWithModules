@@ -179,18 +179,18 @@ namespace MainModule
 
         public async Task<List<Movie>> GetSearchedMoviesFirstYear(int? selectedYear, decimal selectedRating)
         {
-            DateTime firstTime = new DateTime((int)selectedYear, 8, 18);
+            DateTime firstTime = new DateTime((int)selectedYear, 1, 1);
             Movies searchedMovies = await first.Movies.DiscoverAsync(null, true, null, firstTime, null, null, selectedRating, null, null, 1, token);
-            List<Movie> list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value.Year == selectedYear)).ToList<Movie>();
+            List<Movie> list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value.Year > selectedYear)).ToList<Movie>();
 
             return list;
         }
 
         public async Task<List<Movie>> GetSearchedMoviesLastYear(int? selectedYear, decimal selectedRating)
         {
-            DateTime lastTime = new DateTime((int)selectedYear, 8, 18);
+            DateTime lastTime = new DateTime((int)selectedYear, 12, 31);
             Movies searchedMovies = await first.Movies.DiscoverAsync(null, true, null, null, lastTime, null, selectedRating, null, null, 1, token);
-            List<Movie> list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value.Year == selectedYear)).ToList<Movie>();
+            List<Movie> list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value.Year < selectedYear)).ToList<Movie>();
 
             return list;
         }
@@ -198,7 +198,7 @@ namespace MainModule
         public async Task<List<Movie>> GetSearchedMovies(int? selectedFirstYear, int? selectedLastYear, decimal selectedRating)
         {
             DateTime date1 = new DateTime(2010, 8, 18);
-            DateTime firstTime = new DateTime((int)selectedFirstYear, 8, 18);
+            DateTime firstTime = new DateTime((int)selectedFirstYear, 1, 1);
             DateTime secondTime = new DateTime((int)selectedLastYear, 12, 31);
             Movies searchedMovies = await first.Movies.DiscoverAsync(null, true, null, firstTime, secondTime, null, selectedRating, null, null, 1, token);
             List<Movie> list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value > firstTime && item.ReleaseDate.Value < secondTime)).ToList<Movie>();
@@ -225,6 +225,27 @@ namespace MainModule
         {
             IEnumerable<Video> videos = await first.Movies.GetVideosAsync(id, "ru", token);
             return videos.FirstOrDefault();
+        }
+
+        //public async Task<Collection> GetPopularActors()
+        //{
+        //    List<Collection> collectionsList = new List<Collection>();
+        //    for (int i = 0; i < 20; i++)
+        //    {
+        //        Collection collection = await first.Collections.GetAsync(i, "ru", true, token);
+        //        collectionsList.Add(collection);
+        //    }
+            
+        //    Collections collections = await first.Collections.SearchAsync("p", null, 1, token);
+
+        //    Collection collection1 = await first.Collections.GetAsync(1, "ru", true, token);
+        //    return collection1;
+        //}
+
+        public async Task<Person> GetActor(int id)
+        {
+            Person searched = await first.People.GetAsync(id, true, token);
+            return searched;
         }
     }
 }
