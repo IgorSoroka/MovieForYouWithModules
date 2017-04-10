@@ -3,6 +3,7 @@ using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
 using MainModule;
+using ModuleMainModule.Model;
 using Prism.Commands;
 using Prism.Regions;
 
@@ -45,34 +46,6 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _movies, value); }
         }
 
-        private async void GetPopularMovies()
-        {
-            List<Movie> moviesTest = await Data.GetPopularMoviesData();
-            Movies = new ObservableCollection<Movie>(moviesTest);
-            //SelectedMovie = null;
-        }
-
-        private async void GetBestMovies()
-        {
-            List<Movie> moviesTest = await Data.GetTopRatedMoviesData();
-            Movies = new ObservableCollection<Movie>(moviesTest);
-            //SelectedMovie = null;
-        }
-
-        private async void GetUpComingMovies()
-        {
-            List<Movie> moviesTest = await Data.GetUpCommingMoviesData();
-            Movies = new ObservableCollection<Movie>(moviesTest);
-            //SelectedMovie = null;
-        }
-
-        private async void GetNowPlayingMovies()
-        {
-            List<Movie> moviesTest = await Data.GetNewMoviesData();
-            Movies = new ObservableCollection<Movie>(moviesTest);
-            //SelectedMovie = null;
-        }
-
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var type = navigationContext.Parameters["type"] as string;
@@ -94,41 +67,57 @@ namespace ModuleMainModule.ViewModels
                 GetMoviesByGenre(genre);
             }
 
+            var company = navigationContext.Parameters["company"] as string;
+            if (company != null)
+            {
+                GetMoviesByCompany(company);
+            }
+
             var name = navigationContext.Parameters["name"] as string;
             if (name != null)
             {
                 GetMoviesByName(name);
             }
 
-            int selectedYear = (int)navigationContext.Parameters["SelectedYear"];
-            int selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
-            int selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
-            decimal selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
+            //int selectedYear = (int)navigationContext.Parameters["SelectedYear"];
+            //int selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
+            //int selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
+            //decimal selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
 
-            if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
-            {
-                GetMoviesByOnlyRating(selectedRating);
-            }
-            else if (selectedYear != 0)
-            {
-                GetMoviesByYearAndRating(selectedYear, selectedRating);
-            }
-            else if (selectedFirstYear != 0 && selectedLastYear != 0)
-            {
-                GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
-            }
-            else if (selectedFirstYear == 0 || selectedLastYear == 0)
-            {
-                if (selectedFirstYear != 0 && selectedLastYear == 0)
-                {
-                    GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating);
-                }
-                else if (selectedFirstYear == 0 && selectedLastYear != 0)
-                {
-                    GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating);
-                }
-            }
+            //if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
+            //{
+            //    GetMoviesByOnlyRating(selectedRating);
+            //}
+            //else if (selectedYear != 0)
+            //{
+            //    GetMoviesByYearAndRating(selectedYear, selectedRating);
+            //}
+            //else if (selectedFirstYear != 0 && selectedLastYear != 0)
+            //{
+            //    GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
+            //}
+            //else if (selectedFirstYear == 0 || selectedLastYear == 0)
+            //{
+            //    if (selectedFirstYear != 0 && selectedLastYear == 0)
+            //    {
+            //        GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating);
+            //    }
+            //    else if (selectedFirstYear == 0 && selectedLastYear != 0)
+            //    {
+            //        GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating);
+            //    }
+            //}
         }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {}
+
+        #region Methods
 
         private async void GetMoviesByFLastYearAndRating(int selectedLastYear, decimal selectedRating)
         {
@@ -173,12 +162,41 @@ namespace ModuleMainModule.ViewModels
             Movies = new ObservableCollection<Movie>(moviesTest);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        private async void GetMoviesByCompany(string company)
         {
-            return true;
+            int companyNumber = RepositoryCompanies.GetCompanyId(company);
+            List<Movie> moviesTest = await Data.GetListOfMoviesByCompany(companyNumber);
+            Movies = new ObservableCollection<Movie>(moviesTest);
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {}
+        private async void GetPopularMovies()
+        {
+            List<Movie> moviesTest = await Data.GetPopularMoviesData();
+            Movies = new ObservableCollection<Movie>(moviesTest);
+            //SelectedMovie = null;
+        }
+
+        private async void GetBestMovies()
+        {
+            List<Movie> moviesTest = await Data.GetTopRatedMoviesData();
+            Movies = new ObservableCollection<Movie>(moviesTest);
+            //SelectedMovie = null;
+        }
+
+        private async void GetUpComingMovies()
+        {
+            List<Movie> moviesTest = await Data.GetUpCommingMoviesData();
+            Movies = new ObservableCollection<Movie>(moviesTest);
+            //SelectedMovie = null;
+        }
+
+        private async void GetNowPlayingMovies()
+        {
+            List<Movie> moviesTest = await Data.GetNewMoviesData();
+            Movies = new ObservableCollection<Movie>(moviesTest);
+            //SelectedMovie = null;
+        }
+
+        #endregion
     }
 }

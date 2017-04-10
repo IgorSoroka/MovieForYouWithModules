@@ -96,6 +96,27 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _hardy, value); }
         }
 
+        private Person _pitt;
+        public Person Pitt
+        {
+            get { return _pitt; }
+            set { SetProperty(ref _pitt, value); }
+        }
+
+        private Person _downey;
+        public Person Downey
+        {
+            get { return _downey; }
+            set { SetProperty(ref _downey, value); }
+        }
+
+        private Person _robbie;
+        public Person Robbie
+        {
+            get { return _robbie; }
+            set { SetProperty(ref _robbie, value); }
+        }
+
         #endregion
 
         private async void GetActorsData()
@@ -109,6 +130,9 @@ namespace ModuleMainModule.ViewModels
             Diesel = await Data.GetActor(12835);
             DiCaprio = await Data.GetActor(6193);
             Hardy = await Data.GetActor(2524);
+            Pitt = await Data.GetActor(287);
+            Downey = await Data.GetActor(3223);
+            Robbie = await Data.GetActor(234352);
         }
 
         private void Search(string obj)

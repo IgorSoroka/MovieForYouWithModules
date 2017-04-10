@@ -26,15 +26,15 @@
                 </Grid.ColumnDefinitions>
                 <Image Margin="3" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Orientation="Vertical">
-                    <TextBlock FontSize="14" Text="{Binding Path = Name}"/>
-                    <Label>Сюжет</Label>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="130" MaxHeight="250" >
-                        <TextBlock TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
+                    <TextBlock Foreground="Honeydew"  FontSize="14" Text="{Binding Path = Name}"/>
+                    <Label Foreground="Honeydew" Content="Сюжет"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="130" MaxHeight="250">
+                        <TextBlock Foreground="Honeydew"  TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
                     </ScrollViewer>
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Row="1">
-                <Label>Состав</Label>
+                <Label Foreground="Honeydew" Content="Состав"/>
                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Crew}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
@@ -70,8 +70,9 @@
                 </ListBox>
             </StackPanel>
             <StackPanel Grid.Row="2">
-                <Label>В главных ролях</Label>
-                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Cast}" SelectedItem="{Binding Path=SelectedActor, Mode=TwoWay}">
+                <Label Foreground="Honeydew" Content="В главных ролях"/>
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Cast}" 
+                         SelectedItem="{Binding Path=SelectedActor}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="Background" Value="#4C000000"/>
@@ -104,17 +105,18 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button FontSize="16" Height="35" Command="{Binding NavigateCommandShowDirectActor}" CommandParameter="{Binding Path=Id}">Подробная информация о выбранном актере</Button>
+                <Button FontSize="16" Height="35" Content="Подробная информация о выбранном актере" 
+                        Command="{Binding NavigateCommandShowDirectActor}" CommandParameter="{Binding Path=Id}"/>
             </StackPanel>
             <StackPanel Grid.Row="3" DataContext="{Binding Path=DirectShow}">
-                <Label FontSize="12">О фильме</Label>
-                <Label FontSize="10">Оригинальное название</Label>
-                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = OriginalName}"/>
-                <Label FontSize="10">Премьера</Label>
-                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}"/>
-                <Label FontSize="10">Домашняя страница</Label>
-                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = HomePage}"/>
-                <Button FontSize="16" Height="35">Смотреть трейлер</Button>
+                <Label Foreground="Honeydew"  FontSize="12">О фильме</Label>
+                <Label Foreground="Honeydew"  FontSize="10" Content="Оригинальное название"/>
+                <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = OriginalName}"/>
+                <Label Foreground="Honeydew"  FontSize="10" Content="Премьера"/>
+                <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}"/>
+                <Label Foreground="Honeydew"  FontSize="10" Content="Домашняя страница"/>
+                <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = HomePage}"/>
+                <Button FontSize="16" Height="35" Content="Смотреть трейлер"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>

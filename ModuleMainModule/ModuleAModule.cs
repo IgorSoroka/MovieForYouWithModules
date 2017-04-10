@@ -19,6 +19,7 @@ namespace MainModule
 
         public void Initialize()
         {
+            //_regionManager.RegisterViewWithRegion("MainRegion", typeof(Player));
             _regionManager.RegisterViewWithRegion("MainRegion", typeof(StartView));
 
             _container.RegisterTypeForNavigation<MoviesList>();
@@ -31,6 +32,9 @@ namespace MainModule
 
             _container.RegisterTypeForNavigation<MovieSearchView>();
             _container.RegisterTypeForNavigation<ActorSearchView>();
+            _container.RegisterTypeForNavigation<ShowSearchView>();
+
+            _container.RegisterTypeForNavigation<Player>();
 
             //_regionManager.RequestNavigate("ListRegion", "MoviesList");
         }

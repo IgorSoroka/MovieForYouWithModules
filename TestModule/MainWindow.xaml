@@ -8,7 +8,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="850" Width="1000">
+        Title="{Binding Title}" MinWidth="300" Height="800" Width="1200" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,7 +27,6 @@
                     <ribbon:RibbonApplicationMenuItem Header="Закрыть" x:Name="MenuItemClose"/>
                 </ribbon:RibbonApplicationMenu>
             </ribbon:Ribbon.ApplicationMenu>
-
             <ribbon:RibbonTab Header="Фильмы">
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
@@ -58,7 +57,7 @@
                     <ribbon:RibbonButton Label="Найти фильм" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Найти сериал" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="ShowsList"/>
+                    <ribbon:RibbonButton Label="Найти сериал" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="Найти актера" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
@@ -74,8 +73,11 @@
         <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Background="#4C000000">
                 <ContentControl  prism:RegionManager.RegionName="ListRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
         </DockPanel>
-        <DockPanel Grid.Row="1" Grid.Column="0">
-            <ContentControl  prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+        <DockPanel Grid.Row="1" Grid.Column="0" >
+            <DockPanel.Background>
+                <ImageBrush ImageSource="/Images/grey.jpg" Stretch="UniformToFill"/>
+            </DockPanel.Background>
+            <ContentControl   prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
         </DockPanel>
     </Grid>
 </Window>

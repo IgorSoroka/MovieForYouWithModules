@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
+using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -14,13 +15,23 @@ namespace ModuleMainModule.ViewModels
         IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
         public DelegateCommand<int?> NavigateCommandShowDirectActor { get; private set; }
+        public DelegateCommand<int?> NavigateCommandShowTrailler { get; private set; }
+        
 
         public MovieViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
             NavigateCommandShowDirectActor = new DelegateCommand<int?>(NavigateShowDirectActor);
+            NavigateCommandShowTrailler = new DelegateCommand<int?>(ShowTrailler);
         }
-
+        
+        private void ShowTrailler(int? id)
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add("VideoUrl", VideoUrl);
+            _regionManager.RequestNavigate("MainRegion", "Player", parameters);
+        }
+        
         private void NavigateShowDirectActor(int? id)
         {
             //var parameters = new NavigationParameters();
@@ -28,8 +39,15 @@ namespace ModuleMainModule.ViewModels
 
             var parameters = new NavigationParameters();
             parameters.Add("id", SelectedActor.Id);
-
             _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+        }
+
+        
+        private string _videoUrl;
+        public string VideoUrl
+        {
+            get { return _videoUrl; }
+            set { SetProperty(ref _videoUrl, value); }
         }
 
         private Movie _direcctMovie;
@@ -64,7 +82,8 @@ namespace ModuleMainModule.ViewModels
         {
             var type = (int)navigationContext.Parameters["id"];
             GetDirectMovieInfo(type);
-        }
+            GetVideoUrl(type);
+        }        
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
@@ -73,6 +92,15 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
+
+        private async void GetVideoUrl(int id)
+        {
+            Video video = await Data.GetTrailler(id);
+            if (video != null)
+            {
+                VideoUrl = video.Key;
+            }
+        }
 
         private async void GetDirectMovieInfo(int id)
         {

@@ -11,115 +11,119 @@
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
+    <!--<UserControl.Style>
+        <Style TargetType="Button">
+            <Setter Property="Button.Background">
+                <Setter.Value>
+                    <ImageBrush ImageSource="D:/grey.jpg" Stretch="UniformToFill"></ImageBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Style>-->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" LastChildFill="True">
-            <TextBox Width="200" Text="{Binding Path = Name}"></TextBox>
-            <Button FontSize="20" Command="{Binding Path = NavigateCommandSearch}">Искать!</Button>
+            <TextBox Width="200" Text="{Binding Path = Name}"/>
+            <Button FontSize="20" Command="{Binding Path = NavigateCommandSearch}" Content="Искать!"/>
         </DockPanel>
         <Grid Background="#4C000000" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" DataContext="{Binding Path = Jackman}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="0" Grid.Column="0" DataContext="{Binding Path = Jackman}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+                
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            
-                <Button Grid.Row="0" Grid.Column="1" DataContext="{Binding Path = Depp}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="0" Grid.Column="1" DataContext="{Binding Path = Depp}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="0" Grid.Column="2" DataContext="{Binding Path = Watson}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="0" Grid.Column="2" DataContext="{Binding Path = Watson}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="0" DataContext="{Binding Path = Lawrence}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="1" Grid.Column="0" DataContext="{Binding Path = Lawrence}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="1" DataContext="{Binding Path = Diesel}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="1" Grid.Column="1" DataContext="{Binding Path = Diesel}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="2" DataContext="{Binding Path = Johansson}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="1" Grid.Column="2" DataContext="{Binding Path = Johansson}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="2" Grid.Column="0" DataContext="{Binding Path = DiCaprio}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="2" Grid.Column="0" DataContext="{Binding Path = DiCaprio}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="2" Grid.Column="1" DataContext="{Binding Path = Hathaway}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="2" Grid.Column="1" DataContext="{Binding Path = Hathaway}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="2" Grid.Column="2" DataContext="{Binding Path = Hardy}" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+            <Button Grid.Row="2" Grid.Column="2" DataContext="{Binding Path = Hardy}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock FontSize="17" TextAlignment="Center" Grid.Row="1" Text="{Binding Path = Name}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
+                </Grid>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="3" DataContext="{Binding Path = Pitt}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+                <Grid>
+                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
+                </Grid>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="3" DataContext="{Binding Path = Downey}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+                <Grid>
+                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
+                </Grid>
+            </Button>
+            <Button Grid.Row="2" Grid.Column="3" DataContext="{Binding Path = Robbie}" 
+                    Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding Path=Id}">
+                <Grid>
+                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
+                    <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
         </Grid>

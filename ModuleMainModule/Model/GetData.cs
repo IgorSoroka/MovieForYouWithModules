@@ -204,13 +204,14 @@ namespace MainModule
             List<Movie> list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value > firstTime && item.ReleaseDate.Value < secondTime)).ToList<Movie>();
 
             return list;
+        }
 
-            //var find = list.Select(item => item.Genres.Where(it => it.Name == "Comedy"));
-            //var find = (from item in list
-            //            where item.ReleaseDate < moment2 && item.ReleaseDate > moment1 && item.Genres.Contains(it => it.Name == "Action")
-            //            select item).ToList<Movie>();
+        public async Task<List<Movie>> GetListOfMoviesByCompany(int companyId)
+        {
+            Movies searched = await first.Companies.GetMoviesAsync(companyId, "ru", 1, token);
+            List<Movie> list = searched.Results.ToList<Movie>();
 
-            //Movies movies = await first.Genres.GetMoviesAsync(1, "ru", true, 1, token);
+            return list;
         }
 
         public async Task<List<Movie>> GetListOfMoviesByGenre(int genre)
@@ -227,6 +228,65 @@ namespace MainModule
             return videos.FirstOrDefault();
         }
 
+       public async Task<Person> GetActor(int id)
+        {
+            Person searched = await first.People.GetAsync(id, true, token);
+            return searched;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<List<Show>> GetShowsByName(string name)
+        {
+            Shows shows = await first.Shows.SearchAsync(name, "ru", null, true, 1, token);
+            List<Show> searchrShows = shows.Results.ToList<Show>();
+            return searchrShows;
+        }
+
+        public async Task<List<Show>> GetSearchedShows(decimal selectedRating)
+        {
+            Shows searchrShows = await first.Shows.DiscoverAsync("ru", null, null, null, null, selectedRating, null, null, 1, token);
+            List<Show> list = searchrShows.Results.ToList<Show>();
+            return list;
+        }
+
+
+        public async Task<List<Show>> GetSearchedShows(int? selectedYear, decimal selectedRating)
+        {
+            Shows searchrShows = await first.Shows.DiscoverAsync("ru", selectedYear, null, null, null, selectedRating, null, null, 1, token);
+            List<Show> list = (searchrShows.Results.Where(item => item.FirstAirDate.Value.Year == selectedYear)).ToList<Show>();
+            return list;
+        }
+
+        public async Task<List<Show>> GetSearchedShowsFirstYear(int? selectedYear, decimal selectedRating)
+        {
+            DateTime firstTime = new DateTime((int)selectedYear, 1, 1);
+            Shows searchrShows = await first.Shows.DiscoverAsync("ru", null, firstTime, null, null, selectedRating, null, null, 1, token);
+            List<Show> list = (searchrShows.Results.Where(item => item.FirstAirDate.Value.Year > selectedYear)).ToList<Show>();
+            return list;
+        }
+
+        public async Task<List<Show>> GetSearchedShowsLastYear(int? selectedYear, decimal selectedRating)
+        {
+            DateTime lastTime = new DateTime((int)selectedYear, 12, 31);
+            Shows searchrShows = await first.Shows.DiscoverAsync("ru", null, null, lastTime, null, selectedRating, null, null, 1, token);
+            List<Show> list = (searchrShows.Results.Where(item => item.FirstAirDate.Value.Year < selectedYear)).ToList<Show>();
+            return list;
+        }
+
+        public async Task<List<Show>> GetSearchedShows(int? selectedFirstYear, int? selectedLastYear,
+            decimal selectedRating)
+        {
+            DateTime date1 = new DateTime(2010, 8, 18);
+            DateTime firstTime = new DateTime((int) selectedFirstYear, 1, 1);
+            DateTime secondTime = new DateTime((int) selectedLastYear, 12, 31);
+            Shows searchrShows = await first.Shows.DiscoverAsync("ru", null, firstTime, secondTime, null, selectedRating,
+                null, null, 1, token);
+            List<Show> list =
+            (searchrShows.Results.Where(
+                item => item.FirstAirDate.Value > firstTime && item.FirstAirDate.Value < secondTime)).ToList<Show>();
+            return list;
+        }
+        
         //public async Task<Collection> GetPopularActors()
         //{
         //    List<Collection> collectionsList = new List<Collection>();
@@ -235,17 +295,19 @@ namespace MainModule
         //        Collection collection = await first.Collections.GetAsync(i, "ru", true, token);
         //        collectionsList.Add(collection);
         //    }
-            
+
         //    Collections collections = await first.Collections.SearchAsync("p", null, 1, token);
 
         //    Collection collection1 = await first.Collections.GetAsync(1, "ru", true, token);
         //    return collection1;
         //}
 
-        public async Task<Person> GetActor(int id)
-        {
-            Person searched = await first.People.GetAsync(id, true, token);
-            return searched;
-        }
+        //var find = list.Select(item => item.Genres.Where(it => it.Name == "Comedy"));
+        //var find = (from item in list
+        //            where item.ReleaseDate < moment2 && item.ReleaseDate > moment1 && item.Genres.Contains(it => it.Name == "Action")
+        //            select item).ToList<Movie>();
+
+        //Movies movies = await first.Genres.GetMoviesAsync(1, "ru", true, 1, token);
+        
     }
 }

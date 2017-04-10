@@ -26,29 +26,30 @@
                 </Grid.ColumnDefinitions>
                 <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Margin="3" Orientation="Vertical">
-                    <TextBlock FontSize="14" Text="{Binding Path = Name}"/>
-                    <Label>Биография</Label>
+                    <TextBlock Foreground="Honeydew" FontSize="14" Text="{Binding Path = Name}"/>
+                    <Label Foreground="Honeydew" Content="Биография"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="130" MaxHeight="250" >
-                        <TextBlock Margin="3" TextWrapping="Wrap" FontSize="14" Text="{Binding Path = Biography}"/>
+                        <TextBlock Foreground="Honeydew" Margin="3" TextWrapping="Wrap" FontSize="14" Text="{Binding Path = Biography}"/>
                     </ScrollViewer>
                 </StackPanel>
             </Grid>
         </Border>
         <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
             <StackPanel  DataContext="{Binding Path=DirectActor}">
-                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = Name}"/>
-                <Label FontSize="12">Об актере</Label>
-                <Label FontSize="10">Дата рождения</Label>
-                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
-                <Label FontSize="10">Место рождения</Label>
-                <TextBlock Margin="3" FontSize="12" Text="{Binding Path = BirthPlace}"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = Name}"/>
+                <Label Foreground="Honeydew" FontSize="12" Content="Об актере"/>
+                <Label Foreground="Honeydew" FontSize="10" Content="Дата рождения"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
+                <Label Foreground="Honeydew" FontSize="10" Content="Место рождения"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = BirthPlace}"/>
             </StackPanel>
         </Border>
-        <Button Grid.Row="2" Height="25" DockPanel.Dock="Bottom" FontSize="12" Content="Подробная информация о выбранном фильме" Command="{Binding NavigateCommandShowDirectMovie}" CommandParameter="{Binding Path=Id}"/>
-        <StackPanel Grid.Row="3" >
-                <Label>Фильмография</Label>
+        <Button Grid.Row="2" Height="25" DockPanel.Dock="Bottom" FontSize="12" Content="Подробная информация о выбранном фильме" 
+                Command="{Binding NavigateCommandShowDirectMovie}" CommandParameter="{Binding Path=Id}"/>
+        <DockPanel Grid.Row="3" >
+            <Label DockPanel.Dock="Top" Foreground="Honeydew" Content="Фильмография"/>
                 <ScrollViewer  VerticalScrollBarVisibility="Visible" CanContentScroll="True" HorizontalScrollBarVisibility="Visible">
-                    <ListBox ItemsSource="{Binding Path = ActorMovies}" SelectedItem="{Binding Path=SelectedActorMovie, Mode=TwoWay}" >
+                <ListBox ItemsSource="{Binding Path = ActorMovies}" SelectedItem="{Binding Path=SelectedActorMovie, Mode=TwoWay}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="Background" Value="#4C000000"/>
@@ -78,13 +79,14 @@
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Margin="3" FontSize="12" Text="{Binding Path = Title}"/>
                                     <TextBlock Margin="3" FontSize="12" Text="{Binding Path = ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
-                                    <Button FontSize="12" HorizontalAlignment="Left" Content="Подробная информация" Command="{Binding Path=ShowDirectMovie}" Width="150" ></Button>
+                                    <Button FontSize="12" HorizontalAlignment="Left" Content="Подробная информация" 
+                                            Command="{Binding Path=ShowDirectMovie}" Width="150"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
                 </ScrollViewer>
-        </StackPanel>
+        </DockPanel>
     </Grid>
 </UserControl>

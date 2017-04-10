@@ -46,6 +46,9 @@ d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\Hassewa
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\Newtonsoft.Json.dll
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\Hasseware.Net.TMDb.xml
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\Newtonsoft.Json.xml
-d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\MainModule.csprojResolveAssemblyReference.cache
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\StartView.g.cs
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\StartView.baml
+d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\ShowSearchView.g.cs
+d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\ShowSearchView.baml
+d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\Player.g.cs
+d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\Player.baml

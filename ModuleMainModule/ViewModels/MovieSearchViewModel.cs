@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Net.TMDb;
-using MainModule;
+using ModuleMainModule.Model;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -11,10 +10,11 @@ namespace ModuleMainModule.ViewModels
     class MovieSearchViewModel : BindableBase
     {
         IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandGenreSearch { get; private set; }
+        public DelegateCommand NavigateCommandCompanySearch { get; private set; }
         public DelegateCommand NavigateCommandSearch { get; private set; }
+        public DelegateCommand NavigateCommandReset { get; private set; }
 
         public MovieSearchViewModel(RegionManager regionManager)
         {
@@ -22,19 +22,30 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandNameSearch = new DelegateCommand(NameSearch);
             NavigateCommandGenreSearch = new DelegateCommand(GenreSearch);
             NavigateCommandSearch = new DelegateCommand(Search);
+            NavigateCommandCompanySearch = new DelegateCommand(CompanySearch);
+            NavigateCommandReset = new DelegateCommand(Reset);
 
             YearsList = GetYearsList();
             List<string> genresList = RepositoryGenres.GetNames();
             Genres = new ObservableCollection<string>(genresList);
+            List<string> companiesList = RepositoryCompanies.GetNames();
+            Companies = new ObservableCollection<string>(companiesList);
         }
 
         #region Methods
+
+        private void Reset()
+        {
+            SelectedFirstYear = null;
+            SelectedLastYear = null;
+            SelectedRating = 0;
+            SelectedYear = null;
+        }
 
         private void NameSearch()
         {
             var parameters = new NavigationParameters();
             parameters.Add("name", Name);
-
             _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
         }
 
@@ -42,7 +53,6 @@ namespace ModuleMainModule.ViewModels
         {
             var parameters = new NavigationParameters();
             parameters.Add("genre", SelectGenre);
-
             _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
         }
 
@@ -53,7 +63,13 @@ namespace ModuleMainModule.ViewModels
             parameters.Add("SelectedFirstYear", SelectedFirstYear ?? 0);
             parameters.Add("SelectedLastYear", SelectedLastYear ?? 0);
             parameters.Add("SelectedRating", SelectedRating);
+            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+        }
 
+        private void CompanySearch()
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add("company", SelectedCompany);
             _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
         }
 
@@ -85,6 +101,20 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _selectGenre, value); }
         }
 
+        private ObservableCollection<string> _companies;
+        public ObservableCollection<string> Companies
+        {
+            get { return _companies; }
+            set { SetProperty(ref _companies, value); }
+        }
+
+        private string _selectedCompany;
+        public string SelectedCompany
+        {
+            get { return _selectedCompany; }
+            set { SetProperty(ref _selectedCompany, value); }
+        }
+
         private ObservableCollection<int> _yearsList;
         public ObservableCollection<int> YearsList
         {
@@ -96,14 +126,31 @@ namespace ModuleMainModule.ViewModels
         public int? SelectedYear
         {
             get { return _selectedYear; }
-            set { SetProperty(ref _selectedYear, value); }
+            set
+            { SetProperty(ref _selectedYear, value); }
         }
 
         private int? _selectedFirstYear;
         public int? SelectedFirstYear
         {
             get { return _selectedFirstYear; }
-            set { SetProperty(ref _selectedFirstYear, value); }
+            set
+            {
+                SetProperty(ref _selectedFirstYear, value);
+                //YearsList = YearsAfter(value);
+            }
+        }
+
+        private ObservableCollection<int> YearsAfter(int? value)
+        {
+            ObservableCollection<int> years = GetYearsList();
+            List<int> yearsAfter = new List<int>();
+            foreach (var item in years)
+            {
+                if(item > value)
+                    yearsAfter.Add(item);
+            }
+            return new ObservableCollection<int>(yearsAfter);
         }
 
         private int? _selectedLastYear;

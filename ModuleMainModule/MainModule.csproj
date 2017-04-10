@@ -95,11 +95,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\ImageUrlConverter.cs" />
+    <Compile Include="Converters\NullToFalseConverter.cs" />
+    <Compile Include="Converters\VideoUrlConverter.cs" />
     <Compile Include="Model\DataCast.cs" />
     <Compile Include="Model\DataCrew.cs" />
     <Compile Include="Model\GetData.cs" />
     <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\RepositoryCompanies.cs" />
     <Compile Include="Model\RepositoryGenres.cs" />
+    <Compile Include="Model\WebBrowserUtility.cs" />
     <Compile Include="ModuleAModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ActorSearchViewModel.cs" />
@@ -108,6 +112,8 @@
     <Compile Include="ViewModels\MovieListViewModel.cs" />
     <Compile Include="ViewModels\MovieSearchViewModel.cs" />
     <Compile Include="ViewModels\MovieViewModel.cs" />
+    <Compile Include="ViewModels\PlayerViewModel.cs" />
+    <Compile Include="ViewModels\ShowSearchViewModel.cs" />
     <Compile Include="ViewModels\ShowsListViewModel.cs" />
     <Compile Include="ViewModels\ShowViewModel.cs" />
     <Compile Include="ViewModels\StartViewModel.cs" />
@@ -128,6 +134,12 @@
     </Compile>
     <Compile Include="Views\MovieView.xaml.cs">
       <DependentUpon>MovieView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Player.xaml.cs">
+      <DependentUpon>Player.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShowSearchView.xaml.cs">
+      <DependentUpon>ShowSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShowsList.xaml.cs">
       <DependentUpon>ShowsList.xaml</DependentUpon>
@@ -164,6 +176,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MovieView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Player.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShowSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

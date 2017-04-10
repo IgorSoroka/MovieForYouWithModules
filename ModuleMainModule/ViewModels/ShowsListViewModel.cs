@@ -38,19 +38,71 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _selectedShow, value); }
         }
 
-        private MediaCast _selectedActor;
-        public MediaCast SelectedActor
-        {
-            get { return _selectedActor; }
-            set { SetProperty(ref _selectedActor, value); }
-        }
-
-        private ObservableCollection<Show> _shows;
+       private ObservableCollection<Show> _shows;
         public ObservableCollection<Show> Shows
         {
             get { return _shows; }
             set { SetProperty(ref _shows, value); }
         }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            var type = navigationContext.Parameters["type"] as string;
+            if (type != null)
+            {
+                if (type == "Best")
+                    GetBestShows();
+                if (type == "Popular")
+                    GetPopularShows();
+                if (type == "Now")
+                    GetNowPlayingShows();
+            }
+
+            var name = navigationContext.Parameters["name"] as string;
+            if (name != null)
+            {
+                GetShowsByName(name);
+            }
+
+            int selectedYear = (int)navigationContext.Parameters["SelectedYear"];
+            int selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
+            int selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
+            decimal selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
+
+            if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
+            {
+                GetShowsByOnlyRating(selectedRating);
+            }
+            else if (selectedYear != 0)
+            {
+                GetShowsByYearAndRating(selectedYear, selectedRating);
+            }
+            else if (selectedFirstYear != 0 && selectedLastYear != 0)
+            {
+                GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
+            }
+            else if (selectedFirstYear == 0 || selectedLastYear == 0)
+            {
+                if (selectedFirstYear != 0 && selectedLastYear == 0)
+                {
+                    GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating);
+                }
+                else if (selectedFirstYear == 0 && selectedLastYear != 0)
+                {
+                    GetShowsByLastYearAndRating(selectedLastYear, selectedRating);
+                }
+            }
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        { }
+
+        #region Methods
 
         private async void GetPopularShows()
         {
@@ -73,26 +125,42 @@ namespace ModuleMainModule.ViewModels
             //SelectedShow = null;
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        private async void GetShowsByLastYearAndRating(int selectedLastYear, decimal selectedRating)
         {
-            var type = navigationContext.Parameters["type"] as string;
-            if (type != null)
-            {
-                if (type == "Best")
-                    GetBestShows();
-                if (type == "Popular")
-                    GetPopularShows();
-                if (type == "Now")
-                    GetNowPlayingShows();
-            }
+            List<Show> showsTest = await Data.GetSearchedShowsLastYear(selectedLastYear, selectedRating);
+            Shows = new ObservableCollection<Show>(showsTest);
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
+        private async void GetShowsByFirstYearAndRating(int selectedFirstYear, decimal selectedRating)
         {
-            return true;
+            List<Show> showsTest = await Data.GetSearchedShowsFirstYear(selectedFirstYear, selectedRating);
+            Shows = new ObservableCollection<Show>(showsTest);
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {}
+        private async void GetShowsByFirstLastYearAndRating(int selectedFirstYear, int selectedLastYear, decimal selectedRating)
+        {
+            List<Show> showsTest = await Data.GetSearchedShows(selectedFirstYear, selectedLastYear, selectedRating);
+            Shows = new ObservableCollection<Show>(showsTest);
+        }
+
+        private async void GetShowsByYearAndRating(int selectedYear, decimal selectedRating)
+        {
+            List<Show> showsTest = await Data.GetSearchedShows(selectedYear, selectedRating);
+            Shows = new ObservableCollection<Show>(showsTest);
+        }
+
+        private async void GetShowsByOnlyRating(decimal selectedRating)
+        {
+            List<Show> showsTest = await Data.GetSearchedShows(selectedRating);
+            Shows = new ObservableCollection<Show>(showsTest);
+        }
+
+        private async void GetShowsByName(string name)
+        {
+            List<Show> showsTest = await Data.GetShowsByName(name);
+            Shows = new ObservableCollection<Show>(showsTest);
+        }
+        
+        #endregion
     }
 }

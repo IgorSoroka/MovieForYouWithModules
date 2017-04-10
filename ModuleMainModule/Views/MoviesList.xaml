@@ -39,7 +39,7 @@
                         <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}" Height="100" Width="100"/>
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Path = Title}" Margin="3" FontSize="14"/>
-                            <TextBlock Text="{Binding Path = OriginalTitle}" Margin="3" FontSize="14"/>
+                            <TextBlock Text="{Binding Path = OriginalTitle}" TextWrapping="Wrap" Margin="3" FontSize="14"/>
                             <TextBlock Text="{Binding Path = ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}" Margin="3" FontSize="14"/>
                             <Grid>
                                 <Grid.ColumnDefinitions>

@@ -12,12 +12,24 @@
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="#4C000000">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="20*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition MinWidth="300" Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Grid Row="1" Column="1">
+            <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+            <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -26,26 +38,26 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding Path = BestMovie}" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding Path=Id}">
+                <Button Background="#4C000000" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding Path = BestMovie}" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding Path=Id}">
                 <Grid>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock Text="{Binding Path = Title}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="0" DataContext="{Binding Path = SecondMovie}" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding Path=Id}">
+                <Button Background="#4C000000" Grid.Row="1" Grid.Column="0" DataContext="{Binding Path = SecondMovie}" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding Path=Id}">
                 <Grid>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock Text="{Binding Path = Title}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="1" DataContext="{Binding Path = ThirdMovie}" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding Path=Id}">
+                <Button Background="#4C000000" Grid.Row="1" Grid.Column="1" DataContext="{Binding Path = ThirdMovie}" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding Path=Id}">
                 <Grid>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock Text="{Binding Path = Title}"/>
                 </Grid>
             </Button>
         </Grid>
-        <Grid Grid.Column="1">
+            <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="2*"></RowDefinition>
@@ -54,24 +66,26 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" DataContext="{Binding Path = SecondShow}" Command="{Binding NavigateCommandShow}" CommandParameter="{Binding Path=Id}">
+                <Button Background="#4C000000" Grid.Row="0" Grid.Column="0" DataContext="{Binding Path = SecondShow}" Command="{Binding NavigateCommandShow}" CommandParameter="{Binding Path=Id}">
                 <Grid>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="0" Grid.Column="1" DataContext="{Binding Path = ThirdShow}" Command="{Binding NavigateCommandShow}" CommandParameter="{Binding Path=Id}">
+                <Button Background="#4C000000" Grid.Row="0" Grid.Column="1" DataContext="{Binding Path = ThirdShow}" Command="{Binding NavigateCommandShow}" CommandParameter="{Binding Path=Id}">
                 <Grid>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding Path = BestShow}" Command="{Binding NavigateCommandShow}" CommandParameter="{Binding Path=Id}">
+                <Button Background="#4C000000" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding Path = BestShow}" Command="{Binding NavigateCommandShow}" CommandParameter="{Binding Path=Id}">
                 <Grid>
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
         </Grid>
+        </Grid>
+        
     </Grid>
 </UserControl>

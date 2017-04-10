@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="ModuleMainModule.Views.Player"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:ModuleMainModule.Converters"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:model="clr-namespace:ModuleMainModule.Model"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" 
+             Height="auto" Width="auto">
+    <UserControl.Resources>
+        <converters:VideoUrlConverter x:Key="VideoConverter"/>
+    </UserControl.Resources>
+    <WebBrowser x:Name="WebBrowser" model:WebBrowserUtility.BindableSource="{Binding Video}"></WebBrowser>
+</UserControl>
