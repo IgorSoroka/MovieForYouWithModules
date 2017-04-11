@@ -14,48 +14,50 @@
     </UserControl.Resources>
     <Grid Background="#4C000000">
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Border  Width="auto" Height="auto" BorderBrush="DarkGray" BorderThickness="2" CornerRadius="5">
-            <DockPanel LastChildFill="True">
-                <Label FontSize="14" Content="Поиск по названию"/>
-                <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" Content="Найти"/>
-                <TextBox FontSize="14" Text="{Binding Path = Name, UpdateSourceTrigger=LostFocus}"/>
-            </DockPanel>
+        <Border Margin="15, 15, 15, 8" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
+            <StackPanel Orientation="Vertical">
+                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск по названию"/>
+                <DockPanel LastChildFill="True" Margin="10">
+                    <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" Content="Найти"/>
+                    <TextBox FontSize="14" Text="{Binding Path = Name, UpdateSourceTrigger=LostFocus}"/>
+                </DockPanel>
+            </StackPanel>
         </Border>
-        <Border Grid.Row="1" Width="auto" Height="auto" BorderBrush="DarkGray" BorderThickness="2" CornerRadius="5">
+        <Border Margin="15, 8, 15, 15" Grid.Row="1" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
             <StackPanel>
-                <Label FontSize="14" HorizontalContentAlignment="Center" Content="Год создания"/>
-                <ComboBox x:Name="cmYear" IsEnabled="{Binding SelectedItem, ElementName=cbFirst, Converter={StaticResource NullToFalseConverter}}"
+                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Год создания"/>
+                <ComboBox x:Name="CmYear" Margin="10" IsEnabled="{Binding SelectedItem, ElementName=CbFirst, Converter={StaticResource NullToFalseConverter}}"
                           ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedYear, Mode=TwoWay}"/>
-                <Label HorizontalContentAlignment="Center" FontSize="14" Content="Интервал годов"/>
+                <Label Margin="3" HorizontalContentAlignment="Center" FontSize="17" Content="Интервал годов"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Column="0">
+                    <DockPanel Grid.Column="0" Margin="5">
                         <Label FontSize="12" Content="C"/>
-                        <ComboBox x:Name="cbFirst" ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedFirstYear, Mode=TwoWay}"
-                                  IsEnabled="{Binding SelectedItem, ElementName=cmYear, Converter={StaticResource NullToFalseConverter}}"/>
+                        <ComboBox x:Name="CbFirst" ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedFirstYear, Mode=TwoWay}"
+                                  IsEnabled="{Binding SelectedItem, ElementName=CmYear, Converter={StaticResource NullToFalseConverter}}"/>
                     </DockPanel>
-                    <DockPanel Grid.Column="1">
+                    <DockPanel Grid.Column="1" Margin="5">
                         <Label FontSize="12" Content="по"></Label>
-                        <ComboBox x:Name="cbLast" IsEnabled="{Binding SelectedItem, ElementName=cmYear, Converter={StaticResource NullToFalseConverter}}"
+                        <ComboBox x:Name="CbLast" IsEnabled="{Binding SelectedItem, ElementName=CmYear, Converter={StaticResource NullToFalseConverter}}"
                                   ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedLastYear, Mode=TwoWay}"/>
                     </DockPanel>
                 </Grid>
-                <Label HorizontalContentAlignment="Center" FontSize="14" Content="Рейтинг"/>
-                <eo:Slider Foreground="Black" Margin="5" Minimum="0" Maximum="10" TickPlacement="Both" TickFrequency="1"  
-                           Value="{Binding Path=SelectedRating, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Margin="3" HorizontalContentAlignment="Center" FontSize="17" Content="Рейтинг"/>
+                <eo:Slider Foreground="Black" Margin="10" Minimum="0" Maximum="10" TickPlacement="Both" TickFrequency="1"  
+                           Value="{Binding SelectedRating, UpdateSourceTrigger=PropertyChanged}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" FontSize="14" Command="{Binding Path = NavigateCommandReset}" Content="Сбросить"/>
-                    <Button Grid.Column="1" FontSize="14" Command="{Binding Path = NavigateCommandSearch}" Content="Найти"/>
+                    <Button Grid.Column="0" Margin="5" FontSize="14" MaxWidth="150" Command="{Binding Path = NavigateCommandReset}" Content="Сбросить"/>
+                    <Button Grid.Column="1" Margin="5" FontSize="14" MaxWidth="150" Command="{Binding Path = NavigateCommandSearch}" Content="Найти"/>
                 </Grid>
             </StackPanel>
         </Border>

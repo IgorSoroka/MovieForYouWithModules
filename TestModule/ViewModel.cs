@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
-using System.Collections.ObjectModel;
-using System.Net.TMDb;
-using ModuleMainModule.Model;
-using TestModule.Model;
 
 namespace TestModule
 {
@@ -29,25 +23,22 @@ namespace TestModule
         private void NavigateMain(string navigatePath)
         {
             if (navigatePath != null)
-                _regionManager.RequestNavigate("MainRegion", navigatePath);
+            { _regionManager.RequestNavigate("MainRegion", navigatePath);}
         }
 
         private void NavigateListShow(string type)
         {
-            var parameters = new NavigationParameters();
-            parameters.Add("type", type);
-
+            var parameters = new NavigationParameters {{"type", type}};
             if (type != null)
-                _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+            { _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);}
         }
 
         private void NavigateListMovie(string type)
         {
-            var parameters = new NavigationParameters();
-            parameters.Add("type", type);
+            var parameters = new NavigationParameters {{"type", type}};
 
             if (type != null)
-                _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            { _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);}
         }
     }
 }

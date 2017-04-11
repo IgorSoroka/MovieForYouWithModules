@@ -29,9 +29,7 @@ namespace ModuleMainModule.ViewModels
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
+        { return true; }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }

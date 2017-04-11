@@ -11,26 +11,19 @@ namespace ModuleMainModule.ViewModels
 {
     class ShowViewModel : BindableBase, INavigationAware
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<int?> NavigateCommandShowDirectActor { get; private set; }
+        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
+        public DelegateCommand NavigateCommandShowTrailler { get; private set; }
 
         public ShowViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
-            NavigateCommandShowDirectActor = new DelegateCommand<int?>(NavigateShowDirectActor);
+            NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
+            NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
         }
 
-        private void NavigateShowDirectActor(int? id)
-        {
-            //var parameters = new NavigationParameters();
-            //parameters.Add("id", id);
-
-            var parameters = new NavigationParameters();
-            parameters.Add("id", SelectedActor.Id);
-
-            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
-        }
+        #region Properties
 
         private Show _direcctShow;
         public Show DirectShow
@@ -44,6 +37,13 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _selectedActor; }
             set { SetProperty(ref _selectedActor, value); }
+        }
+
+        private string _videoUrl;
+        public string VideoUrl
+        {
+            get { return _videoUrl; }
+            set { SetProperty(ref _videoUrl, value); }
         }
 
         private ObservableCollection<MediaCast> _cast;
@@ -60,29 +60,53 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _crew, value); }
         }
 
+        #endregion
+
+        #region Methods
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            VideoUrl = null;
             var type = (int)navigationContext.Parameters["id"];
             GetDirectShowInfo(type);
+            GetVideoUrl(type);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
+        { return true; }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
 
+        private async void GetVideoUrl(int id)
+        {
+            var video = await Data.GetTraillerShow(id);
+            if (video != null)
+            { VideoUrl = video.Key; }
+        }
+
+        private void ShowTrailler()
+        {
+            var parameters = new NavigationParameters { { "VideoUrl", VideoUrl } };
+            _regionManager.RequestNavigate("MainRegion", "Player", parameters);
+        }
+
+        private void NavigateShowDirectActor()
+        {
+            var parameters = new NavigationParameters {{"id", SelectedActor.Id}};
+            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+        }
+
         private async void GetDirectShowInfo(int id)
         {
-            Show show = await Data.GetDirectShowData(id);
-            List<MediaCrew> crews = (show.Credits.Crew).Take(20).ToList<MediaCrew>();
-            List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList<MediaCast>();
-
+            var show = await Data.GetDirectShowData(id);
+            List<MediaCrew> crews = (show.Credits.Crew).Take(20).ToList();
+            List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList();
             DirectShow = show;
             Crew = new ObservableCollection<MediaCrew>(crews);
             Cast = new ObservableCollection<MediaCast>(casts);
         }
+
+        #endregion
     }
 }

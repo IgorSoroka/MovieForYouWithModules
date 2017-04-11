@@ -7,7 +7,7 @@ namespace ModuleMainModule.ViewModels
 {
     class ShowSearchViewModel : BindableBase
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandSearch { get; private set; }
         public DelegateCommand NavigateCommandReset { get; private set; }
@@ -33,18 +33,19 @@ namespace ModuleMainModule.ViewModels
 
         private void NameSearch()
         {
-            var parameters = new NavigationParameters();
-            parameters.Add("name", Name);
+            var parameters = new NavigationParameters {{"name", Name}};
             _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
         }
 
         private void Search()
         {
-            var parameters = new NavigationParameters();
-            parameters.Add("SelectedYear", SelectedYear ?? 0);
-            parameters.Add("SelectedFirstYear", SelectedFirstYear ?? 0);
-            parameters.Add("SelectedLastYear", SelectedLastYear ?? 0);
-            parameters.Add("SelectedRating", SelectedRating);
+            var parameters = new NavigationParameters
+            {
+                {"SelectedYear", SelectedYear ?? 0},
+                {"SelectedFirstYear", SelectedFirstYear ?? 0},
+                {"SelectedLastYear", SelectedLastYear ?? 0},
+                {"SelectedRating", SelectedRating}
+            };
             _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
         }
 

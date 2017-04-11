@@ -9,7 +9,7 @@ namespace ModuleMainModule.ViewModels
 {
     class MovieSearchViewModel : BindableBase
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandGenreSearch { get; private set; }
         public DelegateCommand NavigateCommandCompanySearch { get; private set; }
@@ -31,60 +31,7 @@ namespace ModuleMainModule.ViewModels
             List<string> companiesList = RepositoryCompanies.GetNames();
             Companies = new ObservableCollection<string>(companiesList);
         }
-
-        #region Methods
-
-        private void Reset()
-        {
-            SelectedFirstYear = null;
-            SelectedLastYear = null;
-            SelectedRating = 0;
-            SelectedYear = null;
-        }
-
-        private void NameSearch()
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("name", Name);
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
-        }
-
-        private void GenreSearch()
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("genre", SelectGenre);
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
-        }
-
-        private void Search()
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("SelectedYear", SelectedYear ?? 0);
-            parameters.Add("SelectedFirstYear", SelectedFirstYear ?? 0);
-            parameters.Add("SelectedLastYear", SelectedLastYear ?? 0);
-            parameters.Add("SelectedRating", SelectedRating);
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
-        }
-
-        private void CompanySearch()
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("company", SelectedCompany);
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
-        }
-
-        private ObservableCollection<int> GetYearsList()
-        {
-            ObservableCollection<int> years = new ObservableCollection<int>();
-            for (int i = 2017; i >= 1900; i--)
-            {
-                years.Add(i);
-            }
-            return years;
-        }
-
-        #endregion
-
+        
         #region Properties
 
         private ObservableCollection<string> _genres;
@@ -135,23 +82,20 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _selectedFirstYear; }
             set
-            {
-                SetProperty(ref _selectedFirstYear, value);
-                //YearsList = YearsAfter(value);
-            }
+            { SetProperty(ref _selectedFirstYear, value); }
         }
 
-        private ObservableCollection<int> YearsAfter(int? value)
-        {
-            ObservableCollection<int> years = GetYearsList();
-            List<int> yearsAfter = new List<int>();
-            foreach (var item in years)
-            {
-                if(item > value)
-                    yearsAfter.Add(item);
-            }
-            return new ObservableCollection<int>(yearsAfter);
-        }
+        //private ObservableCollection<int> YearsAfter(int? value)
+        //{
+        //    ObservableCollection<int> years = GetYearsList();
+        //    List<int> yearsAfter = new List<int>();
+        //    foreach (var item in years)
+        //    {
+        //        if(item > value)
+        //            yearsAfter.Add(item);
+        //    }
+        //    return new ObservableCollection<int>(yearsAfter);
+        //}
 
         private int? _selectedLastYear;
         public int? SelectedLastYear
@@ -172,6 +116,58 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void Reset()
+        {
+            SelectedFirstYear = null;
+            SelectedLastYear = null;
+            SelectedRating = 0;
+            SelectedYear = null;
+        }
+
+        private void NameSearch()
+        {
+            var parameters = new NavigationParameters { { "name", Name } };
+            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+        }
+
+        private void GenreSearch()
+        {
+            var parameters = new NavigationParameters { { "genre", SelectGenre } };
+            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+        }
+
+        private void Search()
+        {
+            var parameters = new NavigationParameters
+            {
+                {"SelectedYear", SelectedYear ?? 0},
+                {"SelectedFirstYear", SelectedFirstYear ?? 0},
+                {"SelectedLastYear", SelectedLastYear ?? 0},
+                {"SelectedRating", SelectedRating}
+            };
+            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+        }
+
+        private void CompanySearch()
+        {
+            var parameters = new NavigationParameters { { "company", SelectedCompany } };
+            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+        }
+
+        private ObservableCollection<int> GetYearsList()
+        {
+            ObservableCollection<int> years = new ObservableCollection<int>();
+            for (int i = 2017; i >= 1900; i--)
+            {
+                years.Add(i);
+            }
+            return years;
         }
 
         #endregion

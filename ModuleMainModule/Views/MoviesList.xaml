@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -12,8 +11,7 @@
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
-    <DockPanel LastChildFill="True">
-        <Button Height="35" DockPanel.Dock="Bottom" FontSize="14" Content="Подробная информация" Command="{Binding NavigateCommandShowDirectMovie}" CommandParameter="{Binding Path=Id}"/>
+    <DockPanel LastChildFill="True" x:Name="DockPanelMain">
         <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" CanContentScroll="True">
             <ListBox ItemsSource="{Binding Path=Movies}" SelectedItem="{Binding Path=SelectedMovie, Mode=TwoWay}">
             <ListBox.ItemContainerStyle>
@@ -43,17 +41,24 @@
                             <TextBlock Text="{Binding Path = ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}" Margin="3" FontSize="14"/>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"></ColumnDefinition>
-                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                    <ColumnDefinition Width="50"></ColumnDefinition>
+                                    <ColumnDefinition Width="150"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding Path = VoteAverage}" Margin="3" FontSize="14"/>
-                                <!--<Button Grid.Column="1" FontSize="12" Content="Подробная информация" Command="{Binding NavigateCommandShowDirectMovie}" CommandParameter="{Binding Path=Id}">
-                                    --><!--<i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
-                                            <prism:InvokeCommandAction Command="{Binding NavigateCommandShowDirectMovie}" CommandParameter="{Binding Path=Id}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>--><!--
-                                </Button>-->
+                                <Button Grid.Column="1" FontSize="12" DataContext="{Binding ElementName=DockPanelMain, Path=DataContext}" 
+                                            Content="Подробнее" Command="{Binding NavigateCommandShowDirectMovie}">
+                                        <Button.Style>
+                                            <Style TargetType="{x:Type Button}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                    AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                             </Grid>
                         </StackPanel>
                     </StackPanel>

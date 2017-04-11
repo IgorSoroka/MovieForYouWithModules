@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
-    <Grid Background="#4C000000">
+    <Grid Background="#4C000000" x:Name="GridMain">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
@@ -44,8 +44,6 @@
                 <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = BirthPlace}"/>
             </StackPanel>
         </Border>
-        <Button Grid.Row="2" Height="25" DockPanel.Dock="Bottom" FontSize="12" Content="Подробная информация о выбранном фильме" 
-                Command="{Binding NavigateCommandShowDirectMovie}" CommandParameter="{Binding Path=Id}"/>
         <DockPanel Grid.Row="3" >
             <Label DockPanel.Dock="Top" Foreground="Honeydew" Content="Фильмография"/>
                 <ScrollViewer  VerticalScrollBarVisibility="Visible" CanContentScroll="True" HorizontalScrollBarVisibility="Visible">
@@ -79,8 +77,20 @@
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Margin="3" FontSize="12" Text="{Binding Path = Title}"/>
                                     <TextBlock Margin="3" FontSize="12" Text="{Binding Path = ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
-                                    <Button FontSize="12" HorizontalAlignment="Left" Content="Подробная информация" 
-                                            Command="{Binding Path=ShowDirectMovie}" Width="150"/>
+                                    <Button FontSize="12" Width="150" HorizontalAlignment="Left" DataContext="{Binding ElementName=GridMain, Path=DataContext}"
+                                            Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectMovie}">
+                                        <Button.Style>
+                                            <Style TargetType="{x:Type Button}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                    AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

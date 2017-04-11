@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.TMDb;
 using MainModule;
 using Prism.Commands;
@@ -11,26 +10,17 @@ namespace ModuleMainModule.ViewModels
 {
     public class ActorViewModel : BindableBase, INavigationAware
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<int?> NavigateCommandShowDirectMovie { get; private set; }
+        public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
 
         public ActorViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
-            NavigateCommandShowDirectMovie = new DelegateCommand<int?>(NavigateShowDirectMovie);
+            NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
         }
 
-        private void NavigateShowDirectMovie(int? id)
-        {
-            //var parameters = new NavigationParameters();
-            //parameters.Add("id", id);
-
-            var parameters = new NavigationParameters();
-            parameters.Add("id", SelectedActorMovie.Id);
-
-            _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
-        }
+        #region Propertises
 
         private Person _direcctActor;
         public Person DirectActor
@@ -54,6 +44,9 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _actorMovies, value); }
         }
 
+        #endregion
+
+        #region Methods
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -71,11 +64,18 @@ namespace ModuleMainModule.ViewModels
 
         private async void GetDirectActorInfo(int id)
         {
-            Person actor = await Data.GetDirectActorData(id);
+            var actor = await Data.GetDirectActorData(id);
             List<PersonCredit> movies = await Data.GetDirectActorMoviesList(id);
-
             DirectActor = actor;
             ActorMovies = new ObservableCollection<PersonCredit>(movies);
         }
+
+        private void NavigateShowDirectMovie()
+        {
+            var parameters = new NavigationParameters { { "id", SelectedActorMovie.Id } };
+            _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
+        }
+
+        #endregion
     }
 }

@@ -4,14 +4,14 @@
     {
         public DataCrew() { }
 
-        public DataCrew(string CreditId, int Id, string Name, string Profile, string Department, string Job)
+        public DataCrew(string creditId, int id, string name, string profile, string department, string job)
         {
-            this.CreditId = CreditId;
-            this.Id = Id;
-            this.Name = Name;
-            this.Path = Profile;
-            this.Department = Department;
-            this.Job = Job;
+            CreditId = creditId;
+            Id = id;
+            Name = name;
+            Path = profile;
+            Department = department;
+            Job = job;
         }
 
         public string CreditId { get; set; }

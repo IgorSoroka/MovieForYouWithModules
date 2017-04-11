@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
 using MainModule;
@@ -11,47 +10,17 @@ namespace ModuleMainModule.ViewModels
 {
     class StartViewModel : BindableBase
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<int?> NavigateCommandMovie { get; private set; }
-        //public DelegateCommand NavigateCommandMovie { get; private set; }
-        public DelegateCommand<int?> NavigateCommandShow { get; private set; }
+        public DelegateCommand<Movie> NavigateCommandMovie { get; private set; }
+        public DelegateCommand<Show> NavigateCommandShow { get; private set; }
 
         public StartViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
             GetAllData();
-            NavigateCommandMovie = new DelegateCommand<int?>(ShowDirectMovie);
-            NavigateCommandShow = new DelegateCommand<int?>(ShowDirectShow);
-        }
-
-        private void ShowDirectMovie(int? obj)
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("id", obj);
-
-            _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
-        }
-
-        private void ShowDirectShow(int? obj)
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("id", obj);
-
-            _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
-        }
-
-        private async void GetAllData()
-        {
-            List<Movie> moviesTest = await Data.GetPopularMoviesData();
-            BestMovie = moviesTest.First();
-            SecondMovie = moviesTest[1];
-            ThirdMovie = moviesTest[2];
-
-            List<Show> showsTest = await Data.GetPopularShowsData();
-            BestShow = showsTest.First();
-            SecondShow = showsTest[1];
-            ThirdShow = showsTest[2];
+            NavigateCommandMovie = new DelegateCommand<Movie>(ShowDirectMovie);
+            NavigateCommandShow = new DelegateCommand<Show>(ShowDirectShow);
         }
 
         #region Properties
@@ -97,6 +66,36 @@ namespace ModuleMainModule.ViewModels
             get { return _thirdShow; }
             set { SetProperty(ref _thirdShow, value); }
         }
+        #endregion
+
+        #region Methods
+
+        private void ShowDirectMovie(Movie movie)
+        {
+            var id = movie.Id;
+            var parameters = new NavigationParameters { { "id", id } };
+            _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
+        }
+
+        private void ShowDirectShow(Show show)
+        {
+            var id = show.Id;
+            var parameters = new NavigationParameters { { "id", id } };
+            _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
+        }
+
+        private async void GetAllData()
+        {
+            List<Movie> moviesTest = await Data.GetPopularMoviesData();
+            BestMovie = moviesTest.First();
+            SecondMovie = moviesTest[1];
+            ThirdMovie = moviesTest[2];
+            List<Show> showsTest = await Data.GetPopularShowsData();
+            BestShow = showsTest.First();
+            SecondShow = showsTest[1];
+            ThirdShow = showsTest[2];
+        }
+
         #endregion
     }
 }

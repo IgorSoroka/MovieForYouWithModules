@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
-using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -12,37 +12,20 @@ namespace ModuleMainModule.ViewModels
 {
     class MovieViewModel : BindableBase, INavigationAware
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<int?> NavigateCommandShowDirectActor { get; private set; }
-        public DelegateCommand<int?> NavigateCommandShowTrailler { get; private set; }
-        
+        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
+        public DelegateCommand NavigateCommandShowTrailler { get; private set; }
 
         public MovieViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
-            NavigateCommandShowDirectActor = new DelegateCommand<int?>(NavigateShowDirectActor);
-            NavigateCommandShowTrailler = new DelegateCommand<int?>(ShowTrailler);
-        }
-        
-        private void ShowTrailler(int? id)
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("VideoUrl", VideoUrl);
-            _regionManager.RequestNavigate("MainRegion", "Player", parameters);
-        }
-        
-        private void NavigateShowDirectActor(int? id)
-        {
-            //var parameters = new NavigationParameters();
-            //parameters.Add("id", id);
-
-            var parameters = new NavigationParameters();
-            parameters.Add("id", SelectedActor.Id);
-            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
+            NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
         }
 
-        
+        #region Properties
+
         private string _videoUrl;
         public string VideoUrl
         {
@@ -78,24 +61,39 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _crew, value); }
         }
 
+        #endregion
+
+        #region Methods
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            VideoUrl = null;
             var type = (int)navigationContext.Parameters["id"];
             GetDirectMovieInfo(type);
             GetVideoUrl(type);
-        }        
+        }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
+        { return true; }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
 
+        private void ShowTrailler()
+        {
+            var parameters = new NavigationParameters { { "VideoUrl", VideoUrl } };
+            _regionManager.RequestNavigate("MainRegion", "Player", parameters);
+        }
+
+        private void NavigateShowDirectActor()
+        {
+            var parameters = new NavigationParameters { { "id", SelectedActor.Id } };
+            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+        }
+
         private async void GetVideoUrl(int id)
         {
-            Video video = await Data.GetTrailler(id);
+            var video = await Data.GetTrailler(id);
             if (video != null)
             {
                 VideoUrl = video.Key;
@@ -104,13 +102,14 @@ namespace ModuleMainModule.ViewModels
 
         private async void GetDirectMovieInfo(int id)
         {
-            Movie movie = await Data.GetDirectMoveData(id);
-            List<MediaCrew> crews = (movie.Credits.Crew).Take(20).ToList<MediaCrew>();
-            List<MediaCast> casts = (movie.Credits.Cast).Take(10).ToList<MediaCast>();
-
+            var movie = await Data.GetDirectMoveData(id);
+            List<MediaCrew> crews = (movie.Credits.Crew).Take(20).ToList();
+            List<MediaCast> casts = (movie.Credits.Cast).Take(10).ToList();
             DirectMovie = movie;
             Crew = new ObservableCollection<MediaCrew>(crews);
             Cast = new ObservableCollection<MediaCast>(casts);
         }
+
+        #endregion
     }
 }

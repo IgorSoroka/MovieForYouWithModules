@@ -7,7 +7,8 @@ namespace ModuleMainModule.Model
     public static class WebBrowserUtility
     {
         public static readonly DependencyProperty BindableSourceProperty =
-            DependencyProperty.RegisterAttached("BindableSource", typeof(string), typeof(WebBrowserUtility), new UIPropertyMetadata(null, BindableSourcePropertyChanged));
+            DependencyProperty.RegisterAttached("BindableSource", typeof(string), typeof(WebBrowserUtility), 
+                new UIPropertyMetadata(null, BindableSourcePropertyChanged));
 
         public static string GetBindableSource(DependencyObject obj)
         {
@@ -28,6 +29,5 @@ namespace ModuleMainModule.Model
                 browser.Source = !String.IsNullOrEmpty(uri) ? new Uri(uri) : null;
             }
         }
-
     }
 }

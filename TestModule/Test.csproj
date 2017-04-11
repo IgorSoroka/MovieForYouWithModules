@@ -110,7 +110,6 @@
     <Compile Include="Model\DataCast.cs" />
     <Compile Include="Model\DataCrew.cs" />
     <Compile Include="Model\GetData.cs" />
-    <Compile Include="Model\RepositoryGenres.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

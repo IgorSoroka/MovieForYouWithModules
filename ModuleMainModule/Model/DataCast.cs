@@ -4,13 +4,13 @@
     {
         public DataCast() { }
 
-        public DataCast(string CreditId, int Id, string Name, string Profile, string Character)
+        public DataCast(string creditId, int id, string name, string profile, string character)
         {
-            this.CreditId = CreditId;
-            this.Id = Id;
-            this.Name = Name;
-            this.Path = Profile;
-            this.Character = Character;
+            CreditId = creditId;
+            Id = id;
+            Name = name;
+            Path = profile;
+            Character = character;
         }
 
         public string CreditId { get; set; }

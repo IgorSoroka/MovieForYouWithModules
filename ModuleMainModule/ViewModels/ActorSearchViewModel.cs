@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Net.TMDb;
-using System.Threading;
+﻿using System.Net.TMDb;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -11,15 +8,15 @@ namespace ModuleMainModule.ViewModels
 {
     class ActorSearchViewModel : BindableBase
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<int?> NavigateCommandDirectActor { get; private set; }
+        public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
         public DelegateCommand<string> NavigateCommandSearch { get; private set; }
 
         public ActorSearchViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
-            NavigateCommandDirectActor = new DelegateCommand<int?>(DirectActor);
+            NavigateCommandDirectActor = new DelegateCommand<Person>(DirectActor);
             NavigateCommandSearch = new DelegateCommand<string>(Search);
             GetActorsData();
         }
@@ -137,15 +134,14 @@ namespace ModuleMainModule.ViewModels
 
         private void Search(string obj)
         {
-            var parameters = new NavigationParameters();
-            parameters.Add("name", Name);
+            var parameters = new NavigationParameters {{"name", Name}};
             _regionManager.RequestNavigate("ListRegion", "ActorsList", parameters);
         }
 
-        private void DirectActor(int? id)
+        private void DirectActor(Person person)
         {
-            var parameters = new NavigationParameters();
-            parameters.Add("id", id);
+            var id = person.Id;
+            var parameters = new NavigationParameters {{"id", id}};
             _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
         }
     }

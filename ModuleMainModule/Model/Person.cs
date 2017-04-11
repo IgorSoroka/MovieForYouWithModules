@@ -12,44 +12,28 @@ namespace ModuleMainModule.Model
         public string FirstName
         {
             get { return _firstName; }
-            set
-            {
-                _firstName = value;
-                OnPropertyChanged();
-            }
+            set { _firstName = value; OnPropertyChanged(); }
         }
 
         private string _lastName;
         public string LastName
         {
             get { return _lastName; }
-            set
-            {
-                _lastName = value;
-                OnPropertyChanged();
-            }
+            set { _lastName = value; OnPropertyChanged(); }
         }
 
         private int _age;
         public int Age
         {
             get { return _age; }
-            set
-            {
-                _age = value;
-                OnPropertyChanged();
-            }
+            set { _age = value; OnPropertyChanged(); }
         }
 
         private DateTime? _lastUpdated;
         public DateTime? LastUpdated
         {
             get { return _lastUpdated; }
-            set
-            {
-                _lastUpdated = value;
-                OnPropertyChanged();
-            }
+            set { _lastUpdated = value; OnPropertyChanged(); }
         }
 
         #endregion //Properties
@@ -57,6 +41,7 @@ namespace ModuleMainModule.Model
         #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged([CallerMemberName]string propertyname = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
@@ -66,7 +51,7 @@ namespace ModuleMainModule.Model
 
         public override string ToString()
         {
-            return String.Format("{0}, {1}", LastName, FirstName);
+            return $"{LastName}, {FirstName}";
         }
     }
 }

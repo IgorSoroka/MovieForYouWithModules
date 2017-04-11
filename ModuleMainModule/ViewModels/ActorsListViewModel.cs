@@ -10,24 +10,19 @@ namespace ModuleMainModule.ViewModels
 {
     class ActorsListViewModel : BindableBase, INavigationAware
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<int?> NavigateCommandShowDirectActor { get; private set; }
+        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
 
         public ActorsListViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
-            NavigateCommandShowDirectActor = new DelegateCommand<int?>(ShowDirectActor);
+            NavigateCommandShowDirectActor = new DelegateCommand(ShowDirectActor);
         }
 
-        private void ShowDirectActor(int? id)
+        private void ShowDirectActor()
         {
-            //var parameters = new NavigationParameters();
-            //parameters.Add("id", id);
-
-            var parameters = new NavigationParameters();
-            parameters.Add("id", SelectedSearchedActor.Id);
-
+            var parameters = new NavigationParameters {{"id", SelectedSearchedActor.Id}};
             _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
         }
 
@@ -49,9 +44,7 @@ namespace ModuleMainModule.ViewModels
         {
             var name = navigationContext.Parameters["name"] as string;
             if (name != null)
-            {
                 GetSearchedActors(name);
-            }
         }
         
         private async void GetSearchedActors(string name)

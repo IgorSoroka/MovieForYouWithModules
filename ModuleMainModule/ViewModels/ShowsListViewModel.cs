@@ -10,25 +10,14 @@ namespace ModuleMainModule.ViewModels
 {
     class ShowsListViewModel : BindableBase, INavigationAware
     {
-        IRegionManager _regionManager;
+        readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<int?> NavigateCommandShowDirectShow { get; private set; }
+        public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
 
         public ShowsListViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
-            NavigateCommandShowDirectShow = new DelegateCommand<int?>(NavigateShowDirectShow);
-        }
-
-        private void NavigateShowDirectShow(int? id)
-        {
-            //var parameters = new NavigationParameters();
-            //parameters.Add("id", id);
-
-            var parameters = new NavigationParameters();
-            parameters.Add("id", SelectedShow.Id);
-
-            _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
+            NavigateCommandShowDirectShow = new DelegateCommand(NavigateShowDirectShow);
         }
 
         private Show _selectedShow;
@@ -38,12 +27,14 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _selectedShow, value); }
         }
 
-       private ObservableCollection<Show> _shows;
+        private ObservableCollection<Show> _shows;
         public ObservableCollection<Show> Shows
         {
             get { return _shows; }
             set { SetProperty(ref _shows, value); }
         }
+
+        #region Methods
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
@@ -51,78 +42,65 @@ namespace ModuleMainModule.ViewModels
             if (type != null)
             {
                 if (type == "Best")
-                    GetBestShows();
+                { GetBestShows();}
                 if (type == "Popular")
-                    GetPopularShows();
+                {  GetPopularShows();}
                 if (type == "Now")
-                    GetNowPlayingShows();
+                {  GetNowPlayingShows();}
             }
 
             var name = navigationContext.Parameters["name"] as string;
             if (name != null)
-            {
-                GetShowsByName(name);
-            }
+            { GetShowsByName(name); }
 
-            int selectedYear = (int)navigationContext.Parameters["SelectedYear"];
-            int selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
-            int selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
-            decimal selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
+            var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
+            var selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
+            var selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
+            var selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
 
             if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
-            {
-                GetShowsByOnlyRating(selectedRating);
-            }
+            { GetShowsByOnlyRating(selectedRating); }
             else if (selectedYear != 0)
-            {
-                GetShowsByYearAndRating(selectedYear, selectedRating);
-            }
+            { GetShowsByYearAndRating(selectedYear, selectedRating); }
             else if (selectedFirstYear != 0 && selectedLastYear != 0)
-            {
-                GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
-            }
+            { GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating); }
             else if (selectedFirstYear == 0 || selectedLastYear == 0)
-            {
+            { 
                 if (selectedFirstYear != 0 && selectedLastYear == 0)
-                {
-                    GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating);
-                }
+                { GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating); }
                 else if (selectedFirstYear == 0 && selectedLastYear != 0)
-                {
-                    GetShowsByLastYearAndRating(selectedLastYear, selectedRating);
-                }
+                { GetShowsByLastYearAndRating(selectedLastYear, selectedRating); }
             }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
+        { return true; }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
 
-        #region Methods
+        private void NavigateShowDirectShow()
+        {
+            var parameters = new NavigationParameters { { "id", SelectedShow.Id } };
+            _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
+        }
 
         private async void GetPopularShows()
         {
             List<Show> showsTest = await Data.GetPopularShowsData();
             Shows = new ObservableCollection<Show>(showsTest);
-            //SelectedShow = null;
         }
 
         private async void GetBestShows()
         {
             List<Show> showsTest = await Data.GetTopRatedShowsData();
             Shows = new ObservableCollection<Show>(showsTest);
-            //SelectedShow = null;
         }
 
         private async void GetNowPlayingShows()
         {
             List<Show> showsTest = await Data.GetNowShowsData();
             Shows = new ObservableCollection<Show>(showsTest);
-            //SelectedShow = null;
         }
 
         private async void GetShowsByLastYearAndRating(int selectedLastYear, decimal selectedRating)

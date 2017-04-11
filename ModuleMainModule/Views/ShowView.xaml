@@ -10,9 +10,10 @@
              Height="auto" Width="auto">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
+        <converters:NullToTrueConverter x:Key="NullToTrueConverter"/>
     </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Visible">
-        <Grid Background="#4C000000">
+        <Grid Background="#4C000000" x:Name="GridMain">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
@@ -97,26 +98,47 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
+                            <!--<DataTemplate.Triggers>
+                                <Trigger Property="ListBoxItem.IsSelected" Value="True">
+                                    <Setter Property="Button.IsEnabled" Value="True"></Setter>
+                                </Trigger>
+                                <Trigger Property="ListBoxItem.IsSelected" Value="False">
+                                    <Setter Property="Button.IsEnabled" Value="False"></Setter>
+                                </Trigger>
+                            </DataTemplate.Triggers>-->
                             <StackPanel MinWidth="150" Orientation="Vertical">
                                 <Image Height="70" Width="70" Source="{Binding Profile, Converter={StaticResource PathConverter}}"/>
                                 <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Path = Name}"/>
                                 <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Path = Character}"/>
+                                <Button FontSize="12" Width="150" HorizontalAlignment="Left" DataContext="{Binding ElementName=GridMain, Path=DataContext}"
+                                            Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectActor}">
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                    AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button FontSize="16" Height="35" Content="Подробная информация о выбранном актере" 
-                        Command="{Binding NavigateCommandShowDirectActor}" CommandParameter="{Binding Path=Id}"/>
+                <Button FontSize="16" Height="35" Content="Смотреть трейлер" Command="{Binding NavigateCommandShowTrailler}"
+                        IsEnabled="{Binding Path=VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
             </StackPanel>
             <StackPanel Grid.Row="3" DataContext="{Binding Path=DirectShow}">
-                <Label Foreground="Honeydew"  FontSize="12">О фильме</Label>
+                <Label Foreground="Honeydew"  FontSize="12" Content="О фильме"/>
                 <Label Foreground="Honeydew"  FontSize="10" Content="Оригинальное название"/>
                 <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = OriginalName}"/>
                 <Label Foreground="Honeydew"  FontSize="10" Content="Премьера"/>
                 <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}"/>
                 <Label Foreground="Honeydew"  FontSize="10" Content="Домашняя страница"/>
                 <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = HomePage}"/>
-                <Button FontSize="16" Height="35" Content="Смотреть трейлер"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>
