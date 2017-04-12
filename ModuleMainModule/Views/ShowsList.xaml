@@ -12,6 +12,7 @@
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
     <DockPanel LastChildFill="True" x:Name="DockPanelMain">
+        <Label FontSize="15" DockPanel.Dock="Top" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"></Label>
         <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" CanContentScroll="True">
             <ListBox ItemsSource="{Binding Path=Shows}" SelectedItem="{Binding Path=SelectedShow, Mode=TwoWay}">
             <ListBox.ItemContainerStyle>

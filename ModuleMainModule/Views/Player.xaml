@@ -12,5 +12,12 @@
     <UserControl.Resources>
         <converters:VideoUrlConverter x:Key="VideoConverter"/>
     </UserControl.Resources>
-    <WebBrowser x:Name="WebBrowser" model:WebBrowserUtility.BindableSource="{Binding Video}"></WebBrowser>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <WebBrowser x:Name="WebBrowser" model:WebBrowserUtility.BindableSource="{Binding Video}"></WebBrowser>
+        <Button Grid.Row="1" FontSize="17" Command="{Binding GoBackCommand}" Content="Назад к описанию"></Button>
+    </Grid>
 </UserControl>

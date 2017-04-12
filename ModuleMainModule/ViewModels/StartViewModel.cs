@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.TMDb;
 using MainModule;
@@ -72,28 +73,47 @@ namespace ModuleMainModule.ViewModels
 
         private void ShowDirectMovie(Movie movie)
         {
-            var id = movie.Id;
-            var parameters = new NavigationParameters { { "id", id } };
-            _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
+            try
+            {
+                var id = movie.Id;
+                var parameters = new NavigationParameters { { "id", id } };
+                _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
+            }
+            catch (System.NullReferenceException e)
+            {
+            }
         }
 
         private void ShowDirectShow(Show show)
         {
-            var id = show.Id;
-            var parameters = new NavigationParameters { { "id", id } };
-            _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
+            try
+            {
+                var id = show.Id;
+                var parameters = new NavigationParameters { { "id", id } };
+                _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
+            }
+            catch (System.NullReferenceException e)
+            {
+            }
+           
         }
 
         private async void GetAllData()
         {
-            List<Movie> moviesTest = await Data.GetPopularMoviesData();
-            BestMovie = moviesTest.First();
-            SecondMovie = moviesTest[1];
-            ThirdMovie = moviesTest[2];
-            List<Show> showsTest = await Data.GetPopularShowsData();
-            BestShow = showsTest.First();
-            SecondShow = showsTest[1];
-            ThirdShow = showsTest[2];
+            try
+            {
+                List<Movie> moviesTest = await Data.GetPopularMoviesData();
+                BestMovie = moviesTest.First();
+                SecondMovie = moviesTest[1];
+                ThirdMovie = moviesTest[2];
+                List<Show> showsTest = await Data.GetPopularShowsData();
+                BestShow = showsTest.First();
+                SecondShow = showsTest[1];
+                ThirdShow = showsTest[2];
+            }
+            catch (System.Net.TMDb.ServiceRequestException e)
+            {
+            }
         }
 
         #endregion

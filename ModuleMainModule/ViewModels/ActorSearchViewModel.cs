@@ -1,4 +1,6 @@
-﻿using System.Net.TMDb;
+﻿using System;
+using System.Net.Sockets;
+using System.Net.TMDb;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -118,18 +120,24 @@ namespace ModuleMainModule.ViewModels
 
         private async void GetActorsData()
         {
-            Watson = await Data.GetActor(10990);
-            Johansson = await Data.GetActor(1245);
-            Lawrence = await Data.GetActor(72129);
-            Hathaway = await Data.GetActor(1813);
-            Jackman = await Data.GetActor(6968);
-            Depp = await Data.GetActor(85);
-            Diesel = await Data.GetActor(12835);
-            DiCaprio = await Data.GetActor(6193);
-            Hardy = await Data.GetActor(2524);
-            Pitt = await Data.GetActor(287);
-            Downey = await Data.GetActor(3223);
-            Robbie = await Data.GetActor(234352);
+            try
+            {
+                Watson = await Data.GetActor(10990);
+                Johansson = await Data.GetActor(1245);
+                Lawrence = await Data.GetActor(72129);
+                Hathaway = await Data.GetActor(1813);
+                Jackman = await Data.GetActor(6968);
+                Depp = await Data.GetActor(85);
+                Diesel = await Data.GetActor(12835);
+                DiCaprio = await Data.GetActor(6193);
+                Hardy = await Data.GetActor(2524);
+                Pitt = await Data.GetActor(287);
+                Downey = await Data.GetActor(3223);
+                Robbie = await Data.GetActor(234352);
+            }
+            catch (System.NullReferenceException e)
+            {
+            }
         }
 
         private void Search(string obj)
@@ -140,9 +148,15 @@ namespace ModuleMainModule.ViewModels
 
         private void DirectActor(Person person)
         {
-            var id = person.Id;
-            var parameters = new NavigationParameters {{"id", id}};
-            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            try
+            {
+                var id = person.Id;
+                var parameters = new NavigationParameters { { "id", id } };
+                _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            }
+            catch (System.NullReferenceException e)
+            {
+            }
         }
     }
 }

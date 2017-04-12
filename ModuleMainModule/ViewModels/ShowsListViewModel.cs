@@ -34,6 +34,13 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _shows, value); }
         }
 
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+
         #region Methods
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -42,11 +49,20 @@ namespace ModuleMainModule.ViewModels
             if (type != null)
             {
                 if (type == "Best")
-                { GetBestShows();}
+                {
+                    GetBestShows();
+                    Title = "Лучшие сериалы";
+                }
                 if (type == "Popular")
-                {  GetPopularShows();}
+                {
+                    GetPopularShows();
+                    Title = "Популярные сериалы";
+                }
                 if (type == "Now")
-                {  GetNowPlayingShows();}
+                {
+                    GetNowPlayingShows();
+                    Title = "Сейчас на ТВ";
+                }
             }
 
             var name = navigationContext.Parameters["name"] as string;

@@ -16,6 +16,23 @@ namespace MainModule
 
         public async Task<List<Movie>> GetPopularMoviesData()
         {
+            //try
+            //{
+            //    var movies1 = await _first.Movies.GetPopularAsync("ru", 1, _token);
+            //    List<Movie> popularMovies1 = movies1.Results.ToList();
+            //    //return popularMovies1;
+
+            //    for (int i = 0; i < 100; i++)
+            //    {
+            //        var movies2 = await _first.Movies.GetPopularAsync("ru", 1, _token);
+            //    }
+            //}
+            //catch (System.Net.TMDb.ServiceRequestException e)
+            //{
+            //    int a = 4;
+            //    throw;
+            //}
+
             var movies = await _first.Movies.GetPopularAsync("ru", 1, _token);
             List<Movie> popularMovies = movies.Results.ToList();
             return popularMovies;
@@ -37,8 +54,9 @@ namespace MainModule
 
         public async Task<List<Movie>> GetUpCommingMoviesData()
         {
-            var movies = await _first.Movies.GetUpcomingAsync("ru", 1, _token);
+            var movies = await _first.Movies.GetUpcomingAsync(null, 1, _token);
             List<Movie> upcomingMovies = movies.Results.ToList();
+            //upcomingMovies.OrderByDescending(item => item.ReleaseDate.Value.Date);
             return upcomingMovies;
         }
 

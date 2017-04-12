@@ -7,7 +7,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             Width="auto" MaxWidth="700" Height="auto" MaxHeight="800">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
@@ -20,16 +20,19 @@
             </Setter>
         </Style>
     </UserControl.Style>-->
-    <Grid>
+    <Grid Background="#4C000000">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0" LastChildFill="True">
-            <TextBox Width="200" Text="{Binding Path = Name}"/>
-            <Button FontSize="20" Command="{Binding Path = NavigateCommandSearch}" Content="Искать!"/>
-        </DockPanel>
-        <Grid Background="#4C000000" Grid.Row="1">
+        <Border Grid.Row="0" Margin="15, 15, 15, 8" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
+            <DockPanel Margin="10" Height="50" LastChildFill="True">
+                    <Button Width="150" DockPanel.Dock="Right" FontSize="20" Command="{Binding Path = NavigateCommandSearch}" Content="Найти!"/>
+                    <TextBox FontSize="25" Text="{Binding Path = Name}"/>
+                </DockPanel>
+            </Border>
+        <Border Grid.Row="1" Margin="15, 15, 15, 8" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
+        <Grid Background="#4C000000" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -41,78 +44,79 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridJackman, Path=DataContext}">
+            <Button Margin="2" Grid.Row="0" Grid.Column="0" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridJackman, Path=DataContext}">
                 <Grid x:Name="GridJackman" DataContext="{Binding Path = Jackman}" >
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="0" Grid.Column="1" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDepp, Path=DataContext}">
+                <Button Margin="2" Grid.Row="0" Grid.Column="1" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDepp, Path=DataContext}">
                 <Grid x:Name="GridDepp" DataContext="{Binding Path = Depp}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="0" Grid.Column="2" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridWatson, Path=DataContext}">
+                <Button Margin="2" Grid.Row="0" Grid.Column="2" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridWatson, Path=DataContext}">
                 <Grid x:Name="GridWatson" DataContext="{Binding Path = Watson}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="0" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridLawrence, Path=DataContext}">
+                <Button Margin="2" Grid.Row="1" Grid.Column="0" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridLawrence, Path=DataContext}">
                 <Grid x:Name="GridLawrence" DataContext="{Binding Path = Lawrence}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="1" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDiesel, Path=DataContext}">
+                <Button Margin="2" Grid.Row="1" Grid.Column="1" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDiesel, Path=DataContext}">
                 <Grid x:Name="GridDiesel" DataContext="{Binding Path = Diesel}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="2" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridJohansson, Path=DataContext}">
+                <Button Margin="2" Grid.Row="1" Grid.Column="2" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridJohansson, Path=DataContext}">
                 <Grid x:Name="GridJohansson" DataContext="{Binding Path = Johansson}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="2" Grid.Column="0" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDiCaprio, Path=DataContext}">
+                <Button Margin="2" Grid.Row="2" Grid.Column="0" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDiCaprio, Path=DataContext}">
                 <Grid x:Name="GridDiCaprio" DataContext="{Binding Path = DiCaprio}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="2" Grid.Column="1" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridHathaway, Path=DataContext}">
+                <Button Margin="2" Grid.Row="2" Grid.Column="1" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridHathaway, Path=DataContext}">
                 <Grid x:Name="GridHathaway" DataContext="{Binding Path = Hathaway}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="2" Grid.Column="2" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridHardy, Path=DataContext}">
+                <Button Margin="2" Grid.Row="2" Grid.Column="2" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridHardy, Path=DataContext}">
                 <Grid x:Name="GridHardy" DataContext="{Binding Path = Hardy}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="0" Grid.Column="3" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridPitt, Path=DataContext}">
+                <Button Margin="2" Grid.Row="0" Grid.Column="3" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridPitt, Path=DataContext}">
                 <Grid x:Name="GridPitt" DataContext="{Binding Path = Pitt}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="3" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDowney, Path=DataContext}">
+                <Button Margin="2" Grid.Row="1" Grid.Column="3" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridDowney, Path=DataContext}">
                 <Grid x:Name="GridDowney" DataContext="{Binding Path = Downey}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="2" Grid.Column="3" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridRobbie, Path=DataContext}">
+                <Button Margin="2" Grid.Row="2" Grid.Column="3" Command="{Binding NavigateCommandDirectActor}" CommandParameter="{Binding ElementName=GridRobbie, Path=DataContext}">
                 <Grid x:Name="GridRobbie" DataContext="{Binding Path = Robbie}">
                     <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                     <TextBlock FontSize="17" TextAlignment="Center" Text="{Binding Path = Name}"/>
                 </Grid>
             </Button>
         </Grid>
+        </Border>
     </Grid>
 </UserControl>

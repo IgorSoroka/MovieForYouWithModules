@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
         <Border Margin="15, 15, 15, 8" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
             <StackPanel Orientation="Vertical">
-                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск по названию"/>
+                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск по названию"/>
                 <DockPanel LastChildFill="True" Margin="10">
                     <Button Width="70" DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" Content="Найти!"/>
                     <TextBox FontSize="16" Text="{Binding Path = Name, UpdateSourceTrigger=LostFocus}"/>
@@ -30,11 +30,11 @@
         </Border>
         <Border Margin="15, 8, 15, 8" Grid.Row="1" Width="auto" Height="auto" BorderBrush="LightGray"  BorderThickness="2" CornerRadius="5">
             <StackPanel>
-                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Год создания"/>
+                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Год создания"/>
                 <ComboBox Margin="10" x:Name="cmYear" IsEnabled="{Binding SelectedItem, ElementName=cbFirst, Converter={StaticResource NullToFalseConverter}}"
                           ItemsSource="{Binding Path=YearsList}" 
                           SelectedItem="{Binding Path=SelectedYear, Mode=TwoWay}"/>
-                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Интервал годов"/>
+                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Интервал годов"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -51,8 +51,8 @@
                                   ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedLastYear, Mode=TwoWay}"/>
                     </DockPanel>
                 </Grid>
-                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Рейтинг"/>
-                <wpf:Slider Foreground="Black" Margin="10" Minimum="0" Maximum="10" TickPlacement="Both" TickFrequency="1"  
+                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Рейтинг"/>
+                <wpf:Slider Foreground="Honeydew" Margin="10" Minimum="0" Maximum="10" TickPlacement="Both" TickFrequency="1"  
                             Value="{Binding Path=SelectedRating, UpdateSourceTrigger=PropertyChanged}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -66,14 +66,14 @@
         </Border>
         <Border Margin="15, 8, 15, 8" Grid.Row="2" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
             <StackPanel Orientation="Vertical">
-                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск фильмов по жанру"/>
+                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск фильмов по жанру"/>
                 <ComboBox Margin="5" ItemsSource="{Binding Path=Genres}" SelectedItem="{Binding Path=SelectGenre, Mode=TwoWay}"/>
                 <Button Margin="3" MaxWidth="100" FontSize="14" Command="{Binding Path = NavigateCommandGenreSearch}" Content="Найти"/>
             </StackPanel>
         </Border>
         <Border Margin="15, 8, 15, 15" Grid.Row="3" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
             <StackPanel Orientation="Vertical">
-                <Label Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск фильмов по компании"/>
+                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск фильмов по компании"/>
                 <ComboBox Margin="5" ItemsSource="{Binding Path=Companies}" SelectedItem="{Binding Path=SelectedCompany, Mode=TwoWay}"/>
                 <Button Margin="3" MaxWidth="100" FontSize="14" Command="{Binding Path = NavigateCommandCompanySearch}" Content="Найти"/>
             </StackPanel>

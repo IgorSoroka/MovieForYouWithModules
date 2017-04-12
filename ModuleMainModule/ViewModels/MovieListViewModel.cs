@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.TMDb;
 using MainModule;
 using ModuleMainModule.Model;
@@ -34,6 +36,13 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _selectedMovie, value); }
         }
 
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+
         private ObservableCollection<Movie> _movies;
         public ObservableCollection<Movie> Movies
         {
@@ -43,48 +52,66 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var type = navigationContext.Parameters["type"] as string;
-            if (type != null)
+            try
             {
-                if(type == "Best")
-                { GetBestMovies();}
-                if(type == "Popular")
-                { GetPopularMovies();}
-                if (type == "Future")
-                {  GetUpComingMovies();}
-                if (type == "Now")
-                { GetNowPlayingMovies();}
+                var type = navigationContext.Parameters["type"] as string;
+                if (type != null)
+                {
+                    if (type == "Best")
+                    {
+                        GetBestMovies();
+                        Title = "Лучшие фильмы";
+                    }
+                    if (type == "Popular")
+                    {
+                        GetPopularMovies();
+                        Title = "Популярные фильмы";
+                    }
+                    if (type == "Future")
+                    {
+                        GetUpComingMovies();
+                        Title = "Скоро в кино";
+                    }
+                    if (type == "Now")
+                    {
+                        GetNowPlayingMovies();
+                        Title = "Сейчас в кино";
+                    }
+                }
+
+                var genre = navigationContext.Parameters["genre"] as string;
+                if (genre != null)
+                { GetMoviesByGenre(genre); }
+
+                var company = navigationContext.Parameters["company"] as string;
+                if (company != null)
+                { GetMoviesByCompany(company); }
+
+                var name = navigationContext.Parameters["name"] as string;
+                if (name != null)
+                { GetMoviesByName(name); }
+
+                var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
+                var selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
+                var selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
+                var selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
+
+                if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
+                { GetMoviesByOnlyRating(selectedRating); }
+                else if (selectedYear != 0)
+                { GetMoviesByYearAndRating(selectedYear, selectedRating); }
+                else if (selectedFirstYear != 0 && selectedLastYear != 0)
+                { GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating); }
+                else if (selectedFirstYear == 0 || selectedLastYear == 0)
+                {
+                    if (selectedFirstYear != 0 && selectedLastYear == 0)
+                    { GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating); }
+                    else if (selectedFirstYear == 0 && selectedLastYear != 0)
+                    { GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating); }
+                }
             }
-
-            var genre = navigationContext.Parameters["genre"] as string;
-            if (genre != null)
-            { GetMoviesByGenre(genre); }
-
-            var company = navigationContext.Parameters["company"] as string;
-            if (company != null)
-            { GetMoviesByCompany(company); }
-
-            var name = navigationContext.Parameters["name"] as string;
-            if (name != null)
-            { GetMoviesByName(name); }
-
-            var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
-            var selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
-            var selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
-            var selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
-
-            if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
-            { GetMoviesByOnlyRating(selectedRating); }
-            else if (selectedYear != 0)
-            { GetMoviesByYearAndRating(selectedYear, selectedRating); }
-            else if (selectedFirstYear != 0 && selectedLastYear != 0)
-            { GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating); }
-            else if (selectedFirstYear == 0 || selectedLastYear == 0)
+            catch (NullReferenceException e)
             {
-                if (selectedFirstYear != 0 && selectedLastYear == 0)
-                { GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating); }
-                else if (selectedFirstYear == 0 && selectedLastYear != 0)
-                { GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating); }
             }
         }
 
@@ -161,6 +188,7 @@ namespace ModuleMainModule.ViewModels
         private async void GetUpComingMovies()
         {
             List<Movie> moviesTest = await Data.GetUpCommingMoviesData();
+            //moviesTest.OrderBy(item => item.ReleaseDate.Value.Date);
             Movies = new ObservableCollection<Movie>(moviesTest);
         }
 

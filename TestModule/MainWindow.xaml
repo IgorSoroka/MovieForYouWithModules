@@ -27,6 +27,11 @@
                     <ribbon:RibbonApplicationMenuItem Header="Закрыть" x:Name="MenuItemClose"/>
                 </ribbon:RibbonApplicationMenu>
             </ribbon:Ribbon.ApplicationMenu>
+            <ribbon:RibbonTab Header="Главная">
+                <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="Главная" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
+                </ribbon:RibbonGroup>
+            </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="Фильмы">
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
