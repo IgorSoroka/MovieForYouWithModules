@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
+using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -48,10 +49,10 @@ namespace ModuleMainModule.ViewModels
 
         #region Methods
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             var type = (int)navigationContext.Parameters["id"];
-            GetDirectActorInfo(type);
+            await GetDirectActorInfo(type);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -62,7 +63,7 @@ namespace ModuleMainModule.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
 
-        private async void GetDirectActorInfo(int id)
+        private async Task GetDirectActorInfo(int id)
         {
             var actor = await Data.GetDirectActorData(id);
             List<PersonCredit> movies = await Data.GetDirectActorMoviesList(id);

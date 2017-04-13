@@ -7,15 +7,16 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Height="auto" Width="auto">
+             Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" Margin="20">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
     <Grid Background="#4C000000" x:Name="GridMain">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Border BorderThickness="1" BorderBrush="Black">
@@ -26,9 +27,9 @@
                 </Grid.ColumnDefinitions>
                 <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Margin="3" Orientation="Vertical">
-                    <TextBlock Foreground="Honeydew" FontSize="14" Text="{Binding Path = Name}"/>
-                    <Label Foreground="Honeydew" Content="Биография"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="130" MaxHeight="250" >
+                        <TextBlock FontSize="20" Foreground="Honeydew" Text="{Binding Path = Name}"/>
+                        <Label FontSize="16" Foreground="Honeydew" Content="Биография"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200" >
                         <TextBlock Foreground="Honeydew" Margin="3" TextWrapping="Wrap" FontSize="14" Text="{Binding Path = Biography}"/>
                     </ScrollViewer>
                 </StackPanel>
@@ -36,18 +37,19 @@
         </Border>
         <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
             <StackPanel  DataContext="{Binding Path=DirectActor}">
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = Name}"/>
-                <Label Foreground="Honeydew" FontSize="12" Content="Об актере"/>
-                <Label Foreground="Honeydew" FontSize="10" Content="Дата рождения"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
-                <Label Foreground="Honeydew" FontSize="10" Content="Место рождения"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = BirthPlace}"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="20" Text="{Binding Path = Name}"/>
+                <Label Foreground="Honeydew" FontSize="16" Content="Об актере"/>
+                <Label Foreground="Honeydew" FontSize="16" Content="Дата рождения"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
+                <Label Foreground="Honeydew" FontSize="16" Content="Место рождения"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = BirthPlace}"/>
+                <Label Foreground="Honeydew" FontSize="16" Content="Домашняя страница"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = HomePage}"/>
             </StackPanel>
         </Border>
         <DockPanel Grid.Row="3" >
-            <Label DockPanel.Dock="Top" Foreground="Honeydew" Content="Фильмография"/>
-                <ScrollViewer  VerticalScrollBarVisibility="Visible" CanContentScroll="True" HorizontalScrollBarVisibility="Visible">
-                <ListBox ItemsSource="{Binding Path = ActorMovies}" SelectedItem="{Binding Path=SelectedActorMovie, Mode=TwoWay}">
+                <Label FontSize="16" DockPanel.Dock="Top" Foreground="Honeydew" Content="Фильмография"/>
+            <ListBox ItemsSource="{Binding Path = ActorMovies}" SelectedItem="{Binding Path=SelectedActorMovie, Mode=TwoWay}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="Background" Value="#4C000000"/>
@@ -96,7 +98,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                </ScrollViewer>
         </DockPanel>
     </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -14,47 +14,30 @@ namespace MainModule
         readonly ServiceClient _first = new ServiceClient("fa314d1331397149188e07fbec92930d");
         readonly CancellationToken _token = new CancellationToken();
 
-        public async Task<List<Movie>> GetPopularMoviesData()
+        public async Task<List<Movie>> GetPopularMoviesData(int page)
         {
-            //try
-            //{
-            //    var movies1 = await _first.Movies.GetPopularAsync("ru", 1, _token);
-            //    List<Movie> popularMovies1 = movies1.Results.ToList();
-            //    //return popularMovies1;
-
-            //    for (int i = 0; i < 100; i++)
-            //    {
-            //        var movies2 = await _first.Movies.GetPopularAsync("ru", 1, _token);
-            //    }
-            //}
-            //catch (System.Net.TMDb.ServiceRequestException e)
-            //{
-            //    int a = 4;
-            //    throw;
-            //}
-
-            var movies = await _first.Movies.GetPopularAsync("ru", 1, _token);
+            var movies = await _first.Movies.GetPopularAsync("ru", page, _token);
             List<Movie> popularMovies = movies.Results.ToList();
             return popularMovies;
         }
 
-        public async Task<List<Movie>> GetNewMoviesData()
+        public async Task<List<Movie>> GetNewMoviesData(int page)
         {
-            var movies = await _first.Movies.GetNowPlayingAsync("ru", 1, _token);
+            var movies = await _first.Movies.GetNowPlayingAsync("ru", page, _token);
             List<Movie> newMovies = movies.Results.ToList();
             return newMovies;
         }
 
-        public async Task<List<Movie>> GetTopRatedMoviesData()
+        public async Task<List<Movie>> GetTopRatedMoviesData(int page)
         {
-            var movies = await _first.Movies.GetTopRatedAsync("ru", 1, _token);
+            var movies = await _first.Movies.GetTopRatedAsync("ru", page, _token);
             List<Movie> topMovies = movies.Results.ToList();
             return topMovies;
         }
 
-        public async Task<List<Movie>> GetUpCommingMoviesData()
+        public async Task<List<Movie>> GetUpCommingMoviesData(int page)
         {
-            var movies = await _first.Movies.GetUpcomingAsync(null, 1, _token);
+            var movies = await _first.Movies.GetUpcomingAsync(null, page, _token);
             List<Movie> upcomingMovies = movies.Results.ToList();
             //upcomingMovies.OrderByDescending(item => item.ReleaseDate.Value.Date);
             return upcomingMovies;
@@ -66,23 +49,23 @@ namespace MainModule
             return movie;
         }
 
-        public async Task<List<Show>> GetPopularShowsData()
+        public async Task<List<Show>> GetPopularShowsData(int page)
         {
-            var shows = await _first.Shows.GetPopularAsync("ru", 1, _token);
+            var shows = await _first.Shows.GetPopularAsync("ru", page, _token);
             List<Show> popularShows = shows.Results.ToList();
             return popularShows;
         }
 
-        public async Task<List<Show>> GetNowShowsData()
+        public async Task<List<Show>> GetNowShowsData(int page)
         {
-            var shows = await _first.Shows.GetAiringAsync("ru", 1, null, _token);
+            var shows = await _first.Shows.GetAiringAsync("ru", page, null, _token);
             List<Show> nowShows = shows.Results.ToList();
             return nowShows;
         }
 
-        public async Task<List<Show>> GetTopRatedShowsData()
+        public async Task<List<Show>> GetTopRatedShowsData(int page)
         {
-            var shows = await _first.Shows.GetTopRatedAsync("ru", 1, _token);
+            var shows = await _first.Shows.GetTopRatedAsync("ru", page, _token);
             List<Show> topRatedShows = shows.Results.ToList();
             return topRatedShows;
         }
@@ -218,16 +201,16 @@ namespace MainModule
             return list;
         }
 
-        public async Task<List<Movie>> GetListOfMoviesByCompany(int companyId)
+        public async Task<List<Movie>> GetListOfMoviesByCompany(int companyId, int page)
         {
-            var searched = await _first.Companies.GetMoviesAsync(companyId, "ru", 1, _token);
+            var searched = await _first.Companies.GetMoviesAsync(companyId, "ru", page, _token);
             List<Movie> list = searched.Results.ToList();
             return list;
         }
 
-        public async Task<List<Movie>> GetListOfMoviesByGenre(int genre)
+        public async Task<List<Movie>> GetListOfMoviesByGenre(int genre, int page)
         {
-            var searched = await _first.Genres.GetMoviesAsync(genre, "ru", true, 1, _token);
+            var searched = await _first.Genres.GetMoviesAsync(genre, "ru", true, page, _token);
             List<Movie> list = searched.Results.ToList();
             return list;
         }

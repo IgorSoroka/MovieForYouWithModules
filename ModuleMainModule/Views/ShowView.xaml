@@ -7,10 +7,14 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Height="auto" Width="auto">
+             Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" Margin="20">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
         <converters:NullToTrueConverter x:Key="NullToTrueConverter"/>
+        <converters:GenresConverter x:Key="GenresConverter"/>
+        <converters:KeywordsConverter x:Key="KeywordsConverter"/>
+        <converters:CountiesConverter x:Key="CountriesConverter"/>
+        <converters:NetworkConverter x:Key="NetworkConverter"/>
     </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Visible">
         <Grid Background="#4C000000" x:Name="GridMain">
@@ -27,15 +31,18 @@
                 </Grid.ColumnDefinitions>
                 <Image Margin="3" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Orientation="Vertical">
-                    <TextBlock Foreground="Honeydew"  FontSize="14" Text="{Binding Path = Name}"/>
-                    <Label Foreground="Honeydew" Content="Сюжет"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="130" MaxHeight="250">
+                    <TextBlock Foreground="Honeydew"  FontSize="20" Text="{Binding Path = Name}"/>
+                    <Label FontSize="16" Foreground="Honeydew" Content="Сюжет"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="250">
                         <TextBlock Foreground="Honeydew"  TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
                     </ScrollViewer>
+                    <Button FontSize="16" Height="35" Content="Смотреть трейлер" Command="{Binding NavigateCommandShowTrailler}"
+                            DataContext="{Binding ElementName=GridMain, Path=DataContext}"
+                            IsEnabled="{Binding Path=VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Row="1">
-                <Label Foreground="Honeydew" Content="Состав"/>
+                <Label FontSize="16" Foreground="Honeydew" Content="Состав"/>
                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Crew}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
@@ -71,7 +78,7 @@
                 </ListBox>
             </StackPanel>
             <StackPanel Grid.Row="2">
-                <Label Foreground="Honeydew" Content="В главных ролях"/>
+                <Label FontSize="16" Foreground="Honeydew" Content="В главных ролях"/>
                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Cast}" 
                          SelectedItem="{Binding Path=SelectedActor}">
                     <ListBox.ItemContainerStyle>
@@ -98,14 +105,6 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <!--<DataTemplate.Triggers>
-                                <Trigger Property="ListBoxItem.IsSelected" Value="True">
-                                    <Setter Property="Button.IsEnabled" Value="True"></Setter>
-                                </Trigger>
-                                <Trigger Property="ListBoxItem.IsSelected" Value="False">
-                                    <Setter Property="Button.IsEnabled" Value="False"></Setter>
-                                </Trigger>
-                            </DataTemplate.Triggers>-->
                             <StackPanel MinWidth="150" Orientation="Vertical">
                                 <Image Height="70" Width="70" Source="{Binding Profile, Converter={StaticResource PathConverter}}"/>
                                 <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Path = Name}"/>
@@ -128,17 +127,63 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button FontSize="16" Height="35" Content="Смотреть трейлер" Command="{Binding NavigateCommandShowTrailler}"
-                        IsEnabled="{Binding Path=VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
             </StackPanel>
             <StackPanel Grid.Row="3" DataContext="{Binding Path=DirectShow}">
-                <Label Foreground="Honeydew"  FontSize="12" Content="О фильме"/>
-                <Label Foreground="Honeydew"  FontSize="10" Content="Оригинальное название"/>
-                <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = OriginalName}"/>
-                <Label Foreground="Honeydew"  FontSize="10" Content="Премьера"/>
-                <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}"/>
-                <Label Foreground="Honeydew"  FontSize="10" Content="Домашняя страница"/>
-                <TextBlock Foreground="Honeydew"  Margin="3" FontSize="12" Text="{Binding Path = HomePage}"/>
+                <Label FontSize="16" Foreground="Honeydew"  Content="О фильме"/>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Оригинальное название"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="14" Text="{Binding Path = OriginalName}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Количество сезонов"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="14" Text="{Binding Path = SeasonCount}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Количество вышедших серий"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="14" Text="{Binding Path = EpisodeCount}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="14" Content="Премьера"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="14" Content="Последняя вышедшая серия"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = LastAirDate, StringFormat=D, ConverterCulture=ru-RU}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="14" Content="Рейтинг сериала"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = VoteAverage}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="14" Content="Количество оценок"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = VoteCount}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Жанры"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Genres, Converter={StaticResource GenresConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Сети производители"/>
+                </StackPanel>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Networks, Converter={StaticResource NetworkConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Страны производители"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Countries, Converter={StaticResource CountriesConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Ключевые слова"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Keywords, Converter={StaticResource KeywordsConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="14" Content="Статус"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Status}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="14" Content="Домашняя страница"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = HomePage}"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
     </ScrollViewer>

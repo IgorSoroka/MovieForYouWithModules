@@ -12,7 +12,15 @@
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
     <DockPanel LastChildFill="True" x:Name="DockPanelMain">
-        <Label FontSize="15" DockPanel.Dock="Top" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"></Label>
+        <Label FontSize="15" DockPanel.Dock="Top" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"/>
+        <Grid DockPanel.Dock="Bottom" Height="35">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button FontSize="17"  Content="Предыдущая" Command="{Binding NavigateCommandShowPriviousPage}"/>
+            <Button FontSize="17" Grid.Column="1" Content="Следующая" Command="{Binding NavigateCommandShowNextPage}"/>
+        </Grid>
         <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" CanContentScroll="True">
             <ListBox ItemsSource="{Binding Path=Movies}" SelectedItem="{Binding Path=SelectedMovie, Mode=TwoWay}">
             <ListBox.ItemContainerStyle>

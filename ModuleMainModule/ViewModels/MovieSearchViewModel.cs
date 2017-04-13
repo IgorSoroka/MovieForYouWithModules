@@ -84,19 +84,7 @@ namespace ModuleMainModule.ViewModels
             set
             { SetProperty(ref _selectedFirstYear, value); }
         }
-
-        //private ObservableCollection<int> YearsAfter(int? value)
-        //{
-        //    ObservableCollection<int> years = GetYearsList();
-        //    List<int> yearsAfter = new List<int>();
-        //    foreach (var item in years)
-        //    {
-        //        if(item > value)
-        //            yearsAfter.Add(item);
-        //    }
-        //    return new ObservableCollection<int>(yearsAfter);
-        //}
-
+        
         private int? _selectedLastYear;
         public int? SelectedLastYear
         {

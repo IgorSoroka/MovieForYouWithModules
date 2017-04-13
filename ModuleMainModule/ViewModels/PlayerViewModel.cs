@@ -1,5 +1,4 @@
 ﻿using System;
-using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;

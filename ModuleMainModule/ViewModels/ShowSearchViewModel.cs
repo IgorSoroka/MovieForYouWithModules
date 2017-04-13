@@ -21,46 +21,6 @@ namespace ModuleMainModule.ViewModels
             YearsList = GetYearsList();
         }
 
-        #region Methods
-
-        private void Reset()
-        {
-            SelectedFirstYear = null;
-            SelectedLastYear = null;
-            SelectedRating = 0;
-            SelectedYear = null;
-        }
-
-        private void NameSearch()
-        {
-            var parameters = new NavigationParameters {{"name", Name}};
-            _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
-        }
-
-        private void Search()
-        {
-            var parameters = new NavigationParameters
-            {
-                {"SelectedYear", SelectedYear ?? 0},
-                {"SelectedFirstYear", SelectedFirstYear ?? 0},
-                {"SelectedLastYear", SelectedLastYear ?? 0},
-                {"SelectedRating", SelectedRating}
-            };
-            _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
-        }
-
-        private ObservableCollection<int> GetYearsList()
-        {
-            ObservableCollection<int> years = new ObservableCollection<int>();
-            for (int i = 2017; i >= 1900; i--)
-            {
-                years.Add(i);
-            }
-            return years;
-        }
-
-        #endregion
-
         #region Properties
 
         private ObservableCollection<int> _yearsList;
@@ -103,6 +63,46 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void Reset()
+        {
+            SelectedFirstYear = null;
+            SelectedLastYear = null;
+            SelectedRating = 0;
+            SelectedYear = null;
+        }
+
+        private void NameSearch()
+        {
+            var parameters = new NavigationParameters { { "name", Name } };
+            _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+        }
+
+        private void Search()
+        {
+            var parameters = new NavigationParameters
+            {
+                {"SelectedYear", SelectedYear ?? 0},
+                {"SelectedFirstYear", SelectedFirstYear ?? 0},
+                {"SelectedLastYear", SelectedLastYear ?? 0},
+                {"SelectedRating", SelectedRating}
+            };
+            _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+        }
+
+        private ObservableCollection<int> GetYearsList()
+        {
+            ObservableCollection<int> years = new ObservableCollection<int>();
+            for (int i = 2017; i >= 1900; i--)
+            {
+                years.Add(i);
+            }
+            return years;
         }
 
         #endregion

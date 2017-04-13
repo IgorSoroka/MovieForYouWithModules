@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.TMDb;
 using MainModule;
@@ -102,11 +101,11 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Movie> moviesTest = await Data.GetPopularMoviesData();
+                List<Movie> moviesTest = await Data.GetPopularMoviesData(1);
                 BestMovie = moviesTest.First();
                 SecondMovie = moviesTest[1];
                 ThirdMovie = moviesTest[2];
-                List<Show> showsTest = await Data.GetPopularShowsData();
+                List<Show> showsTest = await Data.GetPopularShowsData(1);
                 BestShow = showsTest.First();
                 SecondShow = showsTest[1];
                 ThirdShow = showsTest[2];

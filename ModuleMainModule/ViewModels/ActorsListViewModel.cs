@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
+using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -20,12 +21,6 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowDirectActor = new DelegateCommand(ShowDirectActor);
         }
 
-        private void ShowDirectActor()
-        {
-            var parameters = new NavigationParameters {{"id", SelectedSearchedActor.Id}};
-            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
-        }
-
         private Person _selectedSearchedActor;
         public Person SelectedSearchedActor
         {
@@ -40,17 +35,11 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _actorsList, value); }
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             var name = navigationContext.Parameters["name"] as string;
             if (name != null)
-                GetSearchedActors(name);
-        }
-        
-        private async void GetSearchedActors(string name)
-        {
-            List<Person> actorsTest = await Data.GetActorsByName(name);
-            ActorsList = new ObservableCollection<Person>(actorsTest);
+                await GetSearchedActors(name);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -60,5 +49,17 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
+
+        private async Task GetSearchedActors(string name)
+        {
+            List<Person> actorsTest = await Data.GetActorsByName(name);
+            ActorsList = new ObservableCollection<Person>(actorsTest);
+        }
+
+        private void ShowDirectActor()
+        {
+            var parameters = new NavigationParameters { { "id", SelectedSearchedActor.Id } };
+            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+        }
     }
 }

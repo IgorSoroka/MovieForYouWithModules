@@ -7,10 +7,14 @@
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Height="auto" Width="auto">
+             Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" Margin="20">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
         <converters:NullToTrueConverter x:Key="NullToTrueConverter"/>
+        <converters:GenresConverter x:Key="GenresConverter"/>
+        <converters:CompaniesConverter x:Key="CompaniesConverter"/>
+        <converters:KeywordsConverter x:Key="KeywordsConverter"/>
+        <converters:CountiesConverter x:Key="CountriesConverter"/>
     </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Visible">
         <Grid Background="#4C000000" x:Name="GridMain">
@@ -28,14 +32,18 @@
                 <Image Margin="3" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Orientation="Vertical">
                     <TextBlock Foreground="Honeydew" FontSize="20" Text="{Binding Path = Title}"/>
-                    <Label Foreground="Honeydew" Content="Сюжет"/>
+                    <TextBlock Foreground="Honeydew" FontSize="14" Text="{Binding Path = TagLine}"/>
+                    <Label FontSize="16" Foreground="Honeydew" Content="Сюжет"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="130" MaxHeight="250" >
                         <TextBlock Foreground="Honeydew" TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
                     </ScrollViewer>
+                    <Button FontSize="16" Height="35" Content="Смотреть трейлер" Command="{Binding NavigateCommandShowTrailler}"
+                            DataContext="{Binding ElementName=GridMain, Path=DataContext}"
+                            IsEnabled="{Binding Path=VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Row="1">
-                <Label Foreground="Honeydew" Content="Состав"/>
+                <Label FontSize="16" Foreground="Honeydew" Content="Состав"/>
                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Crew}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
@@ -71,7 +79,7 @@
                 </ListBox>
             </StackPanel>
             <StackPanel Grid.Row="2">
-                <Label Foreground="Honeydew" Content="В главных ролях"/>
+                <Label FontSize="16" Foreground="Honeydew" Content="В главных ролях"/>
                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path = Cast}" 
                          SelectedItem="{Binding Path=SelectedActor, Mode=TwoWay}">
                     <ListBox.ItemContainerStyle>
@@ -120,17 +128,57 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button FontSize="16" Height="35" Content="Смотреть трейлер" Command="{Binding NavigateCommandShowTrailler}"
-                        IsEnabled="{Binding Path=VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
             </StackPanel>
             <StackPanel Grid.Row="3" DataContext="{Binding Path=DirectMovie}">
-                <Label FontSize="12" Foreground="Honeydew" Content="О фильме"/>
-                <Label FontSize="10" Foreground="Honeydew" Content="Оригинальное название"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = OriginalTitle}"/>
-                <Label Foreground="Honeydew" FontSize="10" Content="Бюджет"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = Budget}"/>
-                <Label Foreground="Honeydew" FontSize="10" Content="Домашняя страница"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="12" Text="{Binding Path = HomePage}"/>
+                <Label FontSize="18" Foreground="Honeydew" Content="О фильме"/>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label FontSize="16" Foreground="Honeydew" Content="Оригинальное название"/>
+                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = OriginalTitle}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Премьера"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Продолжительность"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Runtime}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="Бюджет"/>
+                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = Budget}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="Сборы"/>
+                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = Revenue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Рейтинг фильма"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = VoteAverage}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Количество оценок"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = VoteCount}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Жанры"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Genres, Converter={StaticResource GenresConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Страны производители"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Countries, Converter={StaticResource CountriesConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Ключевые слова"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Keywords, Converter={StaticResource KeywordsConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew"  FontSize="16" Content="Компании"/>
+                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Path = Companies, Converter={StaticResource CompaniesConverter}}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="Домашняя страница"/>
+                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = HomePage}"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
     </ScrollViewer>

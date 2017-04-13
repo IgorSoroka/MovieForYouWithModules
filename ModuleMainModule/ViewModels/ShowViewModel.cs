@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
+using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -64,12 +65,12 @@ namespace ModuleMainModule.ViewModels
 
         #region Methods
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             VideoUrl = null;
             var type = (int)navigationContext.Parameters["id"];
-            GetDirectShowInfo(type);
-            GetVideoUrl(type);
+            await GetDirectShowInfo(type);
+            await GetVideoUrl(type);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -78,7 +79,7 @@ namespace ModuleMainModule.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
 
-        private async void GetVideoUrl(int id)
+        private async Task GetVideoUrl(int id)
         {
             var video = await Data.GetTraillerShow(id);
             if (video != null)
@@ -97,10 +98,10 @@ namespace ModuleMainModule.ViewModels
             _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
         }
 
-        private async void GetDirectShowInfo(int id)
+        private async Task GetDirectShowInfo(int id)
         {
             var show = await Data.GetDirectShowData(id);
-            List<MediaCrew> crews = (show.Credits.Crew).Take(20).ToList();
+            List<MediaCrew> crews = (show.Credits.Crew).Take(10).ToList();
             List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList();
             DirectShow = show;
             Crew = new ObservableCollection<MediaCrew>(crews);

@@ -20,14 +20,20 @@
             <ColumnDefinition  Width="*"/>
         </Grid.ColumnDefinitions>
         <ribbon:Ribbon Grid.ColumnSpan="2" Background="#FF595959">
-            <ribbon:Ribbon.ApplicationMenu>
+            <!--<ribbon:Ribbon.Background>
+                    <ImageBrush ImageSource="/Images/MenuBackground.jpg" Stretch="UniformToFill"/>
+                </ribbon:Ribbon.Background>-->
+            <!--<ribbon:Ribbon.ApplicationMenu>
                 <ribbon:RibbonApplicationMenu>
                     <ribbon:RibbonApplicationMenuItem Header="Свернуть" x:Name="MenuItemMin"/>
                     <ribbon:RibbonApplicationMenuItem Header="Развернуть" x:Name="MenuItemOpen"/>
                     <ribbon:RibbonApplicationMenuItem Header="Закрыть" x:Name="MenuItemClose"/>
                 </ribbon:RibbonApplicationMenu>
-            </ribbon:Ribbon.ApplicationMenu>
+            </ribbon:Ribbon.ApplicationMenu>-->
             <ribbon:RibbonTab Header="Главная">
+                <!--<ribbon:RibbonTab.Background>
+                    <ImageBrush ImageSource="/Images/MenuBackground.jpg" Stretch="UniformToFill"/>
+                </ribbon:RibbonTab.Background>-->
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="Главная" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
                 </ribbon:RibbonGroup>
@@ -59,7 +65,7 @@
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="Поиск">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Найти фильм" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
+                    <ribbon:RibbonButton Height="100" Width="100" Label="Найти фильм"  FocusedBackground="Black" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="Найти сериал" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
@@ -80,7 +86,7 @@
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="0" >
             <DockPanel.Background>
-                <ImageBrush ImageSource="/Images/grey.jpg" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="/Images/MainBackground.jpg" Stretch="UniformToFill"/>
             </DockPanel.Background>
             <ContentControl   prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
         </DockPanel>

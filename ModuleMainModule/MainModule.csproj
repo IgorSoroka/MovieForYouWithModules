@@ -94,7 +94,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\CompaniesConverter.cs" />
+    <Compile Include="Converters\CountiesConverter.cs" />
+    <Compile Include="Converters\GenresConverter.cs" />
     <Compile Include="Converters\ImageUrlConverter.cs" />
+    <Compile Include="Converters\KeywordsConverter.cs" />
+    <Compile Include="Converters\NetworkConverter.cs" />
     <Compile Include="Converters\NullToFalseConverter.cs" />
     <Compile Include="Converters\VideoUrlConverter.cs" />
     <Compile Include="Model\DataCast.cs" />

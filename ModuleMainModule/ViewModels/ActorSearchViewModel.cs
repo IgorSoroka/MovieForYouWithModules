@@ -1,6 +1,5 @@
-﻿using System;
-using System.Net.Sockets;
-using System.Net.TMDb;
+﻿using System.Net.TMDb;
+using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
