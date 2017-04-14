@@ -17,7 +17,7 @@ namespace ModuleMainModule.Converters
                 IEnumerable<Genre> genres = value as IEnumerable<Genre>;
                 for (int i = 0; i < genres.Count(); i++)
                 {
-                    result = System.IO.Path.Combine(result, " ", genres.ElementAt(i).Name);
+                    result = System.IO.Path.Combine(result, " ", genres.ElementAt(i).Name.Trim('/'));
                 }
                 return result;
             }

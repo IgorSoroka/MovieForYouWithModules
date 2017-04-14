@@ -166,12 +166,6 @@
     <Resource Include="Images\noImage3.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\wallpaper.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\grey.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +178,18 @@
     <Resource Include="Images\ActorSearch.jpg" />
     <Resource Include="Images\MovieSearch.jpg" />
     <Resource Include="Images\ShowSearch.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MovieBest.jpg" />
+    <Resource Include="Images\MovieFuture.jpg" />
+    <Resource Include="Images\MovieNow.jpg" />
+    <Resource Include="Images\MoviePopular.jpg" />
+    <Resource Include="Images\ShowBest.jpg" />
+    <Resource Include="Images\ShowNow.jpg" />
+    <Resource Include="Images\ShowPopular.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\icon.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

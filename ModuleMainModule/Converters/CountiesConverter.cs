@@ -17,7 +17,7 @@ namespace ModuleMainModule.Converters
                 IEnumerable<Country> countries = value as IEnumerable<Country>;
                 for (int i = 0; i < countries.Count(); i++)
                 {
-                    result = System.IO.Path.Combine(result, " ", countries.ElementAt(i).Name);
+                    result = System.IO.Path.Combine(result, " ", countries.ElementAt(i).Name.Trim('/'));
                 }
                 return result;
             }

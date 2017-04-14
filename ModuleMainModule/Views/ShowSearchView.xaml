@@ -12,7 +12,8 @@
     <UserControl.Resources>
         <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
     </UserControl.Resources>
-    <Grid Background="#4C000000">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Background="#4C000000">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -62,4 +63,5 @@
             </StackPanel>
         </Border>
     </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -52,3 +52,4 @@ d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\Views\S
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\ModuleMainModule.g.resources
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\ModuleMainModule.dll
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\ModuleMainModule.pdb
+d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\MainModule.csprojResolveAssemblyReference.cache

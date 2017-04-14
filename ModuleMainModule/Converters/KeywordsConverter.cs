@@ -18,7 +18,7 @@ namespace ModuleMainModule.Converters
                 IEnumerable<Keyword> key = keywords.Results;
                 for (int i = 0; i < key.Count(); i++)
                 {
-                    result = System.IO.Path.Combine(result, " ", key.ElementAt(i).Name);
+                    result = System.IO.Path.Combine(result, " ", key.ElementAt(i).Name.Trim('/'));
                 }
                 return result;
             }

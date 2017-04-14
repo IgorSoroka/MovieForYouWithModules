@@ -8,11 +8,12 @@
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Width="auto" MaxWidth="500" Height="auto" MaxHeight="685">
+             MaxWidth="500" MaxHeight="685">
     <UserControl.Resources>
         <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
     </UserControl.Resources>
-    <Grid Background="#4C000000">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Background="#4C000000">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -79,4 +80,5 @@
             </StackPanel>
         </Border>
     </Grid>
+    </ScrollViewer>
 </UserControl>

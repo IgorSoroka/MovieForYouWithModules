@@ -19,7 +19,7 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition  Width="*"/>
         </Grid.ColumnDefinitions>
-        <ribbon:Ribbon Grid.ColumnSpan="2" Background="#FF595959">
+        <ribbon:Ribbon Grid.ColumnSpan="2" Foreground="Snow" Background="#FF595959">
             <!--<ribbon:Ribbon.Background>
                     <ImageBrush ImageSource="/Images/MenuBackground.jpg" Stretch="UniformToFill"/>
                 </ribbon:Ribbon.Background>-->
@@ -35,43 +35,43 @@
                     <ImageBrush ImageSource="/Images/MenuBackground.jpg" Stretch="UniformToFill"/>
                 </ribbon:RibbonTab.Background>-->
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Главная" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
+                    <ribbon:RibbonButton Label="Главная" HorizontalAlignment="Center" LargeImageSource="/Images/icon.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="Фильмы">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
+                    <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieBest.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Популярные" HorizontalAlignment="Center" Command="{Binding NavigateCommandListMovie}" CommandParameter="Popular"/>
+                    <ribbon:RibbonButton Label="Популярные" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MoviePopular.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Popular"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="">
-                    <ribbon:RibbonButton Label="Скоро в кино" HorizontalAlignment="Center" Command="{Binding NavigateCommandListMovie}" CommandParameter="Future"/>
+                    <ribbon:RibbonButton Label="Скоро в кино" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieFuture.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Future"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Сейчас в кино" HorizontalAlignment="Center" Command="{Binding NavigateCommandListMovie}" CommandParameter="Now"/>
+                    <ribbon:RibbonButton Label="Сейчас в кино" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieNow.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Now"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="Сериалы">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center"  Command="{Binding NavigateCommandListShow}" CommandParameter="Best"/>
+                    <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowBest.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Best"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Популярные" HorizontalAlignment="Center"  Command="{Binding NavigateCommandListShow}" CommandParameter="Popular"/>
+                    <ribbon:RibbonButton Label="Популярные" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowPopular.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Popular"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Сейчас на ТВ" HorizontalAlignment="Center"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
+                    <ribbon:RibbonButton Label="Сейчас на ТВ" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowNow.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="Поиск">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Height="100" Width="100" Label="Найти фильм"  FocusedBackground="Black" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
+                    <ribbon:RibbonButton Label="Найти фильм" Width="100" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Найти сериал" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
+                    <ribbon:RibbonButton Label="Найти сериал" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ShowSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Найти актера" HorizontalAlignment="Center" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
+                    <ribbon:RibbonButton Label="Найти актера" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ActorSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="Справка">
@@ -82,13 +82,13 @@
             </ribbon:RibbonTab>
         </ribbon:Ribbon>
         <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Background="#4C000000">
-                <ContentControl  prism:RegionManager.RegionName="ListRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+                <ContentControl prism:RegionManager.RegionName="ListRegion" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="0" >
             <DockPanel.Background>
                 <ImageBrush ImageSource="/Images/MainBackground.jpg" Stretch="UniformToFill"/>
             </DockPanel.Background>
-            <ContentControl   prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"/>
+            <ContentControl prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </DockPanel>
     </Grid>
 </Window>

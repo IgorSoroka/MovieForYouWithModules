@@ -17,7 +17,8 @@ namespace ModuleMainModule.Converters
                 IEnumerable<Company> companies = value as IEnumerable<Company>;
                 for (int i = 0; i < companies.Count(); i++)
                 {
-                    result = System.IO.Path.Combine(result, " ", companies.ElementAt(i).Name);
+                    string item = companies.ElementAt(i).Name.TrimStart('\\');
+                    result = System.IO.Path.Combine(result, " ", item);
                 }
                 return result;
             }

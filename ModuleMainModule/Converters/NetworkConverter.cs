@@ -17,7 +17,7 @@ namespace ModuleMainModule.Converters
                 IEnumerable<Network> networks = value as IEnumerable<Network>;
                 for (int i = 0; i < networks.Count(); i++)
                 {
-                    result = System.IO.Path.Combine(result, " ", networks.ElementAt(i).Name);
+                    result = System.IO.Path.Combine(result, " ", networks.ElementAt(i).Name.Trim('/'));
                 }
                 return result;
             }
