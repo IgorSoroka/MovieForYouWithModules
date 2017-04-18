@@ -21,8 +21,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button FontSize="15" VerticalContentAlignment="Center" Margin="3" Content="Предыдущая" Command="{Binding NavigateCommandShowPriviousPage}"/>
-            <Button FontSize="15" VerticalContentAlignment="Center" Margin="3" Grid.Column="1" Content="Следующая" Command="{Binding NavigateCommandShowNextPage}"/>
+                <Button FontSize="15" VerticalContentAlignment="Center" Margin="3" Content="{Binding Privious}" Command="{Binding NavigateCommandShowPriviousPage}"/>
+                <Button FontSize="15" VerticalContentAlignment="Center" Margin="3" Grid.Column="1" Content="{Binding Next}" Command="{Binding NavigateCommandShowNextPage}"/>
         </Grid>
         </Border>
         <ScrollViewer Margin="5" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" CanContentScroll="True">
@@ -45,21 +45,21 @@
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
-                <DataTemplate>
+                <!--<DataTemplate>
                     <StackPanel Orientation="Horizontal"  Margin="5">
                         <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}" Height="100" Width="100"/>
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Path = Name}" Margin="3" FontSize="14"/>
-                            <TextBlock Text="{Binding Path = OriginalName}" Margin="3" FontSize="14"/>
-                            <TextBlock Text="{Binding Path = FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}" Margin="3" FontSize="14"/>
+                            <TextBlock Text="{Binding Name}" Margin="3" FontSize="14"/>
+                            <TextBlock Text="{Binding OriginalName}" Margin="3" FontSize="14"/>
+                            <TextBlock Text="{Binding FirstAirDate, StringFormat=D, ConverterCulture=ru-RU}" Margin="3" FontSize="14"/>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50"></ColumnDefinition>
                                     <ColumnDefinition Width="150"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Path = VoteAverage}" Margin="3" FontSize="14"/>
-                                <Button Grid.Column="1" FontSize="12" DataContext="{Binding ElementName=DockPanelMain, Path=DataContext}"
-                                        Command="{Binding Path=NavigateCommandShowDirectShow}" Content="Подробнее">
+                                <TextBlock Grid.Column="0" Text="{Binding VoteAverage}" Margin="3" FontSize="14"/>
+                                    <Button Grid.Column="1" FontSize="12" Command="{Binding Path=NavigateCommandShowDirectShow}" Content="Подробнее" 
+                                            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
                                         <Button.Style>
                                             <Style TargetType="{x:Type Button}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -75,8 +75,39 @@
                             </Grid>
                         </StackPanel>
                     </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
+                </DataTemplate>-->
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <Grid Height="200" Width="310">
+                                <Image Grid.RowSpan="2" Stretch="Fill"  Source="{Binding Backdrop, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch"/>
+                                <Label Content="{Binding Path = OriginalName}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                                    <Label.Background>
+                                        <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                    </Label.Background>
+                                </Label>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                            </Grid>
+                            <Button FontSize="12" HorizontalAlignment="Stretch" Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectShow}"
+                                        DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                    AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+
+                </ListBox.ItemTemplate>
         </ListBox>
         </ScrollViewer>
     </DockPanel>

@@ -41,3 +41,12 @@ d:\Курсы\стажировка\TestModule\TestModule\obj\Debug\TestModule.Pr
 d:\Курсы\стажировка\TestModule\TestModule\obj\Debug\Test.csproj.GenerateResource.Cache
 d:\Курсы\стажировка\TestModule\TestModule\obj\Debug\TestModule.exe
 d:\Курсы\стажировка\TestModule\TestModule\obj\Debug\TestModule.pdb
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\EntityFramework.dll
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\EntityFramework.SqlServer.dll
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\MovieForYou.DAL.dll
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\AutoMapper.dll
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\EntityFramework.xml
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\EntityFramework.SqlServer.xml
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\MovieForYou.DAL.pdb
+d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\AutoMapper.xml
+d:\Курсы\стажировка\TestModule\TestModule\obj\Debug\TestModule_MarkupCompile.lref

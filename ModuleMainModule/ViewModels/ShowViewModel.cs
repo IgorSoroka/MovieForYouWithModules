@@ -4,6 +4,9 @@ using System.Linq;
 using System.Net.TMDb;
 using System.Threading.Tasks;
 using MainModule;
+using ModuleMainModule.Interfaces;
+using ModuleMainModule.Model;
+using ModuleMainModule.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -16,13 +19,134 @@ namespace ModuleMainModule.ViewModels
         static readonly GetData Data = new GetData();
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public DelegateCommand NavigateCommandShowTrailler { get; private set; }
+        public DelegateCommand NavigateCommandAddToDb { get; private set; }
+        static readonly IShowService ShowService = new ShowService();
 
         public ShowViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
             NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
             NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
+            NavigateCommandAddToDb = new DelegateCommand(AddToDb);
         }
+
+        #region Constants
+
+        private const string _plot = "Сюжет";
+        public string Plot
+        {
+            get { return _plot; }
+        }
+
+        private const string _addFavorites = "Добавить в избранное";
+        public string AddFavorites
+        {
+            get { return _addFavorites; }
+        }
+
+        private const string _trailer = "Смотреть трейлер";
+        public string Trailer
+        {
+            get { return _trailer; }
+        }
+
+        private const string _showCast = "Состав";
+        public string ShowCast
+        {
+            get { return _showCast; }
+        }
+
+        private const string _mainRoles = "В главных ролях";
+        public string MainRoles
+        {
+            get { return _mainRoles; }
+        }
+
+        private const string _originalName = "Оригинальное название";
+        public string OriginalName
+        {
+            get { return _originalName; }
+        }
+
+        private const string _seasonsNumber = "Количество сезонов";
+        public string SeasonsNumber
+        {
+            get { return _seasonsNumber; }
+        }
+
+        private const string _seriesNumber = "Количество вышедших серий";
+        public string SeriesNumber
+        {
+            get { return _seriesNumber; }
+        }
+
+        private const string _raiting = "Рейтинг";
+        public string Raiting
+        {
+            get { return _raiting; }
+        }
+
+        private const string _voteCount = "Количество голосов";
+        public string VoteCount
+        {
+            get { return _voteCount; }
+        }
+
+        private const string _genres = "Жанры";
+        public string Genres
+        {
+            get { return _genres; }
+        }
+
+        private const string _networks = "Сети производители";
+        public string Networks
+        {
+            get { return _networks; }
+        }
+
+        private const string _countries = "Страны производители";
+        public string Countries
+        {
+            get { return _countries; }
+        }
+
+        private const string _keywords = "Ключевые слова";
+        public string Keywords
+        {
+            get { return _keywords; }
+        }
+
+        private const string _status = "Статус";
+        public string Status
+        {
+            get { return _status; }
+        }
+
+        private const string _homePage = "Домашняя страница";
+        public string HomePage
+        {
+            get { return _homePage; }
+        }
+
+        private const string _premiere = "Премьера первой серии";
+        public string Premiere
+        {
+            get { return _premiere; }
+        }
+
+        private const string _lastSeries = "Последняя вышедшая серия";
+        public string LastSeries
+        {
+            get { return _lastSeries; }
+        }
+
+        private const string _aboutShow = "О сериале";
+        public string AboutShow
+        {
+            get { return _aboutShow; }
+        }
+
+        #endregion
 
         #region Properties
 
@@ -106,6 +230,14 @@ namespace ModuleMainModule.ViewModels
             DirectShow = show;
             Crew = new ObservableCollection<MediaCrew>(crews);
             Cast = new ObservableCollection<MediaCast>(casts);
+        }
+
+        private void AddToDb()
+        {
+            ShowDTO show = new ShowDTO() { Name = DirectShow.Name, Id = DirectShow.Id, Rating = 7 };
+            IEnumerable<ShowDTO> shows = ShowService.GetShows();
+            ShowService.TakeShow(show);
+            IEnumerable<ShowDTO> showsPast = ShowService.GetShows();
         }
 
         #endregion

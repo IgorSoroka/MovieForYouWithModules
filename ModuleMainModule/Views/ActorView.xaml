@@ -27,28 +27,35 @@
                 </Grid.ColumnDefinitions>
                 <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Margin="3" Orientation="Vertical">
-                        <TextBlock FontSize="20" Foreground="Honeydew" Text="{Binding Path = Name}"/>
-                        <Label FontSize="16" Foreground="Honeydew" Content="Биография"/>
+                        <TextBlock FontSize="20" Foreground="Honeydew" Text="{Binding Name}"/>
+                        <Label FontSize="16" Foreground="Honeydew" Content="{Binding Biography}"
+                               DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200" >
-                        <TextBlock Foreground="Honeydew" Margin="3" TextWrapping="Wrap" FontSize="14" Text="{Binding Path = Biography}"/>
+                        <TextBlock Foreground="Honeydew" Margin="3" TextWrapping="Wrap" FontSize="14" Text="{Binding Biography}"/>
                     </ScrollViewer>
-                </StackPanel>
+                        <Button FontSize="16" Height="35" Content="{Binding AddFavorites}" Command="{Binding NavigateCommandAddToDb}"
+                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    </StackPanel>
             </Grid>
         </Border>
         <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
             <StackPanel  DataContext="{Binding Path=DirectActor}">
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="20" Text="{Binding Path = Name}"/>
-                <Label Foreground="Honeydew" FontSize="16" Content="Об актере"/>
-                <Label Foreground="Honeydew" FontSize="16" Content="Дата рождения"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
-                <Label Foreground="Honeydew" FontSize="16" Content="Место рождения"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = BirthPlace}"/>
-                <Label Foreground="Honeydew" FontSize="16" Content="Домашняя страница"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Path = HomePage}"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="20" Text="{Binding Name}"/>
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding AboutActor}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorBirthday}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorBirthPlace}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding BirthPlace}"/>
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorHomePage}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding HomePage}"/>
             </StackPanel>
         </Border>
         <DockPanel Grid.Row="3" >
-                <Label FontSize="16" DockPanel.Dock="Top" Foreground="Honeydew" Content="Фильмография"/>
+                <Label FontSize="16" DockPanel.Dock="Top" Foreground="Honeydew" Content="{Binding Filmography}"/>
             <ListBox ItemsSource="{Binding Path = ActorMovies}" SelectedItem="{Binding Path=SelectedActorMovie, Mode=TwoWay}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
@@ -79,9 +86,9 @@
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Margin="3" FontSize="12" Text="{Binding Path = Title}"/>
                                     <TextBlock Margin="3" FontSize="12" Text="{Binding Path = ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
-                                    <Button FontSize="12" Width="150" HorizontalAlignment="Left" DataContext="{Binding ElementName=GridMain, Path=DataContext}"
-                                            Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectMovie}">
-                                        <Button.Style>
+                                    <Button FontSize="12" Width="150" Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectMovie}" HorizontalAlignment="Left" 
+                                            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
+                                            <Button.Style>
                                             <Style TargetType="{x:Type Button}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
                                                 <Style.Triggers>

@@ -30,6 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EO.Base, Version=17.1.14.0, Culture=neutral, PublicKeyToken=e92353a6bf73fffc, processorArchitecture=MSIL">
       <HintPath>..\packages\EO.Wpf.17.1.14.0\lib\EO.Base.dll</HintPath>
       <Private>True</Private>
@@ -77,6 +89,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -102,15 +115,24 @@
     <Compile Include="Converters\NetworkConverter.cs" />
     <Compile Include="Converters\NullToFalseConverter.cs" />
     <Compile Include="Converters\VideoUrlConverter.cs" />
+    <Compile Include="Interfaces\IActorService.cs" />
+    <Compile Include="Interfaces\IMovieService.cs" />
+    <Compile Include="Interfaces\IShowService.cs" />
+    <Compile Include="Model\ActorDTO.cs" />
     <Compile Include="Model\DataCast.cs" />
     <Compile Include="Model\DataCrew.cs" />
     <Compile Include="Model\GetData.cs" />
+    <Compile Include="Model\MovieDTO.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\RepositoryCompanies.cs" />
     <Compile Include="Model\RepositoryGenres.cs" />
+    <Compile Include="Model\ShowDTO.cs" />
     <Compile Include="Model\WebBrowserUtility.cs" />
     <Compile Include="ModuleAModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ActorService.cs" />
+    <Compile Include="Services\MovieService.cs" />
+    <Compile Include="Services\ShowService.cs" />
     <Compile Include="ViewModels\ActorSearchViewModel.cs" />
     <Compile Include="ViewModels\ActorsListViewModel.cs" />
     <Compile Include="ViewModels\ActorViewModel.cs" />
@@ -157,6 +179,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -205,10 +228,16 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\MovieForYou.DAL\MovieForYou.DAL.csproj">
+      <Project>{52ccd0ff-351f-44a3-972a-a5ac506fab81}</Project>
+      <Name>MovieForYou.DAL</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Images\noImage3.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

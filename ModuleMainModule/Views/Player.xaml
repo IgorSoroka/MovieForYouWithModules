@@ -18,6 +18,6 @@
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         <WebBrowser x:Name="WebBrowser" model:WebBrowserUtility.BindableSource="{Binding Video}"></WebBrowser>
-        <Button Grid.Row="1" FontSize="17" Command="{Binding GoBackCommand}" Content="Назад к описанию"></Button>
+        <Button Grid.Row="1" FontSize="17" Command="{Binding GoBackCommand}" Content="{Binding BackDescription}"></Button>
     </Grid>
 </UserControl>

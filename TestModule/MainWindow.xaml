@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:wpf="http://schemas.essentialobjects.com/wpf/"
+        xmlns:resx="clr-namespace:TestModule.Properties"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         mc:Ignorable="d"
@@ -17,67 +18,54 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
-            <ColumnDefinition  Width="*"/>
+            <ColumnDefinition MaxWidth="350"  Width="*"/>
         </Grid.ColumnDefinitions>
         <ribbon:Ribbon Grid.ColumnSpan="2" Foreground="Snow" Background="#FF595959">
-            <!--<ribbon:Ribbon.Background>
-                    <ImageBrush ImageSource="/Images/MenuBackground.jpg" Stretch="UniformToFill"/>
-                </ribbon:Ribbon.Background>-->
-            <!--<ribbon:Ribbon.ApplicationMenu>
-                <ribbon:RibbonApplicationMenu>
-                    <ribbon:RibbonApplicationMenuItem Header="Свернуть" x:Name="MenuItemMin"/>
-                    <ribbon:RibbonApplicationMenuItem Header="Развернуть" x:Name="MenuItemOpen"/>
-                    <ribbon:RibbonApplicationMenuItem Header="Закрыть" x:Name="MenuItemClose"/>
-                </ribbon:RibbonApplicationMenu>
-            </ribbon:Ribbon.ApplicationMenu>-->
-            <ribbon:RibbonTab Header="Главная">
-                <!--<ribbon:RibbonTab.Background>
-                    <ImageBrush ImageSource="/Images/MenuBackground.jpg" Stretch="UniformToFill"/>
-                </ribbon:RibbonTab.Background>-->
-                <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Главная" HorizontalAlignment="Center" LargeImageSource="/Images/icon.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
+            <ribbon:RibbonTab Header="{x:Static resx:Resources.Name}">
+               <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="{Binding MainView}" HorizontalAlignment="Center" LargeImageSource="/Images/icon.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
-            <ribbon:RibbonTab Header="Фильмы">
+            <ribbon:RibbonTab Header="{Binding Movies}">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieBest.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
+                    <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieBest.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Популярные" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MoviePopular.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Popular"/>
+                    <ribbon:RibbonButton Label="{Binding Popular}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MoviePopular.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Popular"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="">
-                    <ribbon:RibbonButton Label="Скоро в кино" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieFuture.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Future"/>
+                    <ribbon:RibbonButton Label="{Binding UpComing}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieFuture.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Future"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Сейчас в кино" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieNow.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Now"/>
+                    <ribbon:RibbonButton Label="{Binding NowPlaying}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieNow.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Now"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
-            <ribbon:RibbonTab Header="Сериалы">
+            <ribbon:RibbonTab Header="{Binding Shows}">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Лучшие" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowBest.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Best"/>
+                    <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowBest.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Best"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Популярные" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowPopular.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Popular"/>
+                    <ribbon:RibbonButton Label="{Binding Popular}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowPopular.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Popular"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Сейчас на ТВ" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowNow.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
-                </ribbon:RibbonGroup>
-            </ribbon:RibbonTab>
-            <ribbon:RibbonTab Header="Поиск">
-                <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Найти фильм" Width="100" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
-                </ribbon:RibbonGroup>
-                <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Найти сериал" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ShowSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
-                </ribbon:RibbonGroup>
-                <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Найти актера" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ActorSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
+                    <ribbon:RibbonButton Label="{Binding NowOnTV}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowNow.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
-            <ribbon:RibbonTab Header="Справка">
-                <ribbon:RibbonGroup Header="Информация">
-                    <ribbon:RibbonButton Label="О разработчике"/>
-                    <ribbon:RibbonButton Label="О программе"/>
+            <ribbon:RibbonTab Header="{Binding Search}">
+                <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="{Binding SearchMovie}" Width="100" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
+                </ribbon:RibbonGroup>
+                <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="{Binding SearchShow}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ShowSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
+                </ribbon:RibbonGroup>
+                <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="{Binding SearchActor}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ActorSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
+                </ribbon:RibbonGroup>
+            </ribbon:RibbonTab>
+            <ribbon:RibbonTab Header="{Binding Help}">
+                <ribbon:RibbonGroup Header="{Binding Information}">
+                    <ribbon:RibbonButton Label="{Binding AboutDeveloper}"/>
+                    <ribbon:RibbonButton Label="{Binding AboutProgram}"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
         </ribbon:Ribbon>

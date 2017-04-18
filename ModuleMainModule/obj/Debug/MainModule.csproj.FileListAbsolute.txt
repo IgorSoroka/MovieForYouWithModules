@@ -53,3 +53,14 @@ d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\ModuleM
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\ModuleMainModule.dll
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\ModuleMainModule.pdb
 d:\Курсы\стажировка\TestModule\ModuleMainModule\obj\Debug\MainModule.csprojResolveAssemblyReference.cache
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\LocalDatabase.mdf
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\LocalDatabase_log.ldf
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\AutoMapper.dll
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\MovieForYou.DAL.dll
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\EntityFramework.dll
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\MovieForYou.DAL.pdb
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\AutoMapper.xml
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\EntityFramework.xml
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\ModuleMainModule.dll.config
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\EntityFramework.SqlServer.dll
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\EntityFramework.SqlServer.xml

@@ -20,36 +20,36 @@
         </Grid.RowDefinitions>
         <Border Margin="15, 15, 15, 8" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
             <StackPanel Orientation="Vertical">
-                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Поиск по названию"/>
+                    <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="{Binding NameSearching}"/>
                 <DockPanel LastChildFill="True" Margin="10">
-                    <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" Content="Найти"/>
-                    <TextBox FontSize="14" Text="{Binding Path = Name, UpdateSourceTrigger=LostFocus}"/>
+                        <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" Content="{Binding Find}"/>
+                    <TextBox FontSize="14" Text="{Binding Name, UpdateSourceTrigger=LostFocus}"/>
                 </DockPanel>
             </StackPanel>
         </Border>
         <Border Margin="15, 8, 15, 15" Grid.Row="1" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
             <StackPanel>
-                <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="Год создания"/>
+                    <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="{Binding Year}"/>
                 <ComboBox x:Name="CmYear" Margin="10" IsEnabled="{Binding SelectedItem, ElementName=CbFirst, Converter={StaticResource NullToFalseConverter}}"
-                          ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedYear, Mode=TwoWay}"/>
-                <Label Foreground="Honeydew" Margin="3" HorizontalContentAlignment="Center" FontSize="17" Content="Интервал годов"/>
+                          ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding SelectedYear, Mode=TwoWay}"/>
+                    <Label Foreground="Honeydew" Margin="3" HorizontalContentAlignment="Center" FontSize="17" Content="{Binding Interval}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="5">
-                        <Label FontSize="12" Content="C"/>
-                        <ComboBox x:Name="CbFirst" ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedFirstYear, Mode=TwoWay}"
+                            <Label Foreground="Honeydew" FontSize="12" Content="{Binding From}"/>
+                        <ComboBox x:Name="CbFirst" ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding SelectedFirstYear, Mode=TwoWay}"
                                   IsEnabled="{Binding SelectedItem, ElementName=CmYear, Converter={StaticResource NullToFalseConverter}}"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Margin="5">
-                        <Label FontSize="12" Content="по"></Label>
+                            <Label Foreground="Honeydew" FontSize="12" Content="{Binding To}"></Label>
                         <ComboBox x:Name="CbLast" IsEnabled="{Binding SelectedItem, ElementName=CmYear, Converter={StaticResource NullToFalseConverter}}"
                                   ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding Path=SelectedLastYear, Mode=TwoWay}"/>
                     </DockPanel>
                 </Grid>
-                <Label Foreground="Honeydew" Margin="3" HorizontalContentAlignment="Center" FontSize="17" Content="Рейтинг"/>
+                    <Label Foreground="Honeydew" Margin="3" HorizontalContentAlignment="Center" FontSize="17" Content="{Binding Raiting}"/>
                 <eo:Slider Foreground="Honeydew" Margin="10" Minimum="0" Maximum="10" TickPlacement="Both" TickFrequency="1"  
                            Value="{Binding SelectedRating, UpdateSourceTrigger=PropertyChanged}"/>
                 <Grid>
@@ -57,8 +57,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Margin="5" FontSize="14" MaxWidth="150" Command="{Binding Path = NavigateCommandReset}" Content="Сбросить"/>
-                    <Button Grid.Column="1" Margin="5" FontSize="14" MaxWidth="150" Command="{Binding Path = NavigateCommandSearch}" Content="Найти"/>
+                        <Button Grid.Column="0" Margin="5" FontSize="14" MaxWidth="150" Command="{Binding Path = NavigateCommandReset}" Content="{Binding ResetAll}"/>
+                        <Button Grid.Column="1" Margin="5" FontSize="14" MaxWidth="150" Command="{Binding Path = NavigateCommandSearch}" Content="{Binding Find}"/>
                 </Grid>
             </StackPanel>
         </Border>

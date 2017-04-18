@@ -17,6 +17,12 @@ namespace ModuleMainModule.ViewModels
             GoBackCommand = new DelegateCommand(GoBack);
         }
 
+        private const string _backDescription = "Назад к описанию";
+        public string BackDescription
+        {
+            get { return _backDescription; }
+        }
+
         private Uri _video;
         public Uri Video
         {

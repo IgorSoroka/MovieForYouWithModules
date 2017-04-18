@@ -40,5 +40,105 @@ namespace TestModule
             if (type != null)
             { _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);}
         }
+
+        #region Constants
+
+        private const string _mainView = "Главная";
+        public string MainView
+        {
+            get { return _mainView; }
+        }
+
+        private const string _movies = "Фильмы";
+        public string Movies
+        {
+            get { return _movies; }
+        }
+
+        private const string _shows = "Сериалы";
+        public string Shows
+        {
+            get { return _shows; }
+        }
+
+        private const string _search = "Поиск";
+        public string Search
+        {
+            get { return _search; }
+        }
+
+        private const string _help = "Справка";
+        public string Help
+        {
+            get { return _help; }
+        }
+
+        private const string _best = "Лучшие";
+        public string Best
+        {
+            get { return _best; }
+        }
+
+        private const string _popular = "Популярные";
+        public string Popular
+        {
+            get { return _popular; }
+        }
+
+        private const string _upComing = "Скоро в кино";
+        public string UpComing
+        {
+            get { return _upComing; }
+        }
+
+        private const string _nowPlaying = "Сейчас в кино";
+        public string NowPlaying
+        {
+            get { return _nowPlaying; }
+        }
+
+        private const string _nowOnTV = "Сейчас на ТВ";
+        public string NowOnTV
+        {
+            get { return _nowOnTV; }
+        }
+
+        private const string _searchMovie = "Найти фильм";
+        public string SearchMovie
+        {
+            get { return _searchMovie; }
+        }
+
+        private const string _searchShow = "Найти сериал";
+        public string SearchShow
+        {
+            get { return _searchShow; }
+        }
+
+        private const string _searchActor = "Найти актера";
+        public string SearchActor
+        {
+            get { return _searchActor; }
+        }
+
+        private const string _aboutDeveloper = "О разработчике";
+        public string AboutDeveloper
+        {
+            get { return _aboutDeveloper; }
+        }
+
+        private const string _aboutProgram = "О программе";
+        public string AboutProgram
+        {
+            get { return _aboutProgram; }
+        }
+
+        private const string _information = "Информация";
+        public string Information
+        {
+            get { return _information; }
+        }
+
+        #endregion
     }
 }

@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 11-2055703871
 1-70516471
-43-1280366293
-78680865604
+52-1014587863
+83-1619740507
 Views\ActorSearchView.xaml;Views\ActorsList.xaml;Views\ActorView.xaml;Views\MovieSearchView.xaml;Views\MoviesList.xaml;Views\MovieView.xaml;Views\Player.xaml;Views\ShowSearchView.xaml;Views\ShowsList.xaml;Views\ShowView.xaml;Views\StartView.xaml;
 
-False
+True
 

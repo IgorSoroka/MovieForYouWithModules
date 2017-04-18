@@ -39,25 +39,47 @@
                 <Button Background="#4C000000" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  
                         Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridBestMovie, Path=DataContext}">
                     <Grid x:Name="GridBestMovie" DataContext="{Binding Path = BestMovie}">
-                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock Text="{Binding Path = Title}"/>
-                </Grid>
+                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                        <Label Content="{Binding Path = Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                            <Label.Background>
+                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                            </Label.Background>
+                        </Label>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                    </Grid>
             </Button>
-                <Button Background="#4C000000" Grid.Row="1" Grid.Column="0" 
-                        Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridSecondMovie, Path=DataContext}">
+                <Button Background="#4C000000" Grid.Row="1" Grid.Column="0"  Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridSecondMovie, Path=DataContext}">
                     <Grid x:Name="GridSecondMovie" DataContext="{Binding Path = SecondMovie}">
-                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock Text="{Binding Path = Title}"/>
-                </Grid>
-            </Button>
-                <Button Background="#4C000000" Grid.Row="1" Grid.Column="1"  
-                        Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridThirdMovie, Path=DataContext}">
+                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                        <Label Content="{Binding Path = Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                            <Label.Background>
+                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                            </Label.Background>
+                        </Label>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Button>
+                <Button Background="#4C000000" Grid.Row="1" Grid.Column="1" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridThirdMovie, Path=DataContext}">
                     <Grid x:Name="GridThirdMovie" DataContext="{Binding Path = ThirdMovie}">
-                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock Text="{Binding Path = Title}"/>
-                </Grid>
-            </Button>
-        </Grid>
+                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                        <Label Content="{Binding Path = Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                            <Label.Background>
+                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                            </Label.Background>
+                        </Label>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Button>
+            </Grid>
             <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -70,24 +92,48 @@
                 <Button Background="#4C000000" Grid.Row="0" Grid.Column="0" 
                         Command="{Binding NavigateCommandShow}" CommandParameter="{Binding ElementName=GridSecondShow, Path=DataContext}">
                     <Grid x:Name="GridSecondShow" DataContext="{Binding Path = SecondShow}">
-                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock Text="{Binding Path = Name}"/>
-                </Grid>
-            </Button>
+                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                        <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                            <Label.Background>
+                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                            </Label.Background>
+                        </Label>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Button>
                 <Button Background="#4C000000" Grid.Row="0" Grid.Column="1" 
                         Command="{Binding NavigateCommandShow}" CommandParameter="{Binding ElementName=GridThirdShow, Path=DataContext}">
                     <Grid x:Name="GridThirdShow" DataContext="{Binding Path = ThirdShow}">
-                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock Text="{Binding Path = Name}"/>
-                </Grid>
-            </Button>
+                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                        <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                            <Label.Background>
+                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                            </Label.Background>
+                        </Label>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Button>
                 <Button Background="#4C000000" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                         Command="{Binding NavigateCommandShow}" CommandParameter="{Binding ElementName=GridBestShow, Path=DataContext}">
                     <Grid x:Name="GridBestShow" DataContext="{Binding Path = BestShow}">
-                    <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
-                    <TextBlock Text="{Binding Path = Name}"/>
-                </Grid>
-            </Button>
+                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                        <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                            <Label.Background>
+                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                            </Label.Background>
+                        </Label>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                </Button>
         </Grid>
         </Grid>
     </Grid>

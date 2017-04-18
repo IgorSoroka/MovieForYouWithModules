@@ -13,7 +13,7 @@
     </UserControl.Resources>
     <DockPanel Background="#4C000000" x:Name="DockPanelMain">
         <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" CanContentScroll="True">
-        <ListBox ItemsSource="{Binding Path=ActorsList}" SelectedItem="{Binding Path=SelectedSearchedActor, Mode=TwoWay}">
+        <ListBox ItemsSource="{Binding ActorsList}" SelectedItem="{Binding Path=SelectedSearchedActor, Mode=TwoWay}">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Background" Value="#4C000000"/>
@@ -34,11 +34,11 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <Image Source="{Binding Path = Poster, Converter={StaticResource PathConverter}}" Height="150" Width="150"/>
+                        <Image Source="{Binding Path Poster, Converter={StaticResource PathConverter}}" Height="150" Width="150"/>
                         <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding Path = Name}" Margin="3" FontSize="14"/>
-                                <Button FontSize="12" DataContext="{Binding ElementName=DockPanelMain, Path=DataContext}" 
-                                            Content="Подробнее" Command="{Binding NavigateCommandShowDirectActor}">
+                                <TextBlock Text="{Binding Name}" Margin="3" FontSize="14"/>
+                                <Button FontSize="12" Content="Подробнее" Command="{Binding NavigateCommandShowDirectActor}" 
+                                        DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">
                                             <Setter Property="Visibility" Value="Collapsed"/>

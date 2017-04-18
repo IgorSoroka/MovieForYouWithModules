@@ -31,8 +31,72 @@ namespace ModuleMainModule.ViewModels
             List<string> companiesList = RepositoryCompanies.GetNames();
             Companies = new ObservableCollection<string>(companiesList);
         }
-        
+
         #region Properties
+
+        #region Constants
+
+        private const string _find = "Найти";
+        public string Find
+        {
+            get { return _find; }
+        }
+
+        private const string _resetAll = "Сбросить";
+        public string ResetAll
+        {
+            get { return _resetAll; }
+        }
+
+        private const string _nameSearching = "Поиск по названию";
+        public string NameSearching
+        {
+            get { return _nameSearching; }
+        }
+
+        private const string _year = "Год создания";
+        public string Year
+        {
+            get { return _year; }
+        }
+
+        private const string _interval = "Интервал годов";
+        public string Interval
+        {
+            get { return _interval; }
+        }
+
+        private const string _from = "С";
+        public string From
+        {
+            get { return _from; }
+        }
+
+        private const string _to = "по";
+        public string To
+        {
+            get { return _to; }
+        }
+
+        private const string _raiting = "Рейтинг";
+        public string Raiting
+        {
+            get { return _raiting; }
+        }
+
+        private const string _genreSearching = "Поиск по жанру";
+        public string GenreSearching
+        {
+            get { return _genreSearching; }
+        }
+
+        private const string _companySearching = "Поиск по компинии";
+        public string CompanySearching
+        {
+            get { return _companySearching; }
+        }
+
+        #endregion
 
         private ObservableCollection<string> _genres;
         public ObservableCollection<string> Genres

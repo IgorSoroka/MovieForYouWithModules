@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "TestModule\Test.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainModule", "ModuleMainModule\MainModule.csproj", "{03B29A22-E017-4477-94A5-81ED76B20787}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieForYou.DAL", "MovieForYou.DAL\MovieForYou.DAL.csproj", "{52CCD0FF-351F-44A3-972A-A5AC506FAB81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{03B29A22-E017-4477-94A5-81ED76B20787}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03B29A22-E017-4477-94A5-81ED76B20787}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03B29A22-E017-4477-94A5-81ED76B20787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52CCD0FF-351F-44A3-972A-A5AC506FAB81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52CCD0FF-351F-44A3-972A-A5AC506FAB81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52CCD0FF-351F-44A3-972A-A5AC506FAB81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52CCD0FF-351F-44A3-972A-A5AC506FAB81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

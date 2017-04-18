@@ -22,6 +22,16 @@ namespace ModuleMainModule.ViewModels
             GetActorsData();
         }
 
+        #region Constants
+
+        private const string _find = "Найти";
+        public string Find
+        {
+            get { return _find; }
+        }
+
+        #endregion
+
         #region Properties
 
         private string _name;

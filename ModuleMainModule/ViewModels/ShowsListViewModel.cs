@@ -30,6 +30,22 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage, CanExecutePriviousPage);
         }
 
+        #region Constants
+
+        private const string _next = "Предыдущая";
+        public string Next
+        {
+            get { return _next; }
+        }
+
+        private const string _privious = "Следуюшая";
+        public string Privious
+        {
+            get { return _privious; }
+        }
+
+        #endregion
+
         private Show _selectedShow;
         public Show SelectedShow
         {
