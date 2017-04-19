@@ -6,6 +6,7 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" Margin="20">
     <UserControl.Resources>
@@ -24,6 +25,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            <i:Interaction.Triggers>
+                <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
+                    <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+                </prism:InteractionRequestTrigger>
+            </i:Interaction.Triggers>
             <Grid DataContext="{Binding Path=DirectMovie}" MinHeight="150" MaxHeight="300">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -71,11 +77,26 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical" MinWidth="150">
-                                <Image Height="70" Width="70" Source="{Binding Profile, Converter={StaticResource PathConverter}}"/>
-                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Name}"/>
-                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Job}"/>
+                        <DataTemplate>                           
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                <Grid Height="130" Width="100">
+                                    <Image Grid.RowSpan="3" Stretch="Uniform"  Source="{Binding Profile, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch"/>
+                                    <Label Content="{Binding Path = Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                        <Label.Background>
+                                            <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                        </Label.Background>
+                                    </Label>
+                                    <Label Content="{Binding Path = Job}" Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                        <Label.Background>
+                                            <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                        </Label.Background>
+                                    </Label>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="0.29*" />
+                                        <RowDefinition Height="0.29*" />
+                                    </Grid.RowDefinitions>
+                                </Grid>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -109,11 +130,26 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical" MinWidth="150" Tag="{Binding Id}">
-                                <Image Height="70" Width="70" Source="{Binding Path=Profile, Converter={StaticResource PathConverter}}"/>
-                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Name}"/>
-                                <TextBlock Margin="3" TextAlignment="Center" FontSize="12" Text="{Binding Character}"/>
-                                <Button FontSize="12" Width="150" HorizontalAlignment="Left" Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectActor}"
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                <Grid Height="130" Width="100">
+                                    <Image Grid.RowSpan="3" Stretch="Uniform"  Source="{Binding Profile, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch"/>
+                                    <Label Content="{Binding Path = Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                        <Label.Background>
+                                            <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                        </Label.Background>
+                                    </Label>
+                                    <Label Content="{Binding Path = Character}" Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                        <Label.Background>
+                                            <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                        </Label.Background>
+                                    </Label>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="0.29*" />
+                                        <RowDefinition Height="0.29*" />
+                                    </Grid.RowDefinitions>
+                                </Grid>
+                                <Button FontSize="12" Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectActor}"
                                         DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">
@@ -125,7 +161,7 @@
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                        </Button.Style>
+                                    </Button.Style>
                                 </Button>
                             </StackPanel>
                         </DataTemplate>

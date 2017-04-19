@@ -7,8 +7,8 @@ namespace ModuleMainModule.ViewModels
 {
     public class PlayerViewModel : BindableBase, INavigationAware
     {
-        IRegionManager _regionManager;
-        IRegionNavigationJournal _journal;
+        private readonly IRegionManager _regionManager;
+        private IRegionNavigationJournal _journal;
         public DelegateCommand GoBackCommand { get; set; }
 
         public PlayerViewModel(RegionManager regionManager)

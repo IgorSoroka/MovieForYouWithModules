@@ -10,17 +10,21 @@ using ModuleMainModule.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using NLog;
+using Prism.Interactivity.InteractionRequest;
 
 namespace ModuleMainModule.ViewModels
 {
     class ShowViewModel : BindableBase, INavigationAware
     {
-        readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public DelegateCommand NavigateCommandShowTrailler { get; private set; }
         public DelegateCommand NavigateCommandAddToDb { get; private set; }
         static readonly IShowService ShowService = new ShowService();
+        private Logger logger = LogManager.GetCurrentClassLogger();
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }
 
         public ShowViewModel(RegionManager regionManager)
         {
@@ -28,6 +32,7 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
             NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NotificationRequest = new InteractionRequest<INotification>();
         }
 
         #region Constants
@@ -185,16 +190,18 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _crew, value); }
         }
 
+        public string InteractionResultMessage { get; private set; }
+
         #endregion
 
         #region Methods
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
             VideoUrl = null;
             var type = (int)navigationContext.Parameters["id"];
-            await GetDirectShowInfo(type);
-            await GetVideoUrl(type);
+            GetDirectShowInfo(type);
+            GetVideoUrl(type);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -203,11 +210,18 @@ namespace ModuleMainModule.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
 
-        private async Task GetVideoUrl(int id)
+        private async void GetVideoUrl(int id)
         {
             var video = await Data.GetTraillerShow(id);
             if (video != null)
             { VideoUrl = video.Key; }
+        }
+
+        private void RaiseNotification()
+        {
+            this.NotificationRequest.Raise(
+               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
         }
 
         private void ShowTrailler()
@@ -222,14 +236,22 @@ namespace ModuleMainModule.ViewModels
             _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
         }
 
-        private async Task GetDirectShowInfo(int id)
+        private async void GetDirectShowInfo(int id)
         {
-            var show = await Data.GetDirectShowData(id);
-            List<MediaCrew> crews = (show.Credits.Crew).Take(10).ToList();
-            List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList();
-            DirectShow = show;
-            Crew = new ObservableCollection<MediaCrew>(crews);
-            Cast = new ObservableCollection<MediaCast>(casts);
+            try
+            {
+                var show = await Data.GetDirectShowData(id);
+                List<MediaCrew> crews = (show.Credits.Crew).Take(10).ToList();
+                List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList();
+                DirectShow = show;
+                Crew = new ObservableCollection<MediaCrew>(crews);
+                Cast = new ObservableCollection<MediaCast>(casts);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowViewModel", ex);
+                RaiseNotification();
+            }
         }
 
         private void AddToDb()

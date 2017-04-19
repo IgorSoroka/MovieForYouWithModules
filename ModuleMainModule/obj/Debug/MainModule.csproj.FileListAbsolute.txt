@@ -64,3 +64,6 @@ d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\EntityF
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\ModuleMainModule.dll.config
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\EntityFramework.SqlServer.dll
 d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\EntityFramework.SqlServer.xml
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\NLog.config
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\NLog.dll
+d:\Курсы\стажировка\TestModule\ModuleMainModule\bin\Debug\NLog.xml

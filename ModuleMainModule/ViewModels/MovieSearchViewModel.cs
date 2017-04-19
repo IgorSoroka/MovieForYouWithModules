@@ -9,7 +9,7 @@ namespace ModuleMainModule.ViewModels
 {
     class MovieSearchViewModel : BindableBase
     {
-        readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandGenreSearch { get; private set; }
         public DelegateCommand NavigateCommandCompanySearch { get; private set; }

@@ -9,22 +9,27 @@ using ModuleMainModule.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using NLog;
+using Prism.Interactivity.InteractionRequest;
 
 namespace ModuleMainModule.ViewModels
 {
     public class ActorViewModel : BindableBase, INavigationAware
     {
-        readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
         public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
         public DelegateCommand NavigateCommandAddToDb { get; private set; }
         static readonly IActorService ActorService = new ActorService();
+        private Logger logger = LogManager.GetCurrentClassLogger();
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }
 
         public ActorViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
             NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NotificationRequest = new InteractionRequest<INotification>();
         }
 
         #region Constants
@@ -97,14 +102,16 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _actorMovies, value); }
         }
 
+        public string InteractionResultMessage { get; private set; }
+
         #endregion
 
         #region Methods
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
             var type = (int)navigationContext.Parameters["id"];
-            await GetDirectActorInfo(type);
+            GetDirectActorInfo(type);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -115,12 +122,27 @@ namespace ModuleMainModule.ViewModels
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
 
-        private async Task GetDirectActorInfo(int id)
+        private void RaiseNotification()
         {
-            var actor = await Data.GetDirectActorData(id);
-            List<PersonCredit> movies = await Data.GetDirectActorMoviesList(id);
-            DirectActor = actor;
-            ActorMovies = new ObservableCollection<PersonCredit>(movies);
+            this.NotificationRequest.Raise(
+               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
+
+        private async void GetDirectActorInfo(int id)
+        {
+            try
+            {
+                var actor = await Data.GetDirectActorData(id);
+                List<PersonCredit> movies = await Data.GetDirectActorMoviesList(id);
+                DirectActor = actor;
+                ActorMovies = new ObservableCollection<PersonCredit>(movies);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ActorViewModel", ex);
+                RaiseNotification();
+            }           
         }
 
         private void NavigateShowDirectMovie()

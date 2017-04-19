@@ -7,16 +7,21 @@ using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using NLog;
+using Prism.Interactivity.InteractionRequest;
 
 namespace ModuleMainModule.ViewModels
 {
     class ShowsListViewModel : BindableBase, INavigationAware
     {
-        readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
         public DelegateCommand NavigateCommandShowPriviousPage { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }       
 
         private bool _best;
         private bool _popular;
@@ -28,17 +33,18 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowDirectShow = new DelegateCommand(NavigateShowDirectShow);
             NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage, CanExecuteNextPage);
             NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage, CanExecutePriviousPage);
+            NotificationRequest = new InteractionRequest<INotification>();
         }
 
         #region Constants
 
-        private const string _next = "Предыдущая";
+        private const string _next = "Следуюшая";
         public string Next
         {
             get { return _next; }
         }
 
-        private const string _privious = "Следуюшая";
+        private const string _privious = "Предыдущая";
         public string Privious
         {
             get { return _privious; }
@@ -74,6 +80,8 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
+        public string InteractionResultMessage { get; private set; }
+
         #region Methods
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
@@ -87,7 +95,7 @@ namespace ModuleMainModule.ViewModels
                     _best = true;
                     _popular = false;
                     _now = false;
-                    await GetBestShows(Page);
+                    GetBestShows(Page);
                     Title = "Лучшие сериалы";
                 }
                 if (type == "Popular")
@@ -95,7 +103,7 @@ namespace ModuleMainModule.ViewModels
                     _best = false;
                     _popular = true;
                     _now = false;
-                    await GetPopularShows(Page);
+                    GetPopularShows(Page);
                     Title = "Популярные сериалы";
                 }
                 if (type == "Now")
@@ -103,14 +111,14 @@ namespace ModuleMainModule.ViewModels
                     _best = false;
                     _popular = false;
                     _now = true;
-                    await GetNowPlayingShows(Page);
+                    GetNowPlayingShows(Page);
                     Title = "Сейчас на ТВ";
                 }
             }
 
             var name = navigationContext.Parameters["name"] as string;
             if (name != null)
-            { await GetShowsByName(name); }
+            { GetShowsByName(name); }
 
             try
             {
@@ -120,17 +128,17 @@ namespace ModuleMainModule.ViewModels
                 var selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
 
                 if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
-                { await GetShowsByOnlyRating(selectedRating); }
+                { GetShowsByOnlyRating(selectedRating); }
                 else if (selectedYear != 0)
-                { await GetShowsByYearAndRating(selectedYear, selectedRating); }
+                { GetShowsByYearAndRating(selectedYear, selectedRating); }
                 else if (selectedFirstYear != 0 && selectedLastYear != 0)
-                { await GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating); }
+                { GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating); }
                 else if (selectedFirstYear == 0 || selectedLastYear == 0)
                 {
                     if (selectedFirstYear != 0 && selectedLastYear == 0)
-                    { await GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating); }
+                    { GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating); }
                     else if (selectedFirstYear == 0 && selectedLastYear != 0)
-                    { await GetShowsByLastYearAndRating(selectedLastYear, selectedRating); }
+                    { GetShowsByLastYearAndRating(selectedLastYear, selectedRating); }
                 }
             }
             catch (NullReferenceException e)
@@ -143,6 +151,13 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         { }
+
+        private void RaiseNotification()
+        {
+            this.NotificationRequest.Raise(
+               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
 
         private bool CanExecutePriviousPage()
         {
@@ -165,19 +180,19 @@ namespace ModuleMainModule.ViewModels
             if (_popular && Page > 1)
             {
                 Page--;
-                await GetPopularShows(Page);
+                GetPopularShows(Page);
             }
 
             if (_best && Page > 1)
             {
                 Page--;
-                await GetBestShows(Page);
+                GetBestShows(Page);
             }
 
             if (_now && Page > 1)
             {
                 Page--;
-                await GetNowPlayingShows(Page);
+                GetNowPlayingShows(Page);
             }
         }
 
@@ -187,19 +202,19 @@ namespace ModuleMainModule.ViewModels
             if (_popular && Page < 5)
             {
                 Page++;
-                await GetPopularShows(Page);
+                GetPopularShows(Page);
             }
 
             if (_best && Page < 5)
             {
                 Page++;
-                await GetBestShows(Page);
+                GetBestShows(Page);
             }
             
             if (_now && Page < 5)
             {
                 Page++;
-                await GetNowPlayingShows(Page);
+                GetNowPlayingShows(Page);
             }
         }
 
@@ -210,58 +225,130 @@ namespace ModuleMainModule.ViewModels
             _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
         }
 
-        private async Task GetPopularShows(int page)
-        {
-            List<Show> showsTest = await Data.GetPopularShowsData(page);
-            Shows = new ObservableCollection<Show>(showsTest);
+        private async void GetPopularShows(int page)
+        {            
+            try
+            {
+                List<Show> showsTest = await Data.GetPopularShowsData(page);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }            
         }
 
-        private async Task GetBestShows(int page)
+        private async void GetBestShows(int page)
         {
-            List<Show> showsTest = await Data.GetTopRatedShowsData(page);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetTopRatedShowsData(page);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }            
         }
 
-        private async Task GetNowPlayingShows(int page)
+        private async void GetNowPlayingShows(int page)
         {
-            List<Show> showsTest = await Data.GetNowShowsData(page);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetNowShowsData(page);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }            
         }
 
-        private async Task GetShowsByLastYearAndRating(int selectedLastYear, decimal selectedRating)
+        private async void GetShowsByLastYearAndRating(int selectedLastYear, decimal selectedRating)
         {
-            List<Show> showsTest = await Data.GetSearchedShowsLastYear(selectedLastYear, selectedRating);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetSearchedShowsLastYear(selectedLastYear, selectedRating);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }           
         }
 
-        private async Task GetShowsByFirstYearAndRating(int selectedFirstYear, decimal selectedRating)
+        private async void GetShowsByFirstYearAndRating(int selectedFirstYear, decimal selectedRating)
         {
-            List<Show> showsTest = await Data.GetSearchedShowsFirstYear(selectedFirstYear, selectedRating);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetSearchedShowsFirstYear(selectedFirstYear, selectedRating);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }            
         }
 
-        private async Task GetShowsByFirstLastYearAndRating(int selectedFirstYear, int selectedLastYear, decimal selectedRating)
+        private async void GetShowsByFirstLastYearAndRating(int selectedFirstYear, int selectedLastYear, decimal selectedRating)
         {
-            List<Show> showsTest = await Data.GetSearchedShows(selectedFirstYear, selectedLastYear, selectedRating);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetSearchedShows(selectedFirstYear, selectedLastYear, selectedRating);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }            
         }
 
-        private async Task GetShowsByYearAndRating(int selectedYear, decimal selectedRating)
+        private async void GetShowsByYearAndRating(int selectedYear, decimal selectedRating)
         {
-            List<Show> showsTest = await Data.GetSearchedShows(selectedYear, selectedRating);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetSearchedShows(selectedYear, selectedRating);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }           
         }
 
-        private async Task GetShowsByOnlyRating(decimal selectedRating)
+        private async void GetShowsByOnlyRating(decimal selectedRating)
         {
-            List<Show> showsTest = await Data.GetSearchedShows(selectedRating);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetSearchedShows(selectedRating);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }           
         }
 
-        private async Task GetShowsByName(string name)
+        private async void GetShowsByName(string name)
         {
-            List<Show> showsTest = await Data.GetShowsByName(name);
-            Shows = new ObservableCollection<Show>(showsTest);
+            try
+            {
+                List<Show> showsTest = await Data.GetShowsByName(name);
+                Shows = new ObservableCollection<Show>(showsTest);
+            }
+            catch (ServiceRequestException ex)
+            {
+                logger.ErrorException("ShowListViewModel", ex);
+                RaiseNotification();
+            }        
         }
         
         #endregion

@@ -6,6 +6,7 @@
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" Margin="20">
     <UserControl.Resources>
@@ -19,7 +20,12 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Border BorderThickness="1" BorderBrush="Black">
+            <i:Interaction.Triggers>
+                <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
+                    <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+                </prism:InteractionRequestTrigger>
+            </i:Interaction.Triggers>
+            <Border BorderThickness="1" BorderBrush="Black">
             <Grid DataContext="{Binding Path=DirectActor}" MinHeight="150" MaxHeight="300">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>

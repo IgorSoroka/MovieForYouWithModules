@@ -7,7 +7,7 @@ namespace ModuleMainModule.ViewModels
 {
     class ShowSearchViewModel : BindableBase
     {
-        readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandSearch { get; private set; }
         public DelegateCommand NavigateCommandReset { get; private set; }

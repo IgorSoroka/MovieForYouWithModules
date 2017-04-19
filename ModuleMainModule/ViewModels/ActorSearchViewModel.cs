@@ -4,21 +4,26 @@ using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using NLog;
+using Prism.Interactivity.InteractionRequest;
 
 namespace ModuleMainModule.ViewModels
 {
     class ActorSearchViewModel : BindableBase
     {
-        readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
         public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
         public DelegateCommand<string> NavigateCommandSearch { get; private set; }
+        private Logger logger = LogManager.GetCurrentClassLogger();
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }
 
         public ActorSearchViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
             NavigateCommandDirectActor = new DelegateCommand<Person>(DirectActor);
             NavigateCommandSearch = new DelegateCommand<string>(Search);
+            NotificationRequest = new InteractionRequest<INotification>();
             GetActorsData();
         }
 
@@ -125,6 +130,8 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _robbie, value); }
         }
 
+        public string InteractionResultMessage { get; private set; }
+
         #endregion
 
         private async void GetActorsData()
@@ -144,9 +151,22 @@ namespace ModuleMainModule.ViewModels
                 Downey = await Data.GetActor(3223);
                 Robbie = await Data.GetActor(234352);
             }
-            catch (System.NullReferenceException e)
+            catch (System.NullReferenceException ex)
             {
+                logger.ErrorException("ActorSearchViewModel", ex);
             }
+            catch (ServiceRequestException e)
+            {
+                logger.ErrorException("ActorSearchViewModel", e);
+                RaiseNotification();
+            }
+        }
+
+        private void RaiseNotification()
+        {
+            this.NotificationRequest.Raise(
+               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
         }
 
         private void Search(string obj)
@@ -163,8 +183,9 @@ namespace ModuleMainModule.ViewModels
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
             }
-            catch (System.NullReferenceException e)
+            catch (System.NullReferenceException ex)
             {
+                logger.ErrorException("ActorSearchViewModel", ex);
             }
         }
     }

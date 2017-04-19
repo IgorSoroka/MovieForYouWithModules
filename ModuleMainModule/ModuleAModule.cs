@@ -8,8 +8,8 @@ namespace MainModule
 {
     public class ModuleAModule : IModule
     {
-        readonly IRegionManager _regionManager;
-        readonly IUnityContainer _container;
+        private  readonly IRegionManager _regionManager;
+        private readonly IUnityContainer _container;
 
         public ModuleAModule(RegionManager regionManager, IUnityContainer container)
         {
@@ -20,6 +20,7 @@ namespace MainModule
         public void Initialize()
         {
             _regionManager.RegisterViewWithRegion("MainRegion", typeof(StartView));
+            _regionManager.RegisterViewWithRegion("ListRegion", typeof(MoviesList));
 
             _container.RegisterTypeForNavigation<MoviesList>();
             _container.RegisterTypeForNavigation<ShowsList>();

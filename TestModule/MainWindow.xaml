@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:wpf="http://schemas.essentialobjects.com/wpf/"
-        xmlns:resx="clr-namespace:TestModule.Properties"
+        xmlns:wpf="http://schemas.essentialobjects.com/wpf/"       
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         mc:Ignorable="d"
@@ -21,7 +20,7 @@
             <ColumnDefinition MaxWidth="350"  Width="*"/>
         </Grid.ColumnDefinitions>
         <ribbon:Ribbon Grid.ColumnSpan="2" Foreground="Snow" Background="#FF595959">
-            <ribbon:RibbonTab Header="{x:Static resx:Resources.Name}">
+            <ribbon:RibbonTab Header="{Binding MainView}">
                <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="{Binding MainView}" HorizontalAlignment="Center" LargeImageSource="/Images/icon.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
                 </ribbon:RibbonGroup>

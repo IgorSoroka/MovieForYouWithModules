@@ -5,15 +5,20 @@ using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Interactivity.InteractionRequest;
+using NLog;
 
 namespace ModuleMainModule.ViewModels
 {
     class StartViewModel : BindableBase
     {
-        readonly IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public DelegateCommand<Movie> NavigateCommandMovie { get; private set; }
         public DelegateCommand<Show> NavigateCommandShow { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }        
 
         public StartViewModel(RegionManager regionManager)
         {
@@ -21,6 +26,7 @@ namespace ModuleMainModule.ViewModels
             GetAllData();
             NavigateCommandMovie = new DelegateCommand<Movie>(ShowDirectMovie);
             NavigateCommandShow = new DelegateCommand<Show>(ShowDirectShow);
+            NotificationRequest = new InteractionRequest<INotification>();
         }
 
         #region Properties
@@ -66,20 +72,34 @@ namespace ModuleMainModule.ViewModels
             get { return _thirdShow; }
             set { SetProperty(ref _thirdShow, value); }
         }
+
+        public string InteractionResultMessage { get; private set; }
         #endregion
 
         #region Methods
 
-        private void ShowDirectMovie(Movie movie)
+        private void RaiseNotification()
         {
+            this.NotificationRequest.Raise(
+               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
+
+        private void ShowDirectMovie(Movie movie)
+        {            
             try
             {
                 var id = movie.Id;
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
             }
-            catch (System.NullReferenceException e)
+            catch (System.NullReferenceException ex)
             {
+                logger.ErrorException("StartViewModel", ex);
+            }
+            catch (System.Exception otherExeption)
+            {
+                logger.ErrorException("StartViewModel", otherExeption);
             }
         }
 
@@ -91,10 +111,14 @@ namespace ModuleMainModule.ViewModels
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
             }
-            catch (System.NullReferenceException e)
+            catch (System.NullReferenceException ex)
             {
+                logger.ErrorException("StartViewModel", ex);
             }
-           
+            catch (System.Exception otherExeption)
+            {
+                logger.ErrorException("StartViewModel", otherExeption);
+            }
         }
 
         private async void GetAllData()
@@ -110,8 +134,15 @@ namespace ModuleMainModule.ViewModels
                 SecondShow = showsTest[1];
                 ThirdShow = showsTest[2];
             }
-            catch (System.Net.TMDb.ServiceRequestException e)
+            catch (ServiceRequestException ex)
             {
+                logger.ErrorException("StartViewModel", ex);
+                RaiseNotification();
+                //GetAllData();
+            }
+            catch (System.Exception otherExeption)
+            {
+                logger.ErrorException("StartViewModel", otherExeption);
             }
         }
 

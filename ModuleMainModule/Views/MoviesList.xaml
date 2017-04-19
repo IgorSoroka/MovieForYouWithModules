@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              Height="auto" Width="auto">
@@ -12,6 +13,11 @@
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
     <DockPanel LastChildFill="True" x:Name="DockPanelMain">
+        <i:Interaction.Triggers>
+            <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
+                <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+            </prism:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
         <Border Margin="5" DockPanel.Dock="Top"  BorderBrush="DimGray" BorderThickness="2" CornerRadius="5">
             <Label FontSize="15" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"/>
         </Border>
