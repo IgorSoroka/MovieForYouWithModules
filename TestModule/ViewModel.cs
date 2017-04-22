@@ -1,16 +1,24 @@
-﻿using Prism.Commands;
+﻿using ModuleMainModule.Model;
+using NLog;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Prism.Regions;
+using System;
+using System.Threading;
 
 namespace TestModule
 {
     public class MainWindowViewModel : BindableBase
     {
         private readonly IRegionManager _regionManager;
-        
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public DelegateCommand<string> NavigateCommandMain { get; private set; }
         public DelegateCommand<string> NavigateCommandListShow { get; private set; }
         public DelegateCommand<string> NavigateCommandListMovie { get; private set; }
+
+        public InteractionRequest<INotification> NotificationRequestConnection { get; private set; }
 
         public MainWindowViewModel(IRegionManager regionManager)
         {
@@ -18,28 +26,32 @@ namespace TestModule
             NavigateCommandMain = new DelegateCommand<string>(NavigateMain);
             NavigateCommandListShow = new DelegateCommand<string>(NavigateListShow);
             NavigateCommandListMovie = new DelegateCommand<string>(NavigateListMovie);
+
+            NotificationRequestConnection = new InteractionRequest<INotification>();
+
+            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(checkConnection);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
+            dispatcherTimer.Start();
         }
 
-        private void NavigateMain(string navigatePath)
+        private void checkConnection(object sender, EventArgs e)
         {
-            if (navigatePath != null)
-            { _regionManager.RequestNavigate("MainRegion", navigatePath);}
+            bool internetConnection = NetworkClient.CheckForInternetConnection();
+            if (internetConnection == false)
+            {
+                RaiseNotificationConnection();
+            }
         }
 
-        private void NavigateListShow(string type)
+        private void RaiseNotificationConnection()
         {
-            var parameters = new NavigationParameters {{"type", type}};
-            if (type != null)
-            { _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);}
+            this.NotificationRequestConnection.Raise(
+               new Notification { Content = "Проблемы с с доступом к сайту. Проверьте, возможно потеряно интернет соединение", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
         }
 
-        private void NavigateListMovie(string type)
-        {
-            var parameters = new NavigationParameters {{"type", type}};
-
-            if (type != null)
-            { _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);}
-        }
+        public string InteractionResultMessage { get; private set; }
 
         #region Constants
 
@@ -137,8 +149,49 @@ namespace TestModule
         public string Information
         {
             get { return _information; }
-        }
+        }       
 
         #endregion
+
+        private void NavigateMain(string navigatePath)
+        {
+            try
+            {
+                if (navigatePath != null)
+                { _regionManager.RequestNavigate("MainRegion", navigatePath); }
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShellViewModel", e);
+            }
+        }
+
+        private void NavigateListShow(string type)
+        {
+            try
+            {
+                var parameters = new NavigationParameters { { "type", type } };
+                if (type != null)
+                { _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters); }
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShellViewModel", e);
+            }
+        }
+
+        private void NavigateListMovie(string type)
+        {
+            try
+            {
+                var parameters = new NavigationParameters { { "type", type } };
+                if (type != null)
+                { _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters); }
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShellViewModel", e);
+            }
+        }       
     }
 }

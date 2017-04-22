@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
-using System.Threading.Tasks;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -13,6 +11,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Interactivity.InteractionRequest;
 using NLog;
+using System;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -26,6 +25,7 @@ namespace ModuleMainModule.ViewModels
         static readonly IMovieService MovieService = new MovieService();
         private Logger logger = LogManager.GetCurrentClassLogger();
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
 
         public MovieViewModel(RegionManager regionManager)
         {
@@ -34,6 +34,7 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
             NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
         }
 
         #region Constants
@@ -193,10 +194,22 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            VideoUrl = null;
-            var type = (int)navigationContext.Parameters["id"];
-            GetDirectMovieInfo(type);
-            GetVideoUrl(type);
+            try
+            {
+                VideoUrl = null;
+                var type = (int)navigationContext.Parameters["id"];
+                GetDirectMovieInfo(type);
+                GetVideoUrl(type);
+            }
+            catch (NullReferenceException ex)
+            {
+                RaiseNotificationNull();
+                logger.ErrorException("MovieViewModel", ex);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieViewModel", e);
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -212,16 +225,37 @@ namespace ModuleMainModule.ViewModels
                n => { InteractionResultMessage = "The user was notified."; });
         }
 
+        private void RaiseNotificationNull()
+        {
+            this.NotificationRequestNull.Raise(
+               new Notification { Content = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз.", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
+
         private void ShowTrailler()
         {
-            var parameters = new NavigationParameters { { "VideoUrl", VideoUrl } };
-            _regionManager.RequestNavigate("MainRegion", "Player", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "VideoUrl", VideoUrl } };
+                _regionManager.RequestNavigate("MainRegion", "Player", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieViewModel", e);
+            }
         }
 
         private void NavigateShowDirectActor()
         {
-            var parameters = new NavigationParameters { { "id", SelectedActor.Id } };
-            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "id", SelectedActor.Id } };
+                _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieViewModel", e);
+            }
         }
 
         private async void GetVideoUrl(int id)
@@ -236,9 +270,12 @@ namespace ModuleMainModule.ViewModels
             }
             catch (ServiceRequestException ex)
             {
-                logger.ErrorException("MovieListViewModel", ex);
                 RaiseNotification();
-            }          
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieViewModel", e);
+            }
         }
 
         private async void GetDirectMovieInfo(int id)
@@ -253,10 +290,13 @@ namespace ModuleMainModule.ViewModels
                 Cast = new ObservableCollection<MediaCast>(casts);
             }
             catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("MovieListViewModel", ex);
+            {                
                 RaiseNotification();
-            }           
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieViewModel", e);
+            }
         }
 
         private void AddToDb()

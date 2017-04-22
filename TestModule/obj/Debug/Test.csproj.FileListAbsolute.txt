@@ -54,3 +54,4 @@ d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\LocalDatabase
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\NLog.config
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\NLog.dll
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\NLog.xml
+d:\Курсы\стажировка\TestModule\TestModule\obj\Debug\TestModule_Content.g.cs

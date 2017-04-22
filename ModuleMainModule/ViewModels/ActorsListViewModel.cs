@@ -8,6 +8,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using NLog;
 using Prism.Interactivity.InteractionRequest;
+using System;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -19,12 +20,14 @@ namespace ModuleMainModule.ViewModels
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
 
         public ActorsListViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
             NavigateCommandShowDirectActor = new DelegateCommand(ShowDirectActor);
             NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
         }
 
         private Person _selectedSearchedActor;
@@ -45,9 +48,21 @@ namespace ModuleMainModule.ViewModels
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var name = navigationContext.Parameters["name"] as string;
-            if (name != null)
-                await GetSearchedActors(name);
+            try
+            {
+                var name = navigationContext.Parameters["name"] as string;
+                if (name != null)
+                    await GetSearchedActors(name);
+            }
+            catch (NullReferenceException ex)
+            {
+                RaiseNotificationNull();
+                logger.ErrorException("ActorListViewModel", ex);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ActorListViewModel", e);
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -65,11 +80,14 @@ namespace ModuleMainModule.ViewModels
                 List<Person> actorsTest = await Data.GetActorsByName(name);
                 ActorsList = new ObservableCollection<Person>(actorsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("MovieListViewModel", ex);
+            catch (ServiceRequestException)
+            {                
                 RaiseNotification();
-            }           
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ActorListViewModel", e);
+            }
         }
 
         private void RaiseNotification()
@@ -79,10 +97,24 @@ namespace ModuleMainModule.ViewModels
                n => { InteractionResultMessage = "The user was notified."; });
         }
 
+        private void RaiseNotificationNull()
+        {
+            this.NotificationRequestNull.Raise(
+               new Notification { Content = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз.", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
+
         private void ShowDirectActor()
         {
-            var parameters = new NavigationParameters { { "id", SelectedSearchedActor.Id } };
-            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "id", SelectedSearchedActor.Id } };
+                _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ActorListViewModel", e);
+            }
         }
     }
 }

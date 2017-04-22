@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using NLog;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -9,6 +10,7 @@ namespace ModuleMainModule.ViewModels
     {
         private readonly IRegionManager _regionManager;
         private IRegionNavigationJournal _journal;
+        private Logger logger = LogManager.GetCurrentClassLogger();
         public DelegateCommand GoBackCommand { get; set; }
 
         public PlayerViewModel(RegionManager regionManager)
@@ -32,10 +34,17 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            _journal = navigationContext.NavigationService.Journal;
+            try
+            {
+                _journal = navigationContext.NavigationService.Journal;
 
-            string videoUrl = navigationContext.Parameters["VideoUrl"] as string;
-            Video = new Uri(string.Concat("http://www.youtube.com/embed/", videoUrl));
+                string videoUrl = navigationContext.Parameters["VideoUrl"] as string;
+                Video = new Uri(string.Concat("http://www.youtube.com/embed/", videoUrl));
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("PlayerViewModel", e);
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

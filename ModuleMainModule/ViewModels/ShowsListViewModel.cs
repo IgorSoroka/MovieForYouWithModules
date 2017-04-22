@@ -21,7 +21,8 @@ namespace ModuleMainModule.ViewModels
         public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
         public DelegateCommand NavigateCommandShowPriviousPage { get; private set; }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }       
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
 
         private bool _best;
         private bool _popular;
@@ -34,6 +35,7 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage, CanExecuteNextPage);
             NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage, CanExecutePriviousPage);
             NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
         }
 
         #region Constants
@@ -84,10 +86,13 @@ namespace ModuleMainModule.ViewModels
 
         #region Methods
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
             Page = 1;
-            var type = navigationContext.Parameters["type"] as string;
+
+            try
+            {
+                var type = navigationContext.Parameters["type"] as string;
             if (type != null)
             {
                 if (type == "Best")
@@ -120,8 +125,7 @@ namespace ModuleMainModule.ViewModels
             if (name != null)
             { GetShowsByName(name); }
 
-            try
-            {
+           
                 var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
                 var selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
                 var selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
@@ -141,8 +145,14 @@ namespace ModuleMainModule.ViewModels
                     { GetShowsByLastYearAndRating(selectedLastYear, selectedRating); }
                 }
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException ex)
             {
+                //RaiseNotificationNull();
+                logger.ErrorException("ShowListViewModel", ex);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
             }
         }
 
@@ -156,6 +166,13 @@ namespace ModuleMainModule.ViewModels
         {
             this.NotificationRequest.Raise(
                new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
+
+        private void RaiseNotificationNull()
+        {
+            this.NotificationRequestNull.Raise(
+               new Notification { Content = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз.", Title = "Ошибка" },
                n => { InteractionResultMessage = "The user was notified."; });
         }
 
@@ -175,7 +192,7 @@ namespace ModuleMainModule.ViewModels
                 return true;
         }
 
-        private async void ShowPriviousPage()
+        private void ShowPriviousPage()
         {
             if (_popular && Page > 1)
             {
@@ -196,7 +213,7 @@ namespace ModuleMainModule.ViewModels
             }
         }
 
-        private async void ShowNextPage()
+        private void ShowNextPage()
         {
 
             if (_popular && Page < 5)
@@ -221,8 +238,15 @@ namespace ModuleMainModule.ViewModels
 
         private void NavigateShowDirectShow()
         {
-            var parameters = new NavigationParameters { { "id", SelectedShow.Id } };
-            _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "id", SelectedShow.Id } };
+                _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetPopularShows(int page)
@@ -232,11 +256,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetPopularShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {                
                 RaiseNotification();
-            }            
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetBestShows(int page)
@@ -246,11 +273,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetTopRatedShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {                
                 RaiseNotification();
-            }            
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetNowPlayingShows(int page)
@@ -260,11 +290,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetNowShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {                
                 RaiseNotification();
-            }            
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetShowsByLastYearAndRating(int selectedLastYear, decimal selectedRating)
@@ -274,11 +307,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetSearchedShowsLastYear(selectedLastYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {            
                 RaiseNotification();
-            }           
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetShowsByFirstYearAndRating(int selectedFirstYear, decimal selectedRating)
@@ -288,11 +324,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetSearchedShowsFirstYear(selectedFirstYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {                
                 RaiseNotification();
-            }            
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetShowsByFirstLastYearAndRating(int selectedFirstYear, int selectedLastYear, decimal selectedRating)
@@ -302,11 +341,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetSearchedShows(selectedFirstYear, selectedLastYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {              
                 RaiseNotification();
-            }            
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetShowsByYearAndRating(int selectedYear, decimal selectedRating)
@@ -316,11 +358,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetSearchedShows(selectedYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {               
                 RaiseNotification();
-            }           
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetShowsByOnlyRating(decimal selectedRating)
@@ -330,11 +375,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetSearchedShows(selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {              
                 RaiseNotification();
-            }           
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
 
         private async void GetShowsByName(string name)
@@ -344,11 +392,14 @@ namespace ModuleMainModule.ViewModels
                 List<Show> showsTest = await Data.GetShowsByName(name);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowListViewModel", ex);
+            catch (ServiceRequestException)
+            {             
                 RaiseNotification();
-            }        
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
         }
         
         #endregion

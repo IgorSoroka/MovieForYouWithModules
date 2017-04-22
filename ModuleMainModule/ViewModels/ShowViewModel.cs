@@ -12,6 +12,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using NLog;
 using Prism.Interactivity.InteractionRequest;
+using System;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -198,10 +199,17 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            VideoUrl = null;
-            var type = (int)navigationContext.Parameters["id"];
-            GetDirectShowInfo(type);
-            GetVideoUrl(type);
+            try
+            {
+                VideoUrl = null;
+                var type = (int)navigationContext.Parameters["id"];
+                GetDirectShowInfo(type);
+                GetVideoUrl(type);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowViewModel", e);
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -212,9 +220,20 @@ namespace ModuleMainModule.ViewModels
 
         private async void GetVideoUrl(int id)
         {
-            var video = await Data.GetTraillerShow(id);
-            if (video != null)
-            { VideoUrl = video.Key; }
+            try
+            {
+                var video = await Data.GetTraillerShow(id);
+                if (video != null)
+                { VideoUrl = video.Key; }
+            }
+            catch (ServiceRequestException ex)
+            {                
+                RaiseNotification();
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowViewModel", e);
+            }            
         }
 
         private void RaiseNotification()
@@ -226,14 +245,28 @@ namespace ModuleMainModule.ViewModels
 
         private void ShowTrailler()
         {
-            var parameters = new NavigationParameters { { "VideoUrl", VideoUrl } };
-            _regionManager.RequestNavigate("MainRegion", "Player", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "VideoUrl", VideoUrl } };
+                _regionManager.RequestNavigate("MainRegion", "Player", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowViewModel", e);
+            }
         }
 
         private void NavigateShowDirectActor()
         {
-            var parameters = new NavigationParameters {{"id", SelectedActor.Id}};
-            _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "id", SelectedActor.Id } };
+                _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowViewModel", e);
+            }
         }
 
         private async void GetDirectShowInfo(int id)
@@ -247,10 +280,13 @@ namespace ModuleMainModule.ViewModels
                 Crew = new ObservableCollection<MediaCrew>(crews);
                 Cast = new ObservableCollection<MediaCast>(casts);
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ShowViewModel", ex);
+            catch (ServiceRequestException)
+            {                
                 RaiseNotification();
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowViewModel", e);
             }
         }
 

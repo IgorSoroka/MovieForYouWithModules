@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModuleMainModule.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,8 +20,8 @@ namespace MainModule
         {
             List<Movie> popularMovies;
             try
-            {
-                var movies = await _client.Movies.GetPopularAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
+            {                
+                var movies = await _client.Movies.GetPopularAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);               
                 popularMovies = movies.Results.ToList();
             }
             catch (ServiceRequestException)
@@ -96,6 +97,10 @@ namespace MainModule
             try
             {
                 var shows = await _client.Shows.GetPopularAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
+                if (shows == null)
+                {
+                    bool internetConnection = NetworkClient.CheckForInternetConnection();
+                }
                 popularShows = shows.Results.ToList();
             }
             catch (ServiceRequestException)

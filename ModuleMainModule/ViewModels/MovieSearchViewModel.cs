@@ -4,6 +4,8 @@ using ModuleMainModule.Model;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using System;
+using NLog;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -15,6 +17,7 @@ namespace ModuleMainModule.ViewModels
         public DelegateCommand NavigateCommandCompanySearch { get; private set; }
         public DelegateCommand NavigateCommandSearch { get; private set; }
         public DelegateCommand NavigateCommandReset { get; private set; }
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         public MovieSearchViewModel(RegionManager regionManager)
         {
@@ -31,8 +34,6 @@ namespace ModuleMainModule.ViewModels
             List<string> companiesList = RepositoryCompanies.GetNames();
             Companies = new ObservableCollection<string>(companiesList);
         }
-
-        #region Properties
 
         #region Constants
 
@@ -97,6 +98,8 @@ namespace ModuleMainModule.ViewModels
         }
 
         #endregion
+
+        #region Properties
 
         private ObservableCollection<string> _genres;
         public ObservableCollection<string> Genres
@@ -184,32 +187,60 @@ namespace ModuleMainModule.ViewModels
 
         private void NameSearch()
         {
-            var parameters = new NavigationParameters { { "name", Name } };
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "name", Name } };
+                _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieSearchViewModel", e);
+            }
         }
 
         private void GenreSearch()
         {
-            var parameters = new NavigationParameters { { "genre", SelectGenre } };
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "genre", SelectGenre } };
+                _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieSearchViewModel", e);
+            }
         }
 
         private void Search()
         {
-            var parameters = new NavigationParameters
+            try
             {
-                {"SelectedYear", SelectedYear ?? 0},
-                {"SelectedFirstYear", SelectedFirstYear ?? 0},
-                {"SelectedLastYear", SelectedLastYear ?? 0},
-                {"SelectedRating", SelectedRating}
-            };
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+                var parameters = new NavigationParameters
+                    {
+                        {"SelectedYear", SelectedYear ?? 0},
+                        {"SelectedFirstYear", SelectedFirstYear ?? 0},
+                        {"SelectedLastYear", SelectedLastYear ?? 0},
+                        {"SelectedRating", SelectedRating}
+                    };
+                _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieSearchViewModel", e);
+            }
         }
 
         private void CompanySearch()
         {
-            var parameters = new NavigationParameters { { "company", SelectedCompany } };
-            _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "company", SelectedCompany } };
+                _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieSearchViewModel", e);
+            }
         }
 
         private ObservableCollection<int> GetYearsList()

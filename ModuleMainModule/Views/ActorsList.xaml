@@ -15,7 +15,10 @@
     <DockPanel Background="#4C000000" x:Name="DockPanelMain">
         <i:Interaction.Triggers>
             <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
-                <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+                <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
+            </prism:InteractionRequestTrigger>
+            <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequestNull, Mode=OneWay}">
+                <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
             </prism:InteractionRequestTrigger>
         </i:Interaction.Triggers>
         <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" CanContentScroll="True">

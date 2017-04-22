@@ -14,8 +14,11 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="True" x:Name="DockPanelMain">
         <i:Interaction.Triggers>
-            <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
-                <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+            <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequestServer, Mode=OneWay}">
+                <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
+            </prism:InteractionRequestTrigger>
+            <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequestNull, Mode=OneWay}">
+                <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
             </prism:InteractionRequestTrigger>
         </i:Interaction.Triggers>
         <Border Margin="5" DockPanel.Dock="Top"  BorderBrush="DimGray" BorderThickness="2" CornerRadius="5">

@@ -2,12 +2,15 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using System;
+using NLog;
 
 namespace ModuleMainModule.ViewModels
 {
     class ShowSearchViewModel : BindableBase
     {
         private readonly IRegionManager _regionManager;
+        private Logger logger = LogManager.GetCurrentClassLogger();
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandSearch { get; private set; }
         public DelegateCommand NavigateCommandReset { get; private set; }
@@ -131,20 +134,34 @@ namespace ModuleMainModule.ViewModels
 
         private void NameSearch()
         {
-            var parameters = new NavigationParameters { { "name", Name } };
-            _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "name", Name } };
+                _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowSearchtViewModel", e);
+            }
         }
 
         private void Search()
         {
-            var parameters = new NavigationParameters
+            try
+            {
+                var parameters = new NavigationParameters
             {
                 {"SelectedYear", SelectedYear ?? 0},
                 {"SelectedFirstYear", SelectedFirstYear ?? 0},
                 {"SelectedLastYear", SelectedLastYear ?? 0},
                 {"SelectedRating", SelectedRating}
             };
-            _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+                _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowSearchtViewModel", e);
+            }
         }
 
         private ObservableCollection<int> GetYearsList()

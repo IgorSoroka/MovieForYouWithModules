@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
-using System.Threading.Tasks;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -11,6 +10,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using NLog;
 using Prism.Interactivity.InteractionRequest;
+using System;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -110,8 +110,15 @@ namespace ModuleMainModule.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var type = (int)navigationContext.Parameters["id"];
-            GetDirectActorInfo(type);
+            try
+            {
+                var type = (int)navigationContext.Parameters["id"];
+                GetDirectActorInfo(type);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ActorViewModel", e);
+            }
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -142,13 +149,24 @@ namespace ModuleMainModule.ViewModels
             {
                 logger.ErrorException("ActorViewModel", ex);
                 RaiseNotification();
-            }           
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ActorViewModel", e);
+            }
         }
 
         private void NavigateShowDirectMovie()
         {
-            var parameters = new NavigationParameters { { "id", SelectedActorMovie.Id } };
-            _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "id", SelectedActorMovie.Id } };
+                _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ActorViewModel", e);
+            }
         }
 
         private void AddToDb()

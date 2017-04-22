@@ -6,6 +6,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using NLog;
 using Prism.Interactivity.InteractionRequest;
+using System;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -17,6 +18,7 @@ namespace ModuleMainModule.ViewModels
         public DelegateCommand<string> NavigateCommandSearch { get; private set; }
         private Logger logger = LogManager.GetCurrentClassLogger();
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
 
         public ActorSearchViewModel(RegionManager regionManager)
         {
@@ -24,6 +26,7 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandDirectActor = new DelegateCommand<Person>(DirectActor);
             NavigateCommandSearch = new DelegateCommand<string>(Search);
             NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
             GetActorsData();
         }
 
@@ -153,12 +156,16 @@ namespace ModuleMainModule.ViewModels
             }
             catch (System.NullReferenceException ex)
             {
+                RaiseNotificationNull();
                 logger.ErrorException("ActorSearchViewModel", ex);
             }
-            catch (ServiceRequestException e)
-            {
-                logger.ErrorException("ActorSearchViewModel", e);
+            catch (ServiceRequestException)
+            {                
                 RaiseNotification();
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieListViewModel", e);
             }
         }
 
@@ -169,10 +176,24 @@ namespace ModuleMainModule.ViewModels
                n => { InteractionResultMessage = "The user was notified."; });
         }
 
+        private void RaiseNotificationNull()
+        {
+            this.NotificationRequestNull.Raise(
+               new Notification { Content = "Для перехода дождитесь полной загрузки данных по выбранному Вами актеру", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
+
         private void Search(string obj)
         {
-            var parameters = new NavigationParameters {{"name", Name}};
-            _regionManager.RequestNavigate("ListRegion", "ActorsList", parameters);
+            try
+            {
+                var parameters = new NavigationParameters { { "name", Name } };
+                _regionManager.RequestNavigate("ListRegion", "ActorsList", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieListViewModel", e);
+            }
         }
 
         private void DirectActor(Person person)
@@ -185,7 +206,12 @@ namespace ModuleMainModule.ViewModels
             }
             catch (System.NullReferenceException ex)
             {
+                RaiseNotificationNull();
                 logger.ErrorException("ActorSearchViewModel", ex);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieListViewModel", e);
             }
         }
     }

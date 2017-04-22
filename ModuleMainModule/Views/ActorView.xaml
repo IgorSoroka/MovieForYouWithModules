@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
             <i:Interaction.Triggers>
                 <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
-                    <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+                    <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
                 </prism:InteractionRequestTrigger>
             </i:Interaction.Triggers>
             <Border BorderThickness="1" BorderBrush="Black">

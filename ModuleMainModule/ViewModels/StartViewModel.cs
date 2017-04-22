@@ -7,6 +7,8 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Interactivity.InteractionRequest;
 using NLog;
+using System;
+using ModuleMainModule.Model;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -18,7 +20,8 @@ namespace ModuleMainModule.ViewModels
 
         public DelegateCommand<Movie> NavigateCommandMovie { get; private set; }
         public DelegateCommand<Show> NavigateCommandShow { get; private set; }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }        
+        public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
 
         public StartViewModel(RegionManager regionManager)
         {
@@ -27,6 +30,7 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandMovie = new DelegateCommand<Movie>(ShowDirectMovie);
             NavigateCommandShow = new DelegateCommand<Show>(ShowDirectShow);
             NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
         }
 
         #region Properties
@@ -85,6 +89,13 @@ namespace ModuleMainModule.ViewModels
                n => { InteractionResultMessage = "The user was notified."; });
         }
 
+        private void RaiseNotificationNull()
+        {
+            this.NotificationRequestNull.Raise(
+               new Notification { Content = "Для перехода дождитесь полной загрузки данных по выбранному вами фильму или сериалу", Title = "Ошибка" },
+               n => { InteractionResultMessage = "The user was notified."; });
+        }
+
         private void ShowDirectMovie(Movie movie)
         {            
             try
@@ -95,11 +106,12 @@ namespace ModuleMainModule.ViewModels
             }
             catch (System.NullReferenceException ex)
             {
+                RaiseNotificationNull();
                 logger.ErrorException("StartViewModel", ex);
             }
-            catch (System.Exception otherExeption)
+            catch (Exception e)
             {
-                logger.ErrorException("StartViewModel", otherExeption);
+                logger.ErrorException("StartViewModel", e);
             }
         }
 
@@ -113,11 +125,12 @@ namespace ModuleMainModule.ViewModels
             }
             catch (System.NullReferenceException ex)
             {
+                RaiseNotificationNull();
                 logger.ErrorException("StartViewModel", ex);
             }
-            catch (System.Exception otherExeption)
+            catch (Exception e)
             {
-                logger.ErrorException("StartViewModel", otherExeption);
+                logger.ErrorException("StartViewModel", e);
             }
         }
 
@@ -134,15 +147,13 @@ namespace ModuleMainModule.ViewModels
                 SecondShow = showsTest[1];
                 ThirdShow = showsTest[2];
             }
-            catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("StartViewModel", ex);
-                RaiseNotification();
-                //GetAllData();
+            catch (ServiceRequestException)
+            {                
+                RaiseNotification();                
             }
-            catch (System.Exception otherExeption)
+            catch (Exception e)
             {
-                logger.ErrorException("StartViewModel", otherExeption);
+                logger.ErrorException("StartViewModel", e);
             }
         }
 

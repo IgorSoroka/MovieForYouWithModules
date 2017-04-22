@@ -27,7 +27,10 @@
             </Grid.RowDefinitions>
             <i:Interaction.Triggers>
                 <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest, Mode=OneWay}">
-                    <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True"/>
+                    <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
+                </prism:InteractionRequestTrigger>
+                <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequestNull, Mode=OneWay}">
+                    <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
                 </prism:InteractionRequestTrigger>
             </i:Interaction.Triggers>
             <Grid DataContext="{Binding Path=DirectMovie}" MinHeight="150" MaxHeight="300">
