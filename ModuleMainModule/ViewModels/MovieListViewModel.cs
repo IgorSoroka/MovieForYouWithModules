@@ -9,6 +9,8 @@ using Prism.Commands;
 using Prism.Regions;
 using Prism.Interactivity.InteractionRequest;
 using NLog;
+using ModuleMainModule.Interfaces;
+using ModuleMainModule.Services;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -17,6 +19,7 @@ namespace ModuleMainModule.ViewModels
         private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
         private Logger logger = LogManager.GetCurrentClassLogger();
+        static readonly IMovieService MovieService = new MovieService();
 
         public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
@@ -43,6 +46,7 @@ namespace ModuleMainModule.ViewModels
             NotificationRequestNull = new InteractionRequest<INotification>();
 
             Page = 1;
+            _best = true;
             Title = "Лучшие фильмы";
             GetBestMovies(Page);
         }
@@ -154,6 +158,17 @@ namespace ModuleMainModule.ViewModels
                         _company = false;
                         GetNowPlayingMovies(Page);
                         Title = "Сейчас в кино";
+                    }
+                    if (type == "Favorite")
+                    {
+                        _best = false;
+                        _popular = false;
+                        _future = false;
+                        _now = false;
+                        _genre = false;
+                        _company = false;
+                        GetFavoriteMovies();
+                        Title = "Избранные фильмы";
                     }
                 }
 
@@ -601,7 +616,35 @@ namespace ModuleMainModule.ViewModels
             {
                 logger.ErrorException("MovieListViewModel", e);
             }
-        }       
+        }
+
+        private async void GetFavoriteMovies()
+        {
+            try
+            {
+                IEnumerable<MovieDTO> favoriteMoviesFromDb = MovieService.GetMovies();
+                List<int> moviesId = new List<int>();
+                foreach (var item in favoriteMoviesFromDb)
+                {
+                    moviesId.Add(item.ExternalId);
+                }
+                List<Movie> favoriteMoviesFromSite = new List<Movie>();
+                foreach (var item in moviesId)
+                {
+                    Movie movie = await Data.GetDirectMoveData(item);
+                    favoriteMoviesFromSite.Add(movie);
+                }
+                Movies = new ObservableCollection<Movie>(favoriteMoviesFromSite);
+            }
+            catch (ServiceRequestException)
+            {
+                RaiseNotificationServer();
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("MovieListViewModel", e);
+            }
+        }
     }
         #endregion
 

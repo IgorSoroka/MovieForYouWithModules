@@ -9,11 +9,10 @@ namespace ModuleMainModule.Services
 {
     public class MovieService : IMovieService
     {
-        readonly EFUnitOfWork _database = new EFUnitOfWork();
+        private readonly EFUnitOfWork _database = new EFUnitOfWork();
 
         public MovieService()
-        {
-        }
+        {  }
 
         public void TakeMovie(MovieDTO movieDto)
         {
@@ -34,6 +33,12 @@ namespace ModuleMainModule.Services
             var movie = _database.Movies.Get(id.Value);
             Mapper.Initialize(cfg => cfg.CreateMap<Movie, MovieDTO>());
             return Mapper.Map<Movie, MovieDTO>(movie);
+        }
+
+        public void DelMovie(int id)
+        {
+            _database.Movies.Delete(id);
+            _database.Save();
         }
 
         public void Dispose()

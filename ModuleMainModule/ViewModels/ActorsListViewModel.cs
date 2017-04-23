@@ -9,6 +9,9 @@ using Prism.Regions;
 using NLog;
 using Prism.Interactivity.InteractionRequest;
 using System;
+using ModuleMainModule.Interfaces;
+using ModuleMainModule.Services;
+using ModuleMainModule.Model;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -17,6 +20,7 @@ namespace ModuleMainModule.ViewModels
         readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
         Logger logger = LogManager.GetCurrentClassLogger();
+        static readonly IActorService ActorService = new ActorService();
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
@@ -64,10 +68,19 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                var type = navigationContext.Parameters["type"] as string;
+                if (type != null)
+                {     
+                    GetFavoriteActors();
+                    Title = "Избранные актеры";                    
+                }
+
                 var name = navigationContext.Parameters["name"] as string;
                 if (name != null)
+                {
                     await GetSearchedActors(name);
-                Title = "Результаты поиска";
+                    Title = "Результаты поиска";
+                }                  
             }
             catch (NullReferenceException ex)
             {
@@ -133,6 +146,34 @@ namespace ModuleMainModule.ViewModels
             {
                 var parameters = new NavigationParameters { { "id", SelectedSearchedActor.Id } };
                 _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ActorListViewModel", e);
+            }
+        }
+
+        private async void GetFavoriteActors()
+        {
+            try
+            {
+                IEnumerable<ActorDTO> favoriteActorsFromDb = ActorService.GetActors();
+                List<int> actorsId = new List<int>();
+                foreach (var item in favoriteActorsFromDb)
+                {
+                    actorsId.Add(item.ExternalId);
+                }
+                List<Person> favoriteActorsFromSite = new List<Person>();
+                foreach (var item in actorsId)
+                {
+                    Person actor = await Data.GetDirectActorData(item);
+                    favoriteActorsFromSite.Add(actor);
+                }
+                ActorsList = new ObservableCollection<Person>(favoriteActorsFromSite);
+            }
+            catch (ServiceRequestException)
+            {
+                RaiseNotification();
             }
             catch (Exception e)
             {

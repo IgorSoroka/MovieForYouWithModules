@@ -140,6 +140,14 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _robbie, value); }
         }
 
+        private bool _canSave;
+
+        public bool CanSave
+        {
+            get { return _canSave; }
+            set { SetProperty(ref _canSave, value); }
+        }
+
         public string InteractionResultMessage { get; private set; }
 
          #endregion
@@ -263,12 +271,6 @@ namespace ModuleMainModule.ViewModels
         }
 
 
-        private bool _canSave;
-
-        public bool CanSave
-        {
-            get { return _canSave; }
-            set { SetProperty(ref _canSave, value); }
-        }      
+         
     }
 }

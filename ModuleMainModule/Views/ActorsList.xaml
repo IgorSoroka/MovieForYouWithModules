@@ -61,7 +61,7 @@
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}" Height="150" Width="150"/>
                         <StackPanel Orientation="Vertical">
-                                <TextBlock Text="{Binding Name}" Margin="3" FontSize="14"/>
+                                <TextBlock Foreground="Honeydew" Text="{Binding Name}" Margin="3" FontSize="14"/>
                                 <Button FontSize="12" Content="Подробнее" Command="{Binding NavigateCommandShowDirectActor}" 
                                         DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
                                     <Button.Style>

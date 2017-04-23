@@ -20,11 +20,13 @@ namespace ModuleMainModule.ViewModels
     {
         private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
+        static readonly IShowService ShowService = new ShowService();
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public DelegateCommand NavigateCommandShowTrailler { get; private set; }
         public DelegateCommand NavigateCommandAddToDb { get; private set; }
-        static readonly IShowService ShowService = new ShowService();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
 
         public ShowViewModel(RegionManager regionManager)
@@ -33,6 +35,7 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
             NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
             NotificationRequest = new InteractionRequest<INotification>();
         }
 
@@ -42,6 +45,12 @@ namespace ModuleMainModule.ViewModels
         public string Plot
         {
             get { return _plot; }
+        }
+
+        private const string _delFavorites = "Удалить из избранного";
+        public string DelFavorites
+        {
+            get { return _delFavorites; }
         }
 
         private const string _addFavorites = "Добавить в избранное";
@@ -191,6 +200,20 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _crew, value); }
         }
 
+        private bool _canAddToDb;
+        public bool CanAddToDb
+        {
+            get { return _canAddToDb; }
+            set { SetProperty(ref _canAddToDb, value); }
+        }
+
+        private bool _canDelFromDb;
+        public bool CanDelFromDb
+        {
+            get { return _canDelFromDb; }
+            set { SetProperty(ref _canDelFromDb, value); }
+        }
+
         public string InteractionResultMessage { get; private set; }
 
         #endregion
@@ -279,6 +302,18 @@ namespace ModuleMainModule.ViewModels
                 DirectShow = show;
                 Crew = new ObservableCollection<MediaCrew>(crews);
                 Cast = new ObservableCollection<MediaCast>(casts);
+
+                ShowDTO showFromDb = ShowService.GetShow(DirectShow.Id);
+                if (showFromDb == null)
+                {
+                    CanDelFromDb = false;
+                    CanAddToDb = true;
+                }
+                else
+                {
+                    CanDelFromDb = true;
+                    CanAddToDb = false;
+                }
             }
             catch (ServiceRequestException)
             {                
@@ -292,10 +327,19 @@ namespace ModuleMainModule.ViewModels
 
         private void AddToDb()
         {
-            ShowDTO show = new ShowDTO() { Name = DirectShow.Name, Id = DirectShow.Id, Rating = 7 };
-            IEnumerable<ShowDTO> shows = ShowService.GetShows();
+            ShowDTO show = new ShowDTO() { Name = DirectShow.Name, ExternalId = DirectShow.Id };          
             ShowService.TakeShow(show);
-            IEnumerable<ShowDTO> showsPast = ShowService.GetShows();
+
+            CanDelFromDb = true;
+            CanAddToDb = false;
+        }
+
+        private void DelFromDb()
+        {            
+            ShowService.DelShow(DirectShow.Id);
+
+            CanDelFromDb = false;
+            CanAddToDb = true;
         }
 
         #endregion

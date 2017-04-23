@@ -8,6 +8,7 @@ namespace ModuleMainModule.Interfaces
         void TakeShow(ShowDTO showDto);
         ShowDTO GetShow(int? id);
         IEnumerable<ShowDTO> GetShows();
+        void DelShow(int id);
         void Dispose();
     }
 }

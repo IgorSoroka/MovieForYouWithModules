@@ -24,7 +24,7 @@ namespace MovieForYou.DAL.Repositories
 
         public Movie Get(int id)
         {
-            return _db.Movies.Find(id);
+            return _db.Movies.Where(item => item.ExternalId == id).ToList().FirstOrDefault();
         }
 
         public void Create(Movie movie)
@@ -44,7 +44,7 @@ namespace MovieForYou.DAL.Repositories
 
         public void Delete(int id)
         {
-            Movie movie = _db.Movies.Find(id);
+            Movie movie = _db.Movies.Where(item => item.ExternalId == id).ToList().FirstOrDefault();
             if (movie != null)
                 _db.Movies.Remove(movie);
         }

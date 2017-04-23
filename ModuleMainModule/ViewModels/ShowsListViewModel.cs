@@ -9,6 +9,9 @@ using Prism.Mvvm;
 using Prism.Regions;
 using NLog;
 using Prism.Interactivity.InteractionRequest;
+using ModuleMainModule.Interfaces;
+using ModuleMainModule.Services;
+using ModuleMainModule.Model;
 
 namespace ModuleMainModule.ViewModels
 {
@@ -17,6 +20,7 @@ namespace ModuleMainModule.ViewModels
         private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
         private Logger logger = LogManager.GetCurrentClassLogger();
+        static readonly IShowService ShowService = new ShowService();
 
         public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
@@ -93,40 +97,48 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 var type = navigationContext.Parameters["type"] as string;
-            if (type != null)
-            {
-                if (type == "Best")
+                if (type != null)
                 {
-                    _best = true;
-                    _popular = false;
-                    _now = false;
-                    GetBestShows(Page);
-                    Title = "Лучшие сериалы";
+                    if (type == "Best")
+                    {
+                        _best = true;
+                        _popular = false;
+                        _now = false;
+                        GetBestShows(Page);
+                        Title = "Лучшие сериалы";
+                    }
+                    if (type == "Popular")
+                    {
+                        _best = false;
+                        _popular = true;
+                        _now = false;
+                        GetPopularShows(Page);
+                        Title = "Популярные сериалы";
+                    }
+                    if (type == "Now")
+                    {
+                        _best = false;
+                        _popular = false;
+                        _now = true;
+                        GetNowPlayingShows(Page);
+                        Title = "Сейчас на ТВ";
+                    }
+                    if (type == "Favorite")
+                    {
+                        _best = false;
+                        _popular = false;
+                        _now = false;
+                        GetFavoriteShows();
+                        Title = "Избранные сериалы";
+                    }
                 }
-                if (type == "Popular")
-                {
-                    _best = false;
-                    _popular = true;
-                    _now = false;
-                    GetPopularShows(Page);
-                    Title = "Популярные сериалы";
-                }
-                if (type == "Now")
-                {
-                    _best = false;
-                    _popular = false;
-                    _now = true;
-                    GetNowPlayingShows(Page);
-                    Title = "Сейчас на ТВ";
-                }
-            }
 
-            var name = navigationContext.Parameters["name"] as string;
-            if (name != null)
-            {
-                GetShowsByName(name);
-                Title = "Результаты поиска";
-            }
+                var name = navigationContext.Parameters["name"] as string;
+                if (name != null)
+                {
+                    GetShowsByName(name);
+                    Title = "Результаты поиска";
+                }
 
            
                 var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
@@ -419,7 +431,35 @@ namespace ModuleMainModule.ViewModels
                 logger.ErrorException("ShowListViewModel", e);
             }
         }
-        
+
+        private async void GetFavoriteShows()
+        {
+            try
+            {
+                IEnumerable<ShowDTO> favoriteShowsFromDb = ShowService.GetShows();
+                List<int> showsId = new List<int>();
+                foreach (var item in favoriteShowsFromDb)
+                {
+                    showsId.Add(item.ExternalId);
+                }
+                List<Show> favoriteShowsFromSite = new List<Show>();
+                foreach (var item in showsId)
+                {
+                    Show show = await Data.GetDirectShowData(item);
+                    favoriteShowsFromSite.Add(show);
+                }               
+                Shows = new ObservableCollection<Show>(favoriteShowsFromSite);
+            }
+            catch (ServiceRequestException)
+            {
+                RaiseNotification();
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShowListViewModel", e);
+            }
+        }
+
         #endregion
     }
 }

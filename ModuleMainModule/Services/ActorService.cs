@@ -32,6 +32,12 @@ namespace ModuleMainModule.Services
             return Mapper.Map<Actor, ActorDTO>(actor);
         }
 
+        public void DelActor(int id)
+        {
+            _database.Actors.Delete(id);
+            _database.Save();
+        }
+
         public void Dispose()
         {
             _database.Dispose();

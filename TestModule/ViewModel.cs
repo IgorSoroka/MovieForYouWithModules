@@ -17,6 +17,7 @@ namespace TestModule
         public DelegateCommand<string> NavigateCommandMain { get; private set; }
         public DelegateCommand<string> NavigateCommandListShow { get; private set; }
         public DelegateCommand<string> NavigateCommandListMovie { get; private set; }
+        public DelegateCommand<string> NavigateCommandListActor { get; private set; }
 
         public InteractionRequest<INotification> NotificationRequestConnection { get; private set; }
 
@@ -26,6 +27,7 @@ namespace TestModule
             NavigateCommandMain = new DelegateCommand<string>(NavigateMain);
             NavigateCommandListShow = new DelegateCommand<string>(NavigateListShow);
             NavigateCommandListMovie = new DelegateCommand<string>(NavigateListMovie);
+            NavigateCommandListActor = new DelegateCommand<string>(NavigateListActor);
 
             NotificationRequestConnection = new InteractionRequest<INotification>();
 
@@ -192,6 +194,20 @@ namespace TestModule
             {
                 logger.ErrorException("ShellViewModel", e);
             }
-        }       
+        }
+
+        private void NavigateListActor(string type)
+        {
+            try
+            {
+                var parameters = new NavigationParameters { { "type", type } };
+                if (type != null)
+                { _regionManager.RequestNavigate("ListRegion", "ActorsList", parameters); }
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException("ShellViewModel", e);
+            }
+        }
     }
 }

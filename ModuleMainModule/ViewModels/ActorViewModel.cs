@@ -18,10 +18,12 @@ namespace ModuleMainModule.ViewModels
     {
         private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
-        public DelegateCommand NavigateCommandAddToDb { get; private set; }
         static readonly IActorService ActorService = new ActorService();
         private Logger logger = LogManager.GetCurrentClassLogger();
+
+        public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
+        public DelegateCommand NavigateCommandAddToDb { get; private set; }
+        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
 
         public ActorViewModel(RegionManager regionManager)
@@ -29,16 +31,23 @@ namespace ModuleMainModule.ViewModels
             _regionManager = regionManager;
             NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
             NotificationRequest = new InteractionRequest<INotification>();
         }
 
         #region Constants
 
+        private const string _delFavorites = "Удалить из избранного";
+        public string DelFavorites
+        {
+            get { return _delFavorites; }
+        }
+
         private const string _addFavorites = "Добавить в избранное";
         public string AddFavorites
         {
             get { return _addFavorites; }
-        }
+        }        
 
         private const string _homePage = "Домашняя страница";
         public string ActorHomePage
@@ -95,11 +104,24 @@ namespace ModuleMainModule.ViewModels
         }
 
         private ObservableCollection<PersonCredit> _actorMovies;
-
         public ObservableCollection<PersonCredit> ActorMovies
         {
             get { return _actorMovies; }
             set { SetProperty(ref _actorMovies, value); }
+        }
+
+        private bool _canAddToDb;
+        public bool CanAddToDb
+        {
+            get { return _canAddToDb; }
+            set { SetProperty(ref _canAddToDb, value); }
+        }
+
+        private bool _canDelFromDb;
+        public bool CanDelFromDb
+        {
+            get { return _canDelFromDb; }
+            set { SetProperty(ref _canDelFromDb, value); }
         }
 
         public string InteractionResultMessage { get; private set; }
@@ -140,10 +162,22 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                var actor = await Data.GetDirectActorData(id);
+                var actor = await Data.GetDirectActorData(id);               
                 List<PersonCredit> movies = await Data.GetDirectActorMoviesList(id);
                 DirectActor = actor;
                 ActorMovies = new ObservableCollection<PersonCredit>(movies);
+
+                ActorDTO personFromDb = ActorService.GetActor(DirectActor.Id);
+                if (personFromDb == null)
+                {
+                    CanDelFromDb = false;
+                    CanAddToDb = true;
+                }
+                else
+                {
+                    CanDelFromDb = true;
+                    CanAddToDb = false;
+                }
             }
             catch (ServiceRequestException ex)
             {
@@ -171,10 +205,19 @@ namespace ModuleMainModule.ViewModels
 
         private void AddToDb()
         {
-            ActorDTO actor = new ActorDTO() { Name = DirectActor.Name, Id = DirectActor.Id};
-            IEnumerable<ActorDTO> actors = ActorService.GetActors();
+            ActorDTO actor = new ActorDTO() { Name = DirectActor.Name, ExternalId = DirectActor.Id};           
             ActorService.TakeActor(actor);
-            IEnumerable<ActorDTO> actorsPast = ActorService.GetActors();
+
+            CanDelFromDb = true;
+            CanAddToDb = false;
+        }
+
+        private void DelFromDb()
+        {            
+            ActorService.DelActor(DirectActor.Id);
+
+            CanDelFromDb = false;
+            CanAddToDb = true;           
         }
 
         #endregion

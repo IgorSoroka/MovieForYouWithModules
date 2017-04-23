@@ -10,3 +10,6 @@ d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\EntityFr
 d:\Курсы\стажировка\TestModule\MovieForYou.DAL\obj\Debug\MovieForYou.DAL.csprojResolveAssemblyReference.cache
 d:\Курсы\стажировка\TestModule\MovieForYou.DAL\obj\Debug\MovieForYou.DAL.dll
 d:\Курсы\стажировка\TestModule\MovieForYou.DAL\obj\Debug\MovieForYou.DAL.pdb
+d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\EntityFramework.SqlServerCompact.dll
+d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\System.Data.SqlServerCe.dll
+d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\EntityFramework.SqlServerCompact.xml

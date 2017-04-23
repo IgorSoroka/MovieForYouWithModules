@@ -6,7 +6,7 @@ namespace MovieForYou.DAL.EF
     public class LocalDbContext : DbContext
     {
         public LocalDbContext()
-            : base("LocalDatabaseConnection")
+            : base("LocalAppDb")
         {
         }
 

@@ -40,11 +40,19 @@
                     <TextBlock Foreground="Honeydew"  FontSize="20" Text="{Binding Name}"/>
                     <Label FontSize="16" Foreground="Honeydew" Content="{Binding Plot}"
                            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="250">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200">
                         <TextBlock Foreground="Honeydew"  TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Overview}"/>
                     </ScrollViewer>
-                    <Button FontSize="16" Height="35" Content="{Binding AddFavorites}" Command="{Binding NavigateCommandAddToDb}"
-                            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" FontSize="16" Height="35" Content="{Binding AddFavorites}" Command="{Binding NavigateCommandAddToDb}" IsEnabled="{Binding CanAddToDb, UpdateSourceTrigger=PropertyChanged}"
+                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                        <Button Grid.Column="1" FontSize="16" Height="35" Content="{Binding DelFavorites}" Command="{Binding NavigateCommandDellFromDb}" IsEnabled="{Binding CanDelFromDb, UpdateSourceTrigger=PropertyChanged}"
+                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    </Grid>
                     <Button FontSize="16" Height="35" Content="{Binding Trailer}" Command="{Binding NavigateCommandShowTrailler}"
                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"
                             IsEnabled="{Binding Path=VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>

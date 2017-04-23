@@ -58,7 +58,7 @@
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="{Binding Search}">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding SearchMovie}" Width="100" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
+                    <ribbon:RibbonButton Label="{Binding SearchMovie}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="{Binding SearchShow}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ShowSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
@@ -67,10 +67,15 @@
                     <ribbon:RibbonButton Label="{Binding SearchActor}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ActorSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
-            <ribbon:RibbonTab Header="{Binding Help}">
-                <ribbon:RibbonGroup Header="{Binding Information}">
-                    <ribbon:RibbonButton Label="{Binding AboutDeveloper}"/>
-                    <ribbon:RibbonButton Label="{Binding AboutProgram}"/>
+            <ribbon:RibbonTab Header="Избранное">
+                <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="Избранные фильмы" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Favorite"/>
+                </ribbon:RibbonGroup>
+                <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="Избранные сериалы" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ShowSearch.jpg" Command="{Binding NavigateCommandListShow}" CommandParameter="Favorite"/>
+                </ribbon:RibbonGroup>
+                <ribbon:RibbonGroup>
+                    <ribbon:RibbonButton Label="Избранные актеры" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ActorSearch.jpg" Command="{Binding NavigateCommandListActor}" CommandParameter="Favorite"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
         </ribbon:Ribbon>

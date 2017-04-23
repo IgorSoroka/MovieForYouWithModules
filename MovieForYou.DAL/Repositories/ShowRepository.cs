@@ -23,8 +23,8 @@ namespace MovieForYou.DAL.Repositories
         }
 
         public Show Get(int id)
-        {
-            return _db.Shows.Find(id);
+        {            
+            return _db.Shows.Where(item => item.ExternalId == id).ToList().FirstOrDefault();
         }
 
         public void Create(Show show)
@@ -44,7 +44,7 @@ namespace MovieForYou.DAL.Repositories
 
         public void Delete(int id)
         {
-            Show show = _db.Shows.Find(id);
+            Show show = _db.Shows.Where(item => item.ExternalId == id).ToList().FirstOrDefault();
             if (show != null)
                 _db.Shows.Remove(show);
         }

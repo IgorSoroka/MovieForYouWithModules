@@ -39,8 +39,12 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200" >
                         <TextBlock Foreground="Honeydew" Margin="3" TextWrapping="Wrap" FontSize="14" Text="{Binding Biography}"/>
                     </ScrollViewer>
-                        <Button FontSize="16" Height="35" Content="{Binding AddFavorites}" Command="{Binding NavigateCommandAddToDb}"
+                        <StackPanel Orientation="Horizontal">
+                            <Button FontSize="16" Height="35" Content="{Binding AddFavorites}" Command="{Binding NavigateCommandAddToDb}" IsEnabled="{Binding CanAddToDb, UpdateSourceTrigger=PropertyChanged}"
                              DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                            <Button FontSize="16" Height="35" Content="{Binding DelFavorites}" Command="{Binding NavigateCommandDellFromDb}" IsEnabled="{Binding CanDelFromDb, UpdateSourceTrigger=PropertyChanged}"
+                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                        </StackPanel>                        
                     </StackPanel>
             </Grid>
         </Border>

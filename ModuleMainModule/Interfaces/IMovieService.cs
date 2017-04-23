@@ -8,6 +8,7 @@ namespace ModuleMainModule.Interfaces
         void TakeMovie(MovieDTO movieDto);
         MovieDTO GetMovie(int? id);
         IEnumerable<MovieDTO> GetMovies();
+        void DelMovie(int id);
         void Dispose();
     }
 }

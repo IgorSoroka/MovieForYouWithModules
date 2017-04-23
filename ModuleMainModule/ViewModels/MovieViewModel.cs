@@ -19,11 +19,13 @@ namespace ModuleMainModule.ViewModels
     {
         private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
+        static readonly IMovieService MovieService = new MovieService();
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public DelegateCommand NavigateCommandShowTrailler { get; private set; }
         public DelegateCommand NavigateCommandAddToDb { get; private set; }
-        static readonly IMovieService MovieService = new MovieService();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
         public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
 
@@ -33,6 +35,7 @@ namespace ModuleMainModule.ViewModels
             NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
             NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
             NotificationRequest = new InteractionRequest<INotification>();
             NotificationRequestNull = new InteractionRequest<INotification>();
         }
@@ -43,6 +46,12 @@ namespace ModuleMainModule.ViewModels
         public string Plot
         {
             get { return _plot; }
+        }
+
+        private const string _delFavorites = "Удалить из избранного";
+        public string DelFavorites
+        {
+            get { return _delFavorites; }
         }
 
         private const string _addFavorites = "Добавить в избранное";
@@ -186,6 +195,20 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _crew, value); }
         }
 
+        private bool _canAddToDb;
+        public bool CanAddToDb
+        {
+            get { return _canAddToDb; }
+            set { SetProperty(ref _canAddToDb, value); }
+        }
+
+        private bool _canDelFromDb;
+        public bool CanDelFromDb
+        {
+            get { return _canDelFromDb; }
+            set { SetProperty(ref _canDelFromDb, value); }
+        }
+
         public string InteractionResultMessage { get; private set; }
 
         #endregion
@@ -288,6 +311,18 @@ namespace ModuleMainModule.ViewModels
                 DirectMovie = movie;
                 Crew = new ObservableCollection<MediaCrew>(crews);
                 Cast = new ObservableCollection<MediaCast>(casts);
+
+                MovieDTO movieFromDb = MovieService.GetMovie(DirectMovie.Id);
+                if (movieFromDb == null)
+                {
+                    CanDelFromDb = false;
+                    CanAddToDb = true;
+                }
+                else
+                {
+                    CanDelFromDb = true;
+                    CanAddToDb = false;
+                }
             }
             catch (ServiceRequestException ex)
             {                
@@ -301,10 +336,19 @@ namespace ModuleMainModule.ViewModels
 
         private void AddToDb()
         {
-            MovieDTO movie = new MovieDTO() { Name = DirectMovie.OriginalTitle, Id = DirectMovie.Id, Rating = 7 };
-            IEnumerable<MovieDTO> movies = MovieService.GetMovies();
+            MovieDTO movie = new MovieDTO() { Name = DirectMovie.OriginalTitle, ExternalId = DirectMovie.Id };           
             MovieService.TakeMovie(movie);
-            IEnumerable<MovieDTO> moviesPast = MovieService.GetMovies();
+
+            CanDelFromDb = true;
+            CanAddToDb = false;
+        }
+
+        private void DelFromDb()
+        {            
+            MovieService.DelMovie(DirectMovie.Id);
+
+            CanDelFromDb = false;
+            CanAddToDb = true;
         }
 
         #endregion

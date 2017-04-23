@@ -8,6 +8,7 @@ namespace ModuleMainModule.Interfaces
         void TakeActor(ActorDTO actorDto);
         ActorDTO GetActor(int? id);
         IEnumerable<ActorDTO> GetActors();
+        void DelActor(int id);
         void Dispose();
     }
 }

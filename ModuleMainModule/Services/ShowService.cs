@@ -32,6 +32,12 @@ namespace ModuleMainModule.Services
             return Mapper.Map<Show, ShowDTO>(show);
         }
 
+        public void DelShow(int id)
+        {
+            _database.Shows.Delete(id);
+            _database.Save();
+        }
+
         public void Dispose()
         {
             _database.Dispose();
