@@ -4,13 +4,18 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using NLog;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ModuleMainModule.ViewModels
 {
-    class ShowSearchViewModel : BindableBase
+    class ShowSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
         private Logger logger = LogManager.GetCurrentClassLogger();
+
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandSearch { get; private set; }
         public DelegateCommand NavigateCommandReset { get; private set; }
@@ -112,8 +117,10 @@ namespace ModuleMainModule.ViewModels
             get { return _selectedRating; }
             set { SetProperty(ref _selectedRating, value); }
         }
-
+              
         private string _name;
+        [Required]
+        [RegularExpression(@"^[а-яА-Яa-zA-Z0-9\-''-'!?,.()\s]{2,40}$")]
         public string Name
         {
             get { return _name; }
@@ -175,5 +182,49 @@ namespace ModuleMainModule.ViewModels
         }
 
         #endregion
+
+        public string Error
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        string IDataErrorInfo.this[string propertyName]
+        {
+            get { return OnValidate(propertyName); }
+        }
+
+        protected virtual string OnValidate(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                throw new ArgumentException("Invalid property name", propertyName);
+
+            string error = string.Empty;
+            var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
+            var results = new List<ValidationResult>(1);
+
+            var context = new ValidationContext(this, null, null) { MemberName = propertyName };
+
+            var result = Validator.TryValidateProperty(value, context, results);
+
+            if (!result)
+            {
+                var validationResult = results.First();
+                error = validationResult.ErrorMessage;
+            }
+
+            CanSave = error == String.Empty;
+            return error;
+        }
+
+        private bool _canSave;
+
+        public bool CanSave
+        {
+            get { return _canSave; }
+            set { SetProperty(ref _canSave, value); }
+        }
     }
 }

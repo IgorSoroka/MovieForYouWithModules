@@ -123,7 +123,10 @@ namespace ModuleMainModule.ViewModels
 
             var name = navigationContext.Parameters["name"] as string;
             if (name != null)
-            { GetShowsByName(name); }
+            {
+                GetShowsByName(name);
+                Title = "Результаты поиска";
+            }
 
            
                 var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
@@ -132,17 +135,32 @@ namespace ModuleMainModule.ViewModels
                 var selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
 
                 if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
-                { GetShowsByOnlyRating(selectedRating); }
+                {
+                    GetShowsByOnlyRating(selectedRating);
+                    Title = "Результаты поиска";
+                }
                 else if (selectedYear != 0)
-                { GetShowsByYearAndRating(selectedYear, selectedRating); }
+                {
+                    GetShowsByYearAndRating(selectedYear, selectedRating);
+                    Title = "Результаты поиска";
+                }
                 else if (selectedFirstYear != 0 && selectedLastYear != 0)
-                { GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating); }
+                {
+                    GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
+                    Title = "Результаты поиска";
+                }
                 else if (selectedFirstYear == 0 || selectedLastYear == 0)
                 {
                     if (selectedFirstYear != 0 && selectedLastYear == 0)
-                    { GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating); }
+                    {
+                        GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating);
+                        Title = "Результаты поиска";
+                    }
                     else if (selectedFirstYear == 0 && selectedLastYear != 0)
-                    { GetShowsByLastYearAndRating(selectedLastYear, selectedRating); }
+                    {
+                        GetShowsByLastYearAndRating(selectedLastYear, selectedRating);
+                        Title = "Результаты поиска";
+                    }
                 }
             }
             catch (NullReferenceException ex)

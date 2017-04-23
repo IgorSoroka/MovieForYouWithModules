@@ -37,6 +37,20 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _selectedSearchedActor, value); }
         }
 
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+
+        private string _notFound;
+        public string NotFound
+        {
+            get { return _notFound; }
+            set { SetProperty(ref _notFound, value); }
+        }
+
         private ObservableCollection<Person> _actorsList;
         public ObservableCollection<Person> ActorsList
         {
@@ -53,6 +67,7 @@ namespace ModuleMainModule.ViewModels
                 var name = navigationContext.Parameters["name"] as string;
                 if (name != null)
                     await GetSearchedActors(name);
+                Title = "Результаты поиска";
             }
             catch (NullReferenceException ex)
             {
@@ -79,6 +94,14 @@ namespace ModuleMainModule.ViewModels
             {
                 List<Person> actorsTest = await Data.GetActorsByName(name);
                 ActorsList = new ObservableCollection<Person>(actorsTest);
+                //if(actorsTest == null)
+                //{
+                //    NotFound = "not null";
+                //} 
+                //else
+                //{
+                //    NotFound = null;
+                //}               
             }
             catch (ServiceRequestException)
             {                

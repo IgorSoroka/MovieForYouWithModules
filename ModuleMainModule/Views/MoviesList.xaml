@@ -11,6 +11,7 @@
              Height="auto" Width="auto">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
+        <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
     </UserControl.Resources>
     <DockPanel LastChildFill="True" x:Name="DockPanelMain">
         <i:Interaction.Triggers>
@@ -24,6 +25,18 @@
         <Border Margin="5" DockPanel.Dock="Top"  BorderBrush="DimGray" BorderThickness="2" CornerRadius="5">
             <Label FontSize="15" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"/>
         </Border>
+        <!--<Label DockPanel.Dock="Top" Content="Ничего не найдено" HorizontalContentAlignment="Center" FontSize="15">
+            <Label.Style>
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=NotFound, Converter={StaticResource NullToFalseConverter}}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
+        </Label>-->
         <Border DockPanel.Dock="Bottom" Margin="5" BorderBrush="DimGray" BorderThickness="2" CornerRadius="5">
             <Grid Height="30" Margin="5">
             <Grid.ColumnDefinitions>
@@ -34,8 +47,8 @@
                 <Button FontSize="15" VerticalContentAlignment="Center" Margin="3" Grid.Column="1" Content="{Binding Next}" Command="{Binding NavigateCommandShowNextPage}"/>
         </Grid>
         </Border>
-        <ScrollViewer Margin="5" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" CanContentScroll="True">
-            <ListBox ItemsSource="{Binding Path=Movies}" SelectedItem="{Binding Path=SelectedMovie, Mode=TwoWay}">
+        <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" CanContentScroll="True">
+            <ListBox ItemsSource="{Binding Path=Movies}" SelectedItem="{Binding Path=SelectedMovie, Mode=TwoWay}" Background="#4C000000">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Background" Value="#4C000000"/>

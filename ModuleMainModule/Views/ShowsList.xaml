@@ -35,7 +35,7 @@
         </Grid>
         </Border>
         <ScrollViewer Margin="5" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" CanContentScroll="True">
-            <ListBox ItemsSource="{Binding Path=Shows}" SelectedItem="{Binding Path=SelectedShow, Mode=TwoWay}">
+            <ListBox ItemsSource="{Binding Path=Shows}" SelectedItem="{Binding Path=SelectedShow, Mode=TwoWay}" Background="#4C000000">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Background" Value="#4C000000"/>

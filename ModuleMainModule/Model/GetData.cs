@@ -1,4 +1,5 @@
 ﻿using ModuleMainModule.Model;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,10 +16,11 @@ namespace MainModule
         private const string ApiKey = "fa314d1331397149188e07fbec92930d";
         private readonly ServiceClient _client = new ServiceClient(ApiKey);
         private readonly CancellationToken _token = new CancellationToken();
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         public async Task<List<Movie>> GetPopularMoviesData(int page)
         {
-            List<Movie> popularMovies;
+            List<Movie> popularMovies = new List<Movie>();
             try
             {                
                 var movies = await _client.Movies.GetPopularAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);               
@@ -27,13 +29,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
             }            
             return popularMovies;
         }
 
         public async Task<List<Movie>> GetNewMoviesData(int page)
         {
-            List<Movie> newMovies;
+            List<Movie> newMovies = new List<Movie>();
             try
             {
                 var movies = await _client.Movies.GetNowPlayingAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
@@ -42,13 +48,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return newMovies;
         }
 
         public async Task<List<Movie>> GetTopRatedMoviesData(int page)
         {
-            List<Movie> topMovies;
+            List<Movie> topMovies = new List<Movie>();
             try
             {
                 var movies = await _client.Movies.GetTopRatedAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
@@ -56,15 +66,18 @@ namespace MainModule
             }
             catch (ServiceRequestException)
             {
-
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return topMovies;
         }
 
         public async Task<List<Movie>> GetUpCommingMoviesData(int page)
         {
-            List<Movie> upcomingMovies;
+            List<Movie> upcomingMovies = new List<Movie>();
             try
             {
                 var movies = await _client.Movies.GetUpcomingAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
@@ -73,13 +86,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }                     
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return upcomingMovies;
         }
 
         public async Task<Movie> GetDirectMoveData(int id)
         {
-            Movie movie;
+            Movie movie = new Movie();
             try
             {
                 movie = await _client.Movies.GetAsync(id, Thread.CurrentThread.CurrentCulture.Name, true, _token);
@@ -87,13 +104,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return movie;
         }
 
         public async Task<List<Show>> GetPopularShowsData(int page)
         {
-            List<Show> popularShows;
+            List<Show> popularShows = new List<Show>();
             try
             {
                 var shows = await _client.Shows.GetPopularAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
@@ -107,12 +128,16 @@ namespace MainModule
             {
                 throw;
             }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return popularShows;
         }
 
         public async Task<List<Show>> GetNowShowsData(int page)
         {
-            List<Show> nowShows;
+            List<Show> nowShows = new List<Show>();
             try
             {
                 var shows = await _client.Shows.GetAiringAsync(Thread.CurrentThread.CurrentCulture.Name, page, null, _token);
@@ -122,13 +147,16 @@ namespace MainModule
             {
                 throw;
             }
-            
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return nowShows;
         }
 
         public async Task<List<Show>> GetTopRatedShowsData(int page)
         {
-            List<Show> topRatedShows;
+            List<Show> topRatedShows = new List<Show>();
             try
             {
                 var shows = await _client.Shows.GetTopRatedAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
@@ -137,13 +165,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return topRatedShows;
         }
 
         public async Task<Show> GetDirectShowData(int id)
         {
-            Show show;
+            Show show = new Show();
             try
             {
                 show = await _client.Shows.GetAsync(id, Thread.CurrentThread.CurrentCulture.Name, true, _token);
@@ -151,13 +183,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return show;
         }
 
         public async Task<Person> GetDirectActorData(int id)
         {
-            Person actor;
+            Person actor = new Person();
             try
             {
                 actor = await _client.People.GetAsync(id, true, _token);
@@ -165,13 +201,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return actor;
         }
 
         public async Task<List<PersonCredit>> GetDirectActorMoviesList(int id)
         {
-            List<PersonCredit> moviesTest;
+            List<PersonCredit> moviesTest = new List<PersonCredit>();
             try
             {
                 IEnumerable<PersonCredit> movies = await _client.People.GetCreditsAsync(id, Thread.CurrentThread.CurrentCulture.Name, (DataInfoType)1, _token);
@@ -185,7 +225,11 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return moviesTest;
         }
 
@@ -203,7 +247,11 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return stringGenres;
         }
         
@@ -242,7 +290,7 @@ namespace MainModule
 
         public async Task<List<Movie>> GetMoviesByName(string name)
         {
-            List<Movie> searchrMovies;
+            List<Movie> searchrMovies = new List<Movie>();
             try
             {
                 var movies = await _client.Movies.SearchAsync(name, Thread.CurrentThread.CurrentCulture.Name, true, null, true, 1, _token);
@@ -251,7 +299,11 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return searchrMovies;
         }
 
@@ -266,13 +318,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return popularPersons;
         }
 
         public async Task<List<Person>> GetActorsByName(string actorName)
         {
-            List<Person> list;
+            List<Person> list = new List<Person>();
             try
             {
                 var searchPeople = await _client.People.SearchAsync(actorName, true, true, 1, _token);
@@ -282,12 +338,16 @@ namespace MainModule
             {
                 throw;
             }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Movie>> GetSearchedMovies(decimal selectedRating)
         {
-            List<Movie> list;
+            List<Movie> list = new List<Movie>();
             try
             {
                 var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, null, null, null, selectedRating, null, null, 1, _token);
@@ -296,14 +356,18 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
 
         public async Task<List<Movie>> GetSearchedMovies(int? selectedYear, decimal selectedRating)
         {
-            List<Movie> list;
+            List<Movie> list = new List<Movie>();
             try
             {
                 var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, selectedYear, null, null, null, selectedRating, null, null, 1, _token);
@@ -312,13 +376,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Movie>> GetSearchedMoviesFirstYear(int? selectedYear, decimal selectedRating)
         {
-            List<Movie> list;
+            List<Movie> list = new List<Movie>();
             try
             {
                 var firstTime = new DateTime((int)selectedYear, 1, 1);
@@ -328,13 +396,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Movie>> GetSearchedMoviesLastYear(int? selectedYear, decimal selectedRating)
         {
-            List<Movie> list;
+            List<Movie> list = new List<Movie>();
             try
             {
                 var lastTime = new DateTime((int)selectedYear, 12, 31);
@@ -344,13 +416,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Movie>> GetSearchedMovies(int? selectedFirstYear, int? selectedLastYear, decimal selectedRating)
         {
-            List<Movie> list;
+            List<Movie> list = new List<Movie>();
             try
             {
                 var date1 = new DateTime(2010, 8, 18);
@@ -362,13 +438,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Movie>> GetListOfMoviesByCompany(int companyId, int page)
         {
-            List<Movie> list;
+            List<Movie> list = new List<Movie>();
             try
             {
                 var searched = await _client.Companies.GetMoviesAsync(companyId, Thread.CurrentThread.CurrentCulture.Name, page, _token);
@@ -377,13 +457,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Movie>> GetListOfMoviesByGenre(int genre, int page)
         {
-            List<Movie> list;
+            List<Movie> list = new List<Movie>();
             try
             {
                 var searched = await _client.Genres.GetMoviesAsync(genre, Thread.CurrentThread.CurrentCulture.Name, true, page, _token);
@@ -392,7 +476,11 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
@@ -416,7 +504,7 @@ namespace MainModule
 
         public async Task<Person> GetActor(int id)
         {
-            Person searched;
+            Person searched = new Person();
             try
             {
                 searched = await _client.People.GetAsync(id, true, _token);
@@ -424,13 +512,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }           
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return searched;
         }
         
         public async Task<List<Show>> GetShowsByName(string name)
         {
-            List<Show> searchrShows;
+            List<Show> searchrShows = new List<Show>();
             try
             {
                 var shows = await _client.Shows.SearchAsync(name, Thread.CurrentThread.CurrentCulture.Name, null, true, 1, _token);
@@ -439,13 +531,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return searchrShows;
         }
 
         public async Task<List<Show>> GetSearchedShows(decimal selectedRating)
         {
-            List<Show> list;
+            List<Show> list = new List<Show>();
             try
             {
                 var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, null, null, null, selectedRating, null, null, 1, _token);
@@ -454,13 +550,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Show>> GetSearchedShows(int? selectedYear, decimal selectedRating)
         {
-            List<Show> list;
+            List<Show> list = new List<Show>();
             try
             {
                 var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, selectedYear, null, null, null, selectedRating, null, null, 1, _token);
@@ -469,13 +569,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Show>> GetSearchedShowsFirstYear(int? selectedYear, decimal selectedRating)
         {
-            List<Show> list;
+            List<Show> list = new List<Show>();
             try
             {
                 var firstTime = new DateTime((int)selectedYear, 1, 1);
@@ -485,13 +589,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Show>> GetSearchedShowsLastYear(int? selectedYear, decimal selectedRating)
         {
-            List<Show> list;
+            List<Show> list = new List<Show>();
             try
             {
                 var lastTime = new DateTime((int)selectedYear, 12, 31);
@@ -501,13 +609,17 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
 
         public async Task<List<Show>> GetSearchedShows(int? selectedFirstYear, int? selectedLastYear, decimal selectedRating)
         {
-            List<Show> list;
+            List<Show> list = new List<Show>();
             try
             {
                 var firstTime = new DateTime((int)selectedFirstYear, 1, 1);
@@ -518,7 +630,11 @@ namespace MainModule
             catch (ServiceRequestException)
             {
                 throw;
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.ErrorException("GetData", ex);
+            }
             return list;
         }
     }

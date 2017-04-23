@@ -1,5 +1,4 @@
 ﻿using System.Net.TMDb;
-using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -7,16 +6,21 @@ using Prism.Regions;
 using NLog;
 using Prism.Interactivity.InteractionRequest;
 using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ModuleMainModule.ViewModels
 {
-    class ActorSearchViewModel : BindableBase
+    class ActorSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
         static readonly GetData Data = new GetData();
-        public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
-        public DelegateCommand<string> NavigateCommandSearch { get; private set; }
         private Logger logger = LogManager.GetCurrentClassLogger();
+
+        public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
+        public DelegateCommand<string> NavigateCommandSearch { get; private set; }      
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
         public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
 
@@ -43,12 +47,15 @@ namespace ModuleMainModule.ViewModels
         #region Properties
 
         private string _name;
+
+        [Required]
+        [RegularExpression(@"^[а-яА-Яa-zA-Z0-9\-''-'\s]{2,40}$")]
         public string Name
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-
+    
         private Person _watson;
         public Person Watson
         {
@@ -135,7 +142,9 @@ namespace ModuleMainModule.ViewModels
 
         public string InteractionResultMessage { get; private set; }
 
-        #endregion
+         #endregion
+
+        #region Methods
 
         private async void GetActorsData()
         {
@@ -160,7 +169,7 @@ namespace ModuleMainModule.ViewModels
                 logger.ErrorException("ActorSearchViewModel", ex);
             }
             catch (ServiceRequestException)
-            {                
+            {
                 RaiseNotification();
             }
             catch (Exception e)
@@ -214,5 +223,52 @@ namespace ModuleMainModule.ViewModels
                 logger.ErrorException("MovieListViewModel", e);
             }
         }
+
+        #endregion
+
+        public string Error
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        string IDataErrorInfo.this[string propertyName]
+        {
+            get { return OnValidate(propertyName); }
+        }
+
+        protected virtual string OnValidate(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+                throw new ArgumentException("Invalid property name", propertyName);
+
+            string error = string.Empty;
+            var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
+            var results = new List<ValidationResult>(1);
+
+            var context = new ValidationContext(this, null, null) { MemberName = propertyName };
+
+            var result = Validator.TryValidateProperty(value, context, results);
+
+            if (!result)
+            {
+                var validationResult = results.First();
+                error = validationResult.ErrorMessage;
+            }
+
+            CanSave = error == String.Empty;
+            return error;
+        }
+
+
+        private bool _canSave;
+
+        public bool CanSave
+        {
+            get { return _canSave; }
+            set { SetProperty(ref _canSave, value); }
+        }      
     }
 }

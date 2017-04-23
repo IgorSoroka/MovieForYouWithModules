@@ -125,6 +125,7 @@
     <Compile Include="Converters\NullToFalseConverter.cs" />
     <Compile Include="Converters\VideoUrlConverter.cs" />
     <Compile Include="Interfaces\IActorService.cs" />
+    <Compile Include="Interfaces\IErrorService.cs" />
     <Compile Include="Interfaces\IMovieService.cs" />
     <Compile Include="Interfaces\IShowService.cs" />
     <Compile Include="Model\ActorDTO.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="ModuleAModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ActorService.cs" />
+    <Compile Include="Services\ErrorService.cs" />
     <Compile Include="Services\MovieService.cs" />
     <Compile Include="Services\ShowService.cs" />
     <Compile Include="ViewModels\ActorSearchViewModel.cs" />

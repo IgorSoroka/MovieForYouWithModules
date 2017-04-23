@@ -77,11 +77,18 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _page, value); }
         }
 
-        private string _title;
+        private string _title = "not null";
         public string Title
         {
             get { return _title; }
             set { SetProperty(ref _title, value); }
+        }
+
+        private string _notFound;
+        public string NotFound
+        {
+            get { return _notFound; }
+            set { SetProperty(ref _notFound, value); }
         }
 
         private ObservableCollection<Movie> _movies;
@@ -161,6 +168,7 @@ namespace ModuleMainModule.ViewModels
                     _genre = true;
                     _company = false;
                     GetMoviesByGenre(_selectedGenre, Page);
+                    Title = "Результаты поиска";
                 }
 
                 _selectedCompany = null;
@@ -174,11 +182,15 @@ namespace ModuleMainModule.ViewModels
                     _genre = false;
                     _company = true;
                     GetMoviesByCompany(_selectedCompany, Page);
+                    Title = "Результаты поиска";
                 }
 
                 var name = navigationContext.Parameters["name"] as string;
                 if (name != null)
-                { GetMoviesByName(name); }
+                {
+                    GetMoviesByName(name);
+                    Title = "Результаты поиска";
+                }
 
             
                 var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
@@ -187,22 +199,37 @@ namespace ModuleMainModule.ViewModels
                 var selectedRating = (decimal)navigationContext.Parameters["SelectedRating"];
 
                     if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
-                    { GetMoviesByOnlyRating(selectedRating); }
+                    {
+                        GetMoviesByOnlyRating(selectedRating);
+                        Title = "Результаты поиска";
+                    }
                     else if (selectedYear != 0)
-                    { GetMoviesByYearAndRating(selectedYear, selectedRating); }
+                    {
+                        GetMoviesByYearAndRating(selectedYear, selectedRating);
+                        Title = "Результаты поиска";
+                    }
                     else if (selectedFirstYear != 0 && selectedLastYear != 0)
-                    { GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating); }
+                    {
+                        GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
+                        Title = "Результаты поиска";
+                    }
                     else if (selectedFirstYear == 0 || selectedLastYear == 0)
                     {
                         if (selectedFirstYear != 0 && selectedLastYear == 0)
-                        { GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating); }
+                        {
+                            GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating);
+                            Title = "Результаты поиска";
+                        }
                         else if (selectedFirstYear == 0 && selectedLastYear != 0)
-                        { GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating); }
+                        {
+                            GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating);
+                            Title = "Результаты поиска";
+                        }
                     }
             }
             catch (NullReferenceException ex)
             {
-                RaiseNotificationNull();
+                //RaiseNotificationNull();
                 logger.ErrorException("MovieListViewModel", ex);
             }
             catch (Exception e)
@@ -344,6 +371,10 @@ namespace ModuleMainModule.ViewModels
             {
                 List<Movie> moviesTest = await Data.GetSearchedMoviesLastYear(selectedLastYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {
@@ -361,6 +392,10 @@ namespace ModuleMainModule.ViewModels
             {
                 List<Movie> moviesTest = await Data.GetSearchedMoviesFirstYear(selectedFirstYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {
@@ -378,6 +413,10 @@ namespace ModuleMainModule.ViewModels
             {
                 List<Movie> moviesTest = await Data.GetSearchedMovies(selectedFirstYear, selectedLastYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {
@@ -395,6 +434,10 @@ namespace ModuleMainModule.ViewModels
             {
                 List<Movie> moviesTest = await Data.GetSearchedMovies(selectedYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {
@@ -412,6 +455,10 @@ namespace ModuleMainModule.ViewModels
             {
                 List<Movie> moviesTest = await Data.GetSearchedMovies(selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {
@@ -429,6 +476,10 @@ namespace ModuleMainModule.ViewModels
             {
                 List<Movie> moviesTest = await Data.GetMoviesByName(name);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {
@@ -447,6 +498,10 @@ namespace ModuleMainModule.ViewModels
                 var genreNumber = RepositoryGenres.GetGenreId(genre);
                 List<Movie> moviesTest = await Data.GetListOfMoviesByGenre(genreNumber, page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {
@@ -465,6 +520,10 @@ namespace ModuleMainModule.ViewModels
                 var companyNumber = RepositoryCompanies.GetCompanyId(company);
                 List<Movie> moviesTest = await Data.GetListOfMoviesByCompany(companyNumber, page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                if (moviesTest == null)
+                {
+                    NotFound = "not null";
+                }
             }
             catch (ServiceRequestException)
             {

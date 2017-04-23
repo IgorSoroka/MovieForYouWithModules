@@ -6,6 +6,7 @@
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:eo="http://schemas.essentialobjects.com/wpf/"
              mc:Ignorable="d" 
              Width="auto" MaxWidth="500" Height="auto" MaxHeight="600">
@@ -22,9 +23,15 @@
             <StackPanel Orientation="Vertical">
                     <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="{Binding NameSearching}"/>
                 <DockPanel LastChildFill="True" Margin="10">
-                        <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" Content="{Binding Find}"/>
-                    <TextBox FontSize="14" Text="{Binding Name, UpdateSourceTrigger=LostFocus}"/>
-                </DockPanel>
+                        <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" IsEnabled="{Binding CanSave}" Content="{Binding Find}"/>
+                        <TextBox FontSize="14" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
+                        <TextBox.ToolTip>
+                            <ToolTip>
+                                    <TextBlock Text="Можно использовать только буквы, цифрры и символы '!', '?', '-', '(', ')'"/>
+                            </ToolTip>
+                        </TextBox.ToolTip>
+                        </TextBox>
+                    </DockPanel>
             </StackPanel>
         </Border>
         <Border Margin="15, 8, 15, 15" Grid.Row="1" Width="auto" Height="auto" BorderBrush="LightGray" BorderThickness="2" CornerRadius="5">
