@@ -11,6 +11,7 @@ namespace ModuleMainModule.ViewModels
         private readonly IRegionManager _regionManager;
         private IRegionNavigationJournal _journal;
         private Logger logger = LogManager.GetCurrentClassLogger();
+
         public DelegateCommand GoBackCommand { get; set; }
 
         public PlayerViewModel(RegionManager regionManager)
@@ -21,9 +22,9 @@ namespace ModuleMainModule.ViewModels
 
         private const string _backDescription = "Назад к описанию";
         public string BackDescription
-        {
-            get { return _backDescription; }
-        }
+        {   get { return _backDescription; }   }
+
+        private const string _forExceptions = "PlayerViewModel";
 
         private Uri _video;
         public Uri Video
@@ -37,13 +38,12 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 _journal = navigationContext.NavigationService.Journal;
-
                 string videoUrl = navigationContext.Parameters["VideoUrl"] as string;
                 Video = new Uri(string.Concat("http://www.youtube.com/embed/", videoUrl));
             }
             catch (Exception e)
             {
-                logger.ErrorException("PlayerViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 

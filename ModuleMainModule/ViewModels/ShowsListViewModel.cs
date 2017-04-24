@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
-using System.Threading.Tasks;
 using MainModule;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -18,9 +17,9 @@ namespace ModuleMainModule.ViewModels
     class ShowsListViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
+        private readonly GetData Data = new GetData();
         private Logger logger = LogManager.GetCurrentClassLogger();
-        static readonly IShowService ShowService = new ShowService();
+        private static readonly IShowService ShowService = new ShowService();
 
         public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
@@ -36,8 +35,8 @@ namespace ModuleMainModule.ViewModels
         {
             _regionManager = regionManager;
             NavigateCommandShowDirectShow = new DelegateCommand(NavigateShowDirectShow);
-            NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage, CanExecuteNextPage);
-            NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage, CanExecutePriviousPage);
+            NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage);
+            NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage);
             NotificationRequest = new InteractionRequest<INotification>();
             NotificationRequestNull = new InteractionRequest<INotification>();
         }
@@ -46,17 +45,33 @@ namespace ModuleMainModule.ViewModels
 
         private const string _next = "Следуюшая";
         public string Next
-        {
-            get { return _next; }
-        }
+        {   get { return _next; }   }
 
         private const string _privious = "Предыдущая";
         public string Privious
-        {
-            get { return _privious; }
-        }
+        {   get { return _privious; }   }
+
+        private const string _readMore = "Подробнее";
+        public string ReadMore
+        { get { return _readMore; } }
+
+        private const string selectedShows = "Избранные сериалы";
+        private const string searchingResults = "Результаты поиска";
+        private const string _forExceptions = "ShowListViewModel";
+        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";
+        private const string _userNotified = "Пользователь был оповещен";
+        private const string _errorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
+        private const string _bestShows = "Лучшие сериалы";
+        private const string _popularShows = "Популярные сериалы";
+        private const string _onTvShows = "Сейчас на ТВ";
+
+        private const int _minPage = 1;
+        private const int _maxPage = 5;
 
         #endregion
+
+        #region Properties
 
         private Show _selectedShow;
         public Show SelectedShow
@@ -88,12 +103,13 @@ namespace ModuleMainModule.ViewModels
 
         public string InteractionResultMessage { get; private set; }
 
+        #endregion
+
         #region Methods
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             Page = 1;
-
             try
             {
                 var type = navigationContext.Parameters["type"] as string;
@@ -105,7 +121,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = false;
                         _now = false;
                         GetBestShows(Page);
-                        Title = "Лучшие сериалы";
+                        Title = _bestShows;
                     }
                     if (type == "Popular")
                     {
@@ -113,7 +129,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = true;
                         _now = false;
                         GetPopularShows(Page);
-                        Title = "Популярные сериалы";
+                        Title = _popularShows;
                     }
                     if (type == "Now")
                     {
@@ -121,7 +137,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = false;
                         _now = true;
                         GetNowPlayingShows(Page);
-                        Title = "Сейчас на ТВ";
+                        Title = _onTvShows;
                     }
                     if (type == "Favorite")
                     {
@@ -129,7 +145,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = false;
                         _now = false;
                         GetFavoriteShows();
-                        Title = "Избранные сериалы";
+                        Title = selectedShows;
                     }
                 }
 
@@ -137,10 +153,9 @@ namespace ModuleMainModule.ViewModels
                 if (name != null)
                 {
                     GetShowsByName(name);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }
-
-           
+                           
                 var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
                 var selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
                 var selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
@@ -149,40 +164,40 @@ namespace ModuleMainModule.ViewModels
                 if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
                 {
                     GetShowsByOnlyRating(selectedRating);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }
                 else if (selectedYear != 0)
                 {
                     GetShowsByYearAndRating(selectedYear, selectedRating);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }
                 else if (selectedFirstYear != 0 && selectedLastYear != 0)
                 {
                     GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }
                 else if (selectedFirstYear == 0 || selectedLastYear == 0)
                 {
                     if (selectedFirstYear != 0 && selectedLastYear == 0)
                     {
                         GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating);
-                        Title = "Результаты поиска";
+                        Title = searchingResults;
                     }
                     else if (selectedFirstYear == 0 && selectedLastYear != 0)
                     {
                         GetShowsByLastYearAndRating(selectedLastYear, selectedRating);
-                        Title = "Результаты поиска";
+                        Title = searchingResults;
                     }
                 }
             }
             catch (NullReferenceException ex)
             {
                 //RaiseNotificationNull();
-                logger.ErrorException("ShowListViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -195,48 +210,46 @@ namespace ModuleMainModule.ViewModels
         private void RaiseNotification()
         {
             this.NotificationRequest.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void RaiseNotificationNull()
         {
             this.NotificationRequestNull.Raise(
-               new Notification { Content = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз.", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _errorLoadingData, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
-        private bool CanExecutePriviousPage()
-        {
-            if (Page == 1)
-                return false;
-            else
-                return true;
-        }
+        //private bool CanExecutePriviousPage()
+        //{
+        //    if (Page == 1)
+        //        return false;
+        //    else
+        //        return true;
+        //}
 
-        private bool CanExecuteNextPage()
-        {
-            if (Page == 5)
-                return false;
-            else
-                return true;
-        }
+        //private bool CanExecuteNextPage()
+        //{
+        //    if (Page == 5)
+        //        return false;
+        //    else
+        //        return true;
+        //}
 
         private void ShowPriviousPage()
         {
-            if (_popular && Page > 1)
+            if (_popular && Page > _minPage)
             {
                 Page--;
                 GetPopularShows(Page);
             }
-
-            if (_best && Page > 1)
+            if (_best && Page > _minPage)
             {
                 Page--;
                 GetBestShows(Page);
             }
-
-            if (_now && Page > 1)
+            if (_now && Page > _minPage)
             {
                 Page--;
                 GetNowPlayingShows(Page);
@@ -246,25 +259,22 @@ namespace ModuleMainModule.ViewModels
         private void ShowNextPage()
         {
 
-            if (_popular && Page < 5)
+            if (_popular && Page < _maxPage)
             {
                 Page++;
                 GetPopularShows(Page);
             }
-
-            if (_best && Page < 5)
+            if (_best && Page < _maxPage)
             {
                 Page++;
                 GetBestShows(Page);
-            }
-            
-            if (_now && Page < 5)
+            }            
+            if (_now && Page < _maxPage)
             {
                 Page++;
                 GetNowPlayingShows(Page);
             }
         }
-
 
         private void NavigateShowDirectShow()
         {
@@ -275,7 +285,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -292,7 +302,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -309,7 +319,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -326,7 +336,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -343,7 +353,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -360,7 +370,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -377,7 +387,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -394,7 +404,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -411,7 +421,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -428,7 +438,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -456,7 +466,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 

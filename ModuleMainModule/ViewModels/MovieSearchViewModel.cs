@@ -43,63 +43,53 @@ namespace ModuleMainModule.ViewModels
 
         private const string _find = "Найти";
         public string Find
-        {
-            get { return _find; }
-        }
+        {  get { return _find; }   }
 
         private const string _resetAll = "Сбросить";
         public string ResetAll
-        {
-            get { return _resetAll; }
-        }
+        {  get { return _resetAll; }   }
 
         private const string _nameSearching = "Поиск по названию";
         public string NameSearching
-        {
-            get { return _nameSearching; }
-        }
+        {  get { return _nameSearching; }   }
 
         private const string _year = "Год создания";
         public string Year
-        {
-            get { return _year; }
-        }
+        {  get { return _year; }  }
 
         private const string _interval = "Интервал годов";
         public string Interval
-        {
-            get { return _interval; }
-        }
+        {  get { return _interval; }  }
 
         private const string _from = "С";
         public string From
-        {
-            get { return _from; }
-        }
+        {  get { return _from; }  }
 
         private const string _to = "по";
         public string To
-        {
-            get { return _to; }
-        }
+        {  get { return _to; }  }
 
         private const string _raiting = "Рейтинг";
         public string Raiting
-        {
-            get { return _raiting; }
-        }
+        {  get { return _raiting; }  }
 
         private const string _genreSearching = "Поиск по жанру";
         public string GenreSearching
-        {
-            get { return _genreSearching; }
-        }
+        {  get { return _genreSearching; }  }
 
         private const string _companySearching = "Поиск по компинии";
         public string CompanySearching
-        {
-            get { return _companySearching; }
-        }
+        {   get { return _companySearching; }  }
+
+        private const string _regulations = "Можно использовать только буквы, цифрры и символы '!', '?', '-', '(', ')'";
+        public string Regulations
+        { get { return _regulations; } }
+
+        private const string _forExceptions = "MovieSearchViewModel";
+        private const string _invalidPropertyName = "Некорретное имя свойства";
+
+        private const int _minYear = 1990;
+        private const int _maxYear = 2017;
 
         #endregion
 
@@ -179,6 +169,19 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _name, value); }
         }
 
+        private bool _canSave;
+
+        public bool CanSave
+        {
+            get { return _canSave; }
+            set { SetProperty(ref _canSave, value); }
+        }
+
+        public string Error
+        {
+            get  {   throw new NotImplementedException();  }
+        }
+
         #endregion
 
         #region Methods
@@ -200,7 +203,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieSearchViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -213,7 +216,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieSearchViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -232,7 +235,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieSearchViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -245,29 +248,19 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieSearchViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
         private ObservableCollection<int> GetYearsList()
         {
             ObservableCollection<int> years = new ObservableCollection<int>();
-            for (int i = 2017; i >= 1900; i--)
+            for (int i = _maxYear; i >= _minYear; i--)
             {
                 years.Add(i);
             }
             return years;
-        }
-
-        #endregion
-
-        public string Error
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        }      
 
         string IDataErrorInfo.this[string propertyName]
         {
@@ -276,33 +269,34 @@ namespace ModuleMainModule.ViewModels
 
         protected virtual string OnValidate(string propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
-                throw new ArgumentException("Invalid property name", propertyName);
-
             string error = string.Empty;
-            var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
-            var results = new List<ValidationResult>(1);
-
-            var context = new ValidationContext(this, null, null) { MemberName = propertyName };
-
-            var result = Validator.TryValidateProperty(value, context, results);
-
-            if (!result)
+            try
             {
-                var validationResult = results.First();
-                error = validationResult.ErrorMessage;
-            }
+                if (string.IsNullOrEmpty(propertyName))
+                    throw new ArgumentException(_invalidPropertyName, propertyName);
 
-            CanSave = error == String.Empty;
+
+                var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
+                var results = new List<ValidationResult>(1);
+
+                var context = new ValidationContext(this, null, null) { MemberName = propertyName };
+
+                var result = Validator.TryValidateProperty(value, context, results);
+
+                if (!result)
+                {
+                    var validationResult = results.First();
+                    error = validationResult.ErrorMessage;
+                }
+                CanSave = error == String.Empty;
+            }
+            catch (Exception e)
+            {
+                logger.ErrorException(_forExceptions, e);
+            }
             return error;
         }
 
-        private bool _canSave;
-
-        public bool CanSave
-        {
-            get { return _canSave; }
-            set { SetProperty(ref _canSave, value); }
-        }
+        #endregion
     }
 }

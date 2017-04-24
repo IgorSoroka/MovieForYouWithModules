@@ -16,7 +16,7 @@ namespace ModuleMainModule.ViewModels
     class ActorSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
+        private static readonly GetData Data = new GetData();
         private Logger logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
@@ -38,9 +38,31 @@ namespace ModuleMainModule.ViewModels
 
         private const string _find = "Найти";
         public string Find
-        {
-            get { return _find; }
-        }
+        { get { return _find; }  }
+
+        private const string _regulations = "Можно использовать только буквы, цифрры и символ '-'";
+        public string Regulations
+        { get { return _regulations; } }
+
+        private const string _forExceptions = "ActorSearchViewModel";
+        private const string _invalidPropertyName = "Некорретное имя свойства";
+        private const string _exceededNumberRequests  = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";
+        private const string _waitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами актеру";
+        private const string _userNotified = "Пользователь был оповещен";
+
+        private const int _watsonId = 10990;
+        private const int _johanssonId = 1245;
+        private const int _lawrenceId = 72129;
+        private const int _hathawayId = 1813;
+        private const int _jackmanId = 6968;
+        private const int _deppId = 85;
+        private const int _dieselId = 12835;
+        private const int _diCaprioId = 6193;
+        private const int _hardyId = 2524;
+        private const int _pittId = 287;
+        private const int _downeyId = 3223;
+        private const int _robbieId = 234352;
 
         #endregion
 
@@ -150,7 +172,12 @@ namespace ModuleMainModule.ViewModels
 
         public string InteractionResultMessage { get; private set; }
 
-         #endregion
+        public string Error
+        {
+            get {  throw new NotImplementedException(); }
+        }
+
+        #endregion
 
         #region Methods
 
@@ -158,23 +185,23 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                Watson = await Data.GetActor(10990);
-                Johansson = await Data.GetActor(1245);
-                Lawrence = await Data.GetActor(72129);
-                Hathaway = await Data.GetActor(1813);
-                Jackman = await Data.GetActor(6968);
-                Depp = await Data.GetActor(85);
-                Diesel = await Data.GetActor(12835);
-                DiCaprio = await Data.GetActor(6193);
-                Hardy = await Data.GetActor(2524);
-                Pitt = await Data.GetActor(287);
-                Downey = await Data.GetActor(3223);
-                Robbie = await Data.GetActor(234352);
+                Watson = await Data.GetActor(_watsonId);
+                Johansson = await Data.GetActor(_johanssonId);
+                Lawrence = await Data.GetActor(_lawrenceId);
+                Hathaway = await Data.GetActor(_hathawayId);
+                Jackman = await Data.GetActor(_jackmanId);
+                Depp = await Data.GetActor(_deppId);
+                Diesel = await Data.GetActor(_dieselId);
+                DiCaprio = await Data.GetActor(_diCaprioId);
+                Hardy = await Data.GetActor(_hardyId);
+                Pitt = await Data.GetActor(_pittId);
+                Downey = await Data.GetActor(_downeyId);
+                Robbie = await Data.GetActor(_robbieId);
             }
-            catch (System.NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException("ActorSearchViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (ServiceRequestException)
             {
@@ -182,22 +209,22 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
         private void RaiseNotification()
         {
             this.NotificationRequest.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void RaiseNotificationNull()
         {
             this.NotificationRequestNull.Raise(
-               new Notification { Content = "Для перехода дождитесь полной загрузки данных по выбранному Вами актеру", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _waitFullDownload, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void Search(string obj)
@@ -209,7 +236,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -224,21 +251,11 @@ namespace ModuleMainModule.ViewModels
             catch (System.NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException("ActorSearchViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
-            }
-        }
-
-        #endregion
-
-        public string Error
-        {
-            get
-            {
-                throw new NotImplementedException();
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -249,28 +266,29 @@ namespace ModuleMainModule.ViewModels
 
         protected virtual string OnValidate(string propertyName)
         {
-            if (string.IsNullOrEmpty(propertyName))
-                throw new ArgumentException("Invalid property name", propertyName);
-
             string error = string.Empty;
-            var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
-            var results = new List<ValidationResult>(1);
-
-            var context = new ValidationContext(this, null, null) { MemberName = propertyName };
-
-            var result = Validator.TryValidateProperty(value, context, results);
-
-            if (!result)
+            try
             {
-                var validationResult = results.First();
-                error = validationResult.ErrorMessage;
+                if (string.IsNullOrEmpty(propertyName))
+                    throw new ArgumentException(_invalidPropertyName, propertyName);
+                var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
+                var results = new List<ValidationResult>(1);
+                var context = new ValidationContext(this, null, null) { MemberName = propertyName };
+                var result = Validator.TryValidateProperty(value, context, results);
+                if (!result)
+                {
+                    var validationResult = results.First();
+                    error = validationResult.ErrorMessage;
+                }
+                CanSave = error == String.Empty;
             }
-
-            CanSave = error == String.Empty;
+            catch (Exception e)
+            {
+                logger.ErrorException(_forExceptions, e);
+            }
             return error;
         }
 
-
-         
+        #endregion
     }
 }

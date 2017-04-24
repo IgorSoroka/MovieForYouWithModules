@@ -33,7 +33,7 @@
                     <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
                 </prism:InteractionRequestTrigger>
             </i:Interaction.Triggers>
-            <Grid DataContext="{Binding Path=DirectMovie}" MinHeight="150" MaxHeight="300">
+            <Grid DataContext="{Binding DirectMovie}" MinHeight="150" MaxHeight="300">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="5*"/>
@@ -59,7 +59,7 @@
                     </Grid>
                     <Button FontSize="16" Height="35" Content="{Binding Trailer}" Command="{Binding NavigateCommandShowTrailler}"
                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"
-                            IsEnabled="{Binding Path=VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
+                            IsEnabled="{Binding VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Row="1">
@@ -92,12 +92,12 @@
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                 <Grid Height="130" Width="100">
                                     <Image Grid.RowSpan="3" Stretch="Uniform"  Source="{Binding Profile, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch"/>
-                                    <Label Content="{Binding Path = Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                    <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
                                         <Label.Background>
                                             <SolidColorBrush Color="Azure" Opacity="0.5" />
                                         </Label.Background>
                                     </Label>
-                                    <Label Content="{Binding Path = Job}" Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                    <Label Content="{Binding Job}" Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
                                         <Label.Background>
                                             <SolidColorBrush Color="Azure" Opacity="0.5" />
                                         </Label.Background>
@@ -144,12 +144,12 @@
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                 <Grid Height="130" Width="100">
                                     <Image Grid.RowSpan="3" Stretch="Uniform"  Source="{Binding Profile, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch"/>
-                                    <Label Content="{Binding Path = Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                    <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
                                         <Label.Background>
                                             <SolidColorBrush Color="Azure" Opacity="0.5" />
                                         </Label.Background>
                                     </Label>
-                                    <Label Content="{Binding Path = Character}" Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
+                                    <Label Content="{Binding Character}" Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="12" Foreground="Black" VerticalAlignment="Bottom">
                                         <Label.Background>
                                             <SolidColorBrush Color="Azure" Opacity="0.5" />
                                         </Label.Background>
@@ -160,7 +160,7 @@
                                         <RowDefinition Height="0.29*" />
                                     </Grid.RowDefinitions>
                                 </Grid>
-                                <Button FontSize="12" Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectActor}"
+                                <Button FontSize="12" Content="{Binding ReadMore}" Command="{Binding Path=NavigateCommandShowDirectActor}"
                                         DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">
@@ -179,68 +179,62 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </StackPanel>
-            <StackPanel Grid.Row="3" DataContext="{Binding Path=DirectMovie}">
-                <Label FontSize="18" Foreground="Honeydew" Content="{Binding AboutMovie}"
-                       DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label FontSize="16" Foreground="Honeydew" Content="{Binding OriginalName}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding OriginalTitle}"/>
+            <StackPanel Grid.Row="3" DataContext="{Binding DirectMovie}">
+                <StackPanel.Style>
+                    <Style>                        
+                        <Setter Property="TextBlock.Foreground" Value="Honeydew"/>
+                        <Setter Property="TextBlock.Margin" Value="3"/>                       
+                        <Setter Property="StackPanel.Orientation" Value="Vertical"/>
+                    </Style>
+                </StackPanel.Style>
+                <Label Foreground="Honeydew" FontSize="18" Content="{Binding AboutMovie}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding OriginalName}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock Margin="3" FontSize="14" Text="{Binding OriginalTitle}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding Premiere}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Premiere}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock Margin="3" FontSize="16" Text="{Binding ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding Dureation}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Runtime}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Duration}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="16" Text="{Binding Runtime}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Budget}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Budget}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Budget}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="14" Text="{Binding Budget}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Revenue}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding Revenue}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Revenue}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="14" Text="{Binding Revenue}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding Raiting}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding VoteAverage}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Raiting}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="16" Text="{Binding VoteAverage}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding VoteCount}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" TextWrapping="Wrap" FontSize="16" Text="{Binding VoteCount}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding VoteCount}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="16" Text="{Binding VoteCount}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding Genres}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Genres, Converter={StaticResource GenresConverter}}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Genres}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="16" Text="{Binding Genres, Converter={StaticResource GenresConverter}}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding Countries}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Countries, Converter={StaticResource CountriesConverter}}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Countries}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="16" Text="{Binding Countries, Converter={StaticResource CountriesConverter}}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding Keywords}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Keywords, Converter={StaticResource KeywordsConverter}}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Keywords}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="16" Text="{Binding Keywords, Converter={StaticResource KeywordsConverter}}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew"  FontSize="16" Content="{Binding Companies}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew"  Margin="3" FontSize="16" Text="{Binding Companies, Converter={StaticResource CompaniesConverter}}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding Companies}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="16" Text="{Binding Companies, Converter={StaticResource CompaniesConverter}}"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Margin="5">
-                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding HomePage}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding HomePage}"/>
+                <StackPanel Margin="5">
+                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding HomePage}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <TextBlock FontSize="14" Text="{Binding HomePage}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

@@ -9,7 +9,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         mc:Ignorable="d"
-        Title="{Binding Title}" MinWidth="300" Height="800" Width="1200" WindowStartupLocation="CenterScreen">
+        Title="{Binding Title}" MinWidth="300" Height="800" Width="1200" WindowStartupLocation="CenterScreen">    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,73 +18,76 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
-            <ColumnDefinition MaxWidth="350"  Width="*"/>
+            <ColumnDefinition MaxWidth="450" Width="*"/>
         </Grid.ColumnDefinitions>
         <i:Interaction.Triggers>
             <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequestConnection, Mode=OneWay}">
                 <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
             </prism:InteractionRequestTrigger>           
         </i:Interaction.Triggers>
-        <ribbon:Ribbon Grid.ColumnSpan="2" Foreground="Snow" Background="#FF595959">
+        <ribbon:Ribbon Grid.ColumnSpan="2" Foreground="Snow" Background="#FF595959">            
             <ribbon:RibbonTab Header="{Binding MainView}">
                <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding MainView}" HorizontalAlignment="Center" LargeImageSource="/Images/icon.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
+                    <ribbon:RibbonButton Label="{Binding MainView}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding MainPagePath}" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="{Binding Movies}">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieBest.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
+                    <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding BestPath}" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding Popular}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MoviePopular.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Popular"/>
+                    <ribbon:RibbonButton Label="{Binding Popular}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding PopularPath}" Command="{Binding NavigateCommandListMovie}" CommandParameter="Popular"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup Header="">
-                    <ribbon:RibbonButton Label="{Binding UpComing}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieFuture.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Future"/>
+                    <ribbon:RibbonButton Label="{Binding UpComing}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding FutureMoviePath}" Command="{Binding NavigateCommandListMovie}" CommandParameter="Future"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding NowPlaying}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/MovieNow.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Now"/>
+                    <ribbon:RibbonButton Label="{Binding NowPlaying}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding NowMoviePath}" Command="{Binding NavigateCommandListMovie}" CommandParameter="Now"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="{Binding Shows}">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowBest.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Best"/>
+                    <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding BestPath}" Command="{Binding NavigateCommandListShow}" CommandParameter="Best"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding Popular}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowPopular.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Popular"/>
+                    <ribbon:RibbonButton Label="{Binding Popular}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding PopularPath}" Command="{Binding NavigateCommandListShow}" CommandParameter="Popular"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding NowOnTV}" HorizontalAlignment="Center" Width="100" LargeImageSource="/Images/ShowNow.jpg"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
+                    <ribbon:RibbonButton Label="{Binding NowOnTV}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding NowShowPath}"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="{Binding Search}">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding SearchMovie}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
+                    <ribbon:RibbonButton Label="{Binding SearchMovie}" Width="100" HorizontalAlignment="Center" LargeImageSource="{Binding SearchMoviePath}" Command="{Binding NavigateCommandMain}" CommandParameter="MovieSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding SearchShow}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ShowSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
+                    <ribbon:RibbonButton Label="{Binding SearchShow}" Width="100" HorizontalAlignment="Center" LargeImageSource="{Binding SearchShowPath}" Command="{Binding NavigateCommandMain}" CommandParameter="ShowSearchView"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding SearchActor}" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ActorSearch.jpg" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
+                    <ribbon:RibbonButton Label="{Binding SearchActor}" Width="100" HorizontalAlignment="Center" LargeImageSource="{Binding SearchActorPath}" Command="{Binding NavigateCommandMain}" CommandParameter="ActorSearchView"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
-            <ribbon:RibbonTab Header="Избранное">
+            <ribbon:RibbonTab Header="{Binding Selected}">
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Избранные фильмы" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/MovieSearch.jpg" Command="{Binding NavigateCommandListMovie}" CommandParameter="Favorite"/>
+                    <ribbon:RibbonButton Label="{Binding SelectedMovies}" Width="100" HorizontalAlignment="Center" LargeImageSource="{Binding FavoriteMoviePath}" Command="{Binding NavigateCommandListMovie}" CommandParameter="Favorite"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Избранные сериалы" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ShowSearch.jpg" Command="{Binding NavigateCommandListShow}" CommandParameter="Favorite"/>
+                    <ribbon:RibbonButton Label="{Binding SelectedShows}" Width="100" HorizontalAlignment="Center" LargeImageSource="{Binding FavoriteShowPath}" Command="{Binding NavigateCommandListShow}" CommandParameter="Favorite"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="Избранные актеры" Width="100" HorizontalAlignment="Center" LargeImageSource="/Images/ActorSearch.jpg" Command="{Binding NavigateCommandListActor}" CommandParameter="Favorite"/>
+                    <ribbon:RibbonButton Label="{Binding SelectedActors}" Width="100" HorizontalAlignment="Center" LargeImageSource="{Binding FavoritActorPath}" Command="{Binding NavigateCommandListActor}" CommandParameter="Favorite"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
         </ribbon:Ribbon>
-        <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Background="#4C000000">
+        <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True">
+            <DockPanel.Background>
+                <ImageBrush ImageSource="{Binding MainRegionBackgroundPath}" Stretch="UniformToFill"/>
+            </DockPanel.Background>
                 <ContentControl prism:RegionManager.RegionName="ListRegion" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </DockPanel>
         <DockPanel Grid.Row="1" Grid.Column="0" >
             <DockPanel.Background>
-                <ImageBrush ImageSource="/Images/MainBackground.jpg" Stretch="UniformToFill"/>
+                <ImageBrush ImageSource="{Binding ListRegionBackgroundPath}" Stretch="UniformToFill"/>
             </DockPanel.Background>
             <ContentControl prism:RegionManager.RegionName="MainRegion" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </DockPanel>

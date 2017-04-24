@@ -17,10 +17,10 @@ namespace ModuleMainModule.ViewModels
 {
     class ActorsListViewModel : BindableBase, INavigationAware
     {
-        readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
-        Logger logger = LogManager.GetCurrentClassLogger();
-        static readonly IActorService ActorService = new ActorService();
+        private readonly IRegionManager _regionManager;
+        private static readonly GetData Data = new GetData();
+        private Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly IActorService ActorService = new ActorService();
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public InteractionRequest<INotification> NotificationRequest { get; private set; }
@@ -33,6 +33,8 @@ namespace ModuleMainModule.ViewModels
             NotificationRequest = new InteractionRequest<INotification>();
             NotificationRequestNull = new InteractionRequest<INotification>();
         }
+
+        #region Properties
 
         private Person _selectedSearchedActor;
         public Person SelectedSearchedActor
@@ -64,6 +66,26 @@ namespace ModuleMainModule.ViewModels
 
         public string InteractionResultMessage { get; private set; }
 
+        #endregion
+
+        #region StringConstants
+
+        private const string _readMore = "Подробнее";
+        public string ReadMore
+        { get { return _readMore; } }
+
+        private const string _forExceptions = "ActorListViewModel";
+        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";
+        private const string _errorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
+        private const string _userNotified = "Пользователь был оповещен";
+        private const string selectedActors = "Избранные актеры";
+        private const string searchingResults = "Результаты поиска";
+
+        #endregion
+
+        #region Methods
+
         public async void OnNavigatedTo(NavigationContext navigationContext)
         {
             try
@@ -72,24 +94,24 @@ namespace ModuleMainModule.ViewModels
                 if (type != null)
                 {     
                     GetFavoriteActors();
-                    Title = "Избранные актеры";                    
+                    Title = selectedActors;                    
                 }
 
                 var name = navigationContext.Parameters["name"] as string;
                 if (name != null)
                 {
                     await GetSearchedActors(name);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }                  
             }
             catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException("ActorListViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException("ActorListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -106,15 +128,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Person> actorsTest = await Data.GetActorsByName(name);
-                ActorsList = new ObservableCollection<Person>(actorsTest);
-                //if(actorsTest == null)
-                //{
-                //    NotFound = "not null";
-                //} 
-                //else
-                //{
-                //    NotFound = null;
-                //}               
+                ActorsList = new ObservableCollection<Person>(actorsTest);                           
             }
             catch (ServiceRequestException)
             {                
@@ -122,22 +136,22 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ActorListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
         private void RaiseNotification()
         {
             this.NotificationRequest.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void RaiseNotificationNull()
         {
             this.NotificationRequestNull.Raise(
-               new Notification { Content = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз.", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _errorLoadingData, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void ShowDirectActor()
@@ -149,7 +163,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ActorListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -177,8 +191,10 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ActorListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
+
+        #endregion
     }
 }

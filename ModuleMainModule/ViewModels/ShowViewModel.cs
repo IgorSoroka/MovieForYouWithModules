@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
-using System.Threading.Tasks;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -19,8 +18,8 @@ namespace ModuleMainModule.ViewModels
     class ShowViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
-        static readonly IShowService ShowService = new ShowService();
+        private static readonly GetData Data = new GetData();
+        private static readonly IShowService ShowService = new ShowService();
         private Logger logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
@@ -43,123 +42,93 @@ namespace ModuleMainModule.ViewModels
 
         private const string _plot = "Сюжет";
         public string Plot
-        {
-            get { return _plot; }
-        }
+        {   get { return _plot; }   }
+
+        private const string _readMore = "Подробнее";
+        public string ReadMore
+        { get { return _readMore; } }
 
         private const string _delFavorites = "Удалить из избранного";
         public string DelFavorites
-        {
-            get { return _delFavorites; }
-        }
+        {   get { return _delFavorites; }    }
 
         private const string _addFavorites = "Добавить в избранное";
         public string AddFavorites
-        {
-            get { return _addFavorites; }
-        }
+        {   get { return _addFavorites; }    }
 
         private const string _trailer = "Смотреть трейлер";
         public string Trailer
-        {
-            get { return _trailer; }
-        }
+        {   get { return _trailer; }   }
 
         private const string _showCast = "Состав";
         public string ShowCast
-        {
-            get { return _showCast; }
-        }
+        {   get { return _showCast; }   }
 
         private const string _mainRoles = "В главных ролях";
         public string MainRoles
-        {
-            get { return _mainRoles; }
-        }
+        {   get { return _mainRoles; }   }
 
         private const string _originalName = "Оригинальное название";
         public string OriginalName
-        {
-            get { return _originalName; }
-        }
+        {   get { return _originalName; }   }
 
         private const string _seasonsNumber = "Количество сезонов";
         public string SeasonsNumber
-        {
-            get { return _seasonsNumber; }
-        }
+        {   get { return _seasonsNumber; }   }
 
         private const string _seriesNumber = "Количество вышедших серий";
         public string SeriesNumber
-        {
-            get { return _seriesNumber; }
-        }
+        {   get { return _seriesNumber; }   }
 
         private const string _raiting = "Рейтинг";
         public string Raiting
-        {
-            get { return _raiting; }
-        }
+        {   get { return _raiting; }   }
 
         private const string _voteCount = "Количество голосов";
         public string VoteCount
-        {
-            get { return _voteCount; }
-        }
+        {   get { return _voteCount; }  }
 
         private const string _genres = "Жанры";
         public string Genres
-        {
-            get { return _genres; }
-        }
+        {   get { return _genres; }   }
 
         private const string _networks = "Сети производители";
         public string Networks
-        {
-            get { return _networks; }
-        }
+        {   get { return _networks; }   }
 
         private const string _countries = "Страны производители";
         public string Countries
-        {
-            get { return _countries; }
-        }
+        {   get { return _countries; }   }
 
         private const string _keywords = "Ключевые слова";
         public string Keywords
-        {
-            get { return _keywords; }
-        }
+        {   get { return _keywords; }   }
 
         private const string _status = "Статус";
         public string Status
-        {
-            get { return _status; }
-        }
+        {   get { return _status; }   }
 
         private const string _homePage = "Домашняя страница";
         public string HomePage
-        {
-            get { return _homePage; }
-        }
+        {   get { return _homePage; }   }
 
         private const string _premiere = "Премьера первой серии";
         public string Premiere
-        {
-            get { return _premiere; }
-        }
+        {   get { return _premiere; }   }
 
         private const string _lastSeries = "Последняя вышедшая серия";
         public string LastSeries
-        {
-            get { return _lastSeries; }
-        }
+        {   get { return _lastSeries; }   }
 
         private const string _aboutShow = "О сериале";
         public string AboutShow
-        {
-            get { return _aboutShow; }
-        }
+        {   get { return _aboutShow; }  }
+
+
+        private const string _forExceptions = "ShowViewModel";
+        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";
+        private const string _userNotified = "Пользователь был оповещен";
 
         #endregion
 
@@ -231,7 +200,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -249,21 +218,21 @@ namespace ModuleMainModule.ViewModels
                 if (video != null)
                 { VideoUrl = video.Key; }
             }
-            catch (ServiceRequestException ex)
+            catch (ServiceRequestException)
             {                
                 RaiseNotification();
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }            
         }
 
         private void RaiseNotification()
         {
             this.NotificationRequest.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void ShowTrailler()
@@ -275,7 +244,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -288,7 +257,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -321,7 +290,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ShowViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -329,7 +298,6 @@ namespace ModuleMainModule.ViewModels
         {
             ShowDTO show = new ShowDTO() { Name = DirectShow.Name, ExternalId = DirectShow.Id };          
             ShowService.TakeShow(show);
-
             CanDelFromDb = true;
             CanAddToDb = false;
         }
@@ -337,7 +305,6 @@ namespace ModuleMainModule.ViewModels
         private void DelFromDb()
         {            
             ShowService.DelShow(DirectShow.Id);
-
             CanDelFromDb = false;
             CanAddToDb = true;
         }

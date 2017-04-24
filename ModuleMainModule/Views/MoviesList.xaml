@@ -8,7 +8,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Height="auto" Width="auto">
+             Height="auto" Width="auto" MaxWidth="350" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
         <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
@@ -23,20 +23,8 @@
             </prism:InteractionRequestTrigger>
         </i:Interaction.Triggers>
         <Border Margin="5" DockPanel.Dock="Top"  BorderBrush="DimGray" BorderThickness="2" CornerRadius="5">
-            <Label FontSize="15" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"/>
+            <Label FontSize="15" FontWeight="Heavy" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"/>
         </Border>
-        <!--<Label DockPanel.Dock="Top" Content="Ничего не найдено" HorizontalContentAlignment="Center" FontSize="15">
-            <Label.Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=NotFound, Converter={StaticResource NullToFalseConverter}}" Value="true">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Label.Style>
-        </Label>-->
         <Border DockPanel.Dock="Bottom" Margin="5" BorderBrush="DimGray" BorderThickness="2" CornerRadius="5">
             <Grid Height="30" Margin="5">
             <Grid.ColumnDefinitions>
@@ -48,7 +36,7 @@
         </Grid>
         </Border>
         <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" CanContentScroll="True">
-            <ListBox ItemsSource="{Binding Path=Movies}" SelectedItem="{Binding Path=SelectedMovie, Mode=TwoWay}" Background="#4C000000">
+            <ListBox ItemsSource="{Binding Movies}" SelectedItem="{Binding Path=SelectedMovie, Mode=TwoWay}" Background="#4C000000">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Background" Value="#4C000000"/>
@@ -71,7 +59,7 @@
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                             <Grid Height="200" Width="310">
                                 <Image Grid.RowSpan="2" Stretch="Fill"  Source="{Binding Backdrop, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch"/>
-                                <Label Content="{Binding Path = Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
+                                <Label Content="{Binding Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                                     <Label.Background>
                                         <SolidColorBrush Color="Azure" Opacity="0.5" />
                                     </Label.Background>
@@ -81,7 +69,7 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
                             </Grid>
-                            <Button FontSize="12" HorizontalAlignment="Stretch" Content="Подробнее" Command="{Binding Path=NavigateCommandShowDirectMovie}"
+                            <Button FontSize="12" HorizontalAlignment="Stretch" Content="{Binding ReadMore}" Command="{Binding Path=NavigateCommandShowDirectMovie}"
                                         DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
                                 <Button.Style>
                                     <Style TargetType="{x:Type Button}">

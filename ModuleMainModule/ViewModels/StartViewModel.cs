@@ -15,7 +15,7 @@ namespace ModuleMainModule.ViewModels
     class StartViewModel : BindableBase
     {
         private readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
+        private static readonly GetData Data = new GetData();
         private Logger logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand<Movie> NavigateCommandMovie { get; private set; }
@@ -32,6 +32,16 @@ namespace ModuleMainModule.ViewModels
             NotificationRequest = new InteractionRequest<INotification>();
             NotificationRequestNull = new InteractionRequest<INotification>();
         }
+
+        #region StringConstants
+
+        private const string _forExceptions = "StartViewModel";
+        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";
+        private const string _waitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами сериалу или актеру";
+        private const string _userNotified = "Пользователь был оповещен";       
+
+        #endregion
 
         #region Properties
 
@@ -85,15 +95,15 @@ namespace ModuleMainModule.ViewModels
         private void RaiseNotification()
         {
             this.NotificationRequest.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void RaiseNotificationNull()
         {
             this.NotificationRequestNull.Raise(
-               new Notification { Content = "Для перехода дождитесь полной загрузки данных по выбранному вами фильму или сериалу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _waitFullDownload, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void ShowDirectMovie(Movie movie)
@@ -107,11 +117,11 @@ namespace ModuleMainModule.ViewModels
             catch (System.NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException("StartViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException("StartViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -126,11 +136,11 @@ namespace ModuleMainModule.ViewModels
             catch (System.NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException("StartViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException("StartViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -139,10 +149,10 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Movie> moviesTest = await Data.GetPopularMoviesData(1);
+                List<Show> showsTest = await Data.GetPopularShowsData(1);
                 BestMovie = moviesTest.First();
                 SecondMovie = moviesTest[1];
                 ThirdMovie = moviesTest[2];
-                List<Show> showsTest = await Data.GetPopularShowsData(1);
                 BestShow = showsTest.First();
                 SecondShow = showsTest[1];
                 ThirdShow = showsTest[2];
@@ -153,7 +163,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("StartViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 

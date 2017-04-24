@@ -29,7 +29,7 @@
                         <TextBox FontSize="16" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <ToolTip>
-                               <TextBlock Text="Можно использовать только буквы, цифрры и символы '!', '?', '-', '(', ')'"/>
+                                <TextBlock Text="{Binding Regulations}"/>
                             </ToolTip>
                         </TextBox.ToolTip>
                         </TextBox>

@@ -30,8 +30,8 @@
                 <Button Width="150" DockPanel.Dock="Right" FontSize="20" Command="{Binding Path = NavigateCommandSearch}" IsEnabled="{Binding CanSave}" Content="{Binding Find}"/>
                 <TextBox FontSize="25" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
                     <TextBox.ToolTip>
-                        <ToolTip>                           
-                           <TextBlock Text="Можно использовать только буквы, цифрры и символ '-'"/>                               
+                        <ToolTip>
+                            <TextBlock Text="{Binding Regulations}"/>                               
                         </ToolTip>
                     </TextBox.ToolTip>
                 </TextBox>

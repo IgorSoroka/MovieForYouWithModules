@@ -8,7 +8,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Height="auto" Width="auto">
+             Height="auto" Width="auto" MaxWidth="350" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
         <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
@@ -23,20 +23,8 @@
             </prism:InteractionRequestTrigger>
         </i:Interaction.Triggers>
         <Border Margin="5" DockPanel.Dock="Top"  BorderBrush="DimGray" BorderThickness="2" CornerRadius="5">
-            <Label FontSize="15" HorizontalContentAlignment="Center" Content="{Binding Path=Title}"/>
+            <Label FontSize="15" FontWeight="Heavy" HorizontalContentAlignment="Center" Content="{Binding Title}"/>
         </Border>
-        <!--<Label DockPanel.Dock="Top" Content="Ничего не найдено" HorizontalContentAlignment="Center" FontSize="15">
-            <Label.Style>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName = lbMain, Path = ItemsSource, Converter={StaticResource NullToFalseConverter}}">
-                            <Setter Property="Visibility" Value="Visible"/>                        
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Label.Style>
-        </Label>-->
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" CanContentScroll="True">
             <ListBox  x:Name="lbMain" ItemsSource="{Binding ActorsList}" SelectedItem="{Binding Path=SelectedSearchedActor, Mode=TwoWay}" Background="#4C000000">
             <ListBox.ItemContainerStyle>
@@ -62,7 +50,7 @@
                         <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}" Height="150" Width="150"/>
                         <StackPanel Orientation="Vertical">
                                 <TextBlock Foreground="Honeydew" Text="{Binding Name}" Margin="3" FontSize="14"/>
-                                <Button FontSize="12" Content="Подробнее" Command="{Binding NavigateCommandShowDirectActor}" 
+                                <Button FontSize="12" Content="{Binding ReadMore}" Command="{Binding NavigateCommandShowDirectActor}" 
                                         DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
                                     <Button.Style>
                                         <Style TargetType="{x:Type Button}">

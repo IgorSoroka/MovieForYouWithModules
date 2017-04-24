@@ -17,8 +17,8 @@ namespace ModuleMainModule.ViewModels
     public class ActorViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
-        static readonly IActorService ActorService = new ActorService();
+        private static readonly GetData Data = new GetData();
+        private static readonly IActorService ActorService = new ActorService();
         private Logger logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
@@ -35,55 +35,48 @@ namespace ModuleMainModule.ViewModels
             NotificationRequest = new InteractionRequest<INotification>();
         }
 
-        #region Constants
+        #region StringConstants
 
         private const string _delFavorites = "Удалить из избранного";
         public string DelFavorites
-        {
-            get { return _delFavorites; }
-        }
+        {   get { return _delFavorites; }  }
 
         private const string _addFavorites = "Добавить в избранное";
         public string AddFavorites
-        {
-            get { return _addFavorites; }
-        }        
+        {   get { return _addFavorites; }  }        
 
         private const string _homePage = "Домашняя страница";
         public string ActorHomePage
-        {
-            get { return _homePage; }
-        }
+        {   get { return _homePage; }  }
 
         private const string _aboutActor = "Об актере";
         public string AboutActor
-        {
-            get { return _aboutActor; }
-        }
+        {   get { return _aboutActor; }   }
 
         private const string _biography = "Биография";
         public string Biography
-        {
-            get { return _biography; }
-        }
+        {   get { return _biography; }   }
+
+        private const string _readMore = "Подробнее";
+        public string ReadMore
+        { get { return _readMore; } }
 
         private const string _birthday = "Дата рождения";
         public string ActorBirthday
-        {
-            get { return _birthday; }
-        }
+        {   get { return _birthday; }   }
 
         private const string _filmography = "Фильмография";
         public string Filmography
-        {
-            get { return _filmography; }
-        }
+        {   get { return _filmography; }  }
 
         private const string _birthPlace = "Место рождения";
         public string ActorBirthPlace
-        {
-            get { return _birthPlace; }
-        }
+        {   get { return _birthPlace; }   }
+
+        private const string _forExceptions = "ActorViewModel";
+        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";        
+        private const string _userNotified = "Пользователь был оповещен";
 
         #endregion
 
@@ -139,7 +132,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ActorViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -154,8 +147,8 @@ namespace ModuleMainModule.ViewModels
         private void RaiseNotification()
         {
             this.NotificationRequest.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private async void GetDirectActorInfo(int id)
@@ -166,7 +159,6 @@ namespace ModuleMainModule.ViewModels
                 List<PersonCredit> movies = await Data.GetDirectActorMoviesList(id);
                 DirectActor = actor;
                 ActorMovies = new ObservableCollection<PersonCredit>(movies);
-
                 ActorDTO personFromDb = ActorService.GetActor(DirectActor.Id);
                 if (personFromDb == null)
                 {
@@ -180,13 +172,12 @@ namespace ModuleMainModule.ViewModels
                 }
             }
             catch (ServiceRequestException ex)
-            {
-                logger.ErrorException("ActorViewModel", ex);
+            {                
                 RaiseNotification();
             }
             catch (Exception e)
             {
-                logger.ErrorException("ActorViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -199,7 +190,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("ActorViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -207,7 +198,6 @@ namespace ModuleMainModule.ViewModels
         {
             ActorDTO actor = new ActorDTO() { Name = DirectActor.Name, ExternalId = DirectActor.Id};           
             ActorService.TakeActor(actor);
-
             CanDelFromDb = true;
             CanAddToDb = false;
         }
@@ -215,7 +205,6 @@ namespace ModuleMainModule.ViewModels
         private void DelFromDb()
         {            
             ActorService.DelActor(DirectActor.Id);
-
             CanDelFromDb = false;
             CanAddToDb = true;           
         }

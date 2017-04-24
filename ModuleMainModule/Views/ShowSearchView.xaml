@@ -27,7 +27,7 @@
                         <TextBox FontSize="14" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
                         <TextBox.ToolTip>
                             <ToolTip>
-                                    <TextBlock Text="Можно использовать только буквы, цифрры и символы '!', '?', '-', '(', ')'"/>
+                                <TextBlock Text="{Binding Regulations}"/>
                             </ToolTip>
                         </TextBox.ToolTip>
                         </TextBox>
@@ -47,7 +47,7 @@
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Column="0" Margin="5">
                             <Label Foreground="Honeydew" FontSize="12" Content="{Binding From}"/>
-                        <ComboBox x:Name="CbFirst" ItemsSource="{Binding Path=YearsList}" SelectedItem="{Binding SelectedFirstYear, Mode=TwoWay}"
+                        <ComboBox x:Name="CbFirst" ItemsSource="{Binding YearsList}" SelectedItem="{Binding SelectedFirstYear, Mode=TwoWay}"
                                   IsEnabled="{Binding SelectedItem, ElementName=CmYear, Converter={StaticResource NullToFalseConverter}}"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Margin="5">

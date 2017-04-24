@@ -18,8 +18,8 @@ namespace ModuleMainModule.ViewModels
     class MovieViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
-        static readonly IMovieService MovieService = new MovieService();
+        private static readonly GetData Data = new GetData();
+        private static readonly IMovieService MovieService = new MovieService();
         private Logger logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
@@ -44,117 +44,89 @@ namespace ModuleMainModule.ViewModels
 
         private const string _plot = "Сюжет";
         public string Plot
-        {
-            get { return _plot; }
-        }
+        {  get { return _plot; }  }
+
+        private const string _readMore = "Подробнее";
+        public string ReadMore
+        { get { return _readMore; } }
 
         private const string _delFavorites = "Удалить из избранного";
         public string DelFavorites
-        {
-            get { return _delFavorites; }
-        }
+        {  get { return _delFavorites; }  }
 
         private const string _addFavorites = "Добавить в избранное";
         public string AddFavorites
-        {
-            get { return _addFavorites; }
-        }
+        {  get { return _addFavorites; }  }
 
         private const string _trailer = "Смотреть трейлер";
         public string Trailer
-        {
-            get { return _trailer; }
-        }
+        {  get { return _trailer; }  }
 
         private const string _showCast = "Состав";
         public string ShowCast
-        {
-            get { return _showCast; }
-        }
+        {  get { return _showCast; }  }
 
         private const string _mainRoles = "В главных ролях";
         public string MainRoles
-        {
-            get { return _mainRoles; }
-        }
+        {  get { return _mainRoles; }  }
 
         private const string _originalName = "Оригинальное название";
         public string OriginalName
-        {
-            get { return _originalName; }
-        }
+        {  get { return _originalName; }  }
 
         private const string _raiting = "Рейтинг";
         public string Raiting
-        {
-            get { return _raiting; }
-        }
+        {  get { return _raiting; }  }
 
         private const string _voteCount = "Количество голосов";
         public string VoteCount
-        {
-            get { return _voteCount; }
-        }
+        {   get { return _voteCount; }  }
 
         private const string _genres = "Жанры";
         public string Genres
-        {
-            get { return _genres; }
-        }
+        {   get { return _genres; }  }
 
         private const string _countries = "Страны производители";
         public string Countries
-        {
-            get { return _countries; }
-        }
+        {   get { return _countries; }  }
 
         private const string _keywords = "Ключевые слова";
         public string Keywords
-        {
-            get { return _keywords; }
-        }
+        {   get { return _keywords; }   }
 
         private const string _homePage = "Домашняя страница";
         public string HomePage
-        {
-            get { return _homePage; }
-        }
+        {   get { return _homePage; }   }
 
         private const string _premiere = "Премьера";
         public string Premiere
-        {
-            get { return _premiere; }
-        }
+        {   get { return _premiere; }   }
 
         private const string _aboutMovie = "О фильме";
         public string AboutMovie
-        {
-            get { return _aboutMovie; }
-        }
+        {   get { return _aboutMovie; }  }
 
         private const string _duration = "Продолжительность";
         public string Duration
-        {
-            get { return _duration; }
-        }
+        {   get { return _duration; }   }
 
         private const string _budget = "Бюджет";
         public string Budget
-        {
-            get { return _budget; }
-        }
+        {   get { return _budget; }   }
 
         private const string _revenue = "Кассовые сборы (США)";
         public string Revenue
-        {
-            get { return _revenue; }
-        }
+        {   get { return _revenue; }   }
 
         private const string _companies = "Компании производители";
         public string Companies
-        {
-            get { return _companies; }
-        }
+        {   get { return _companies; }  }
+
+        private const string _forExceptions = "MovieViewModel";
+        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";
+        private const string _userNotified = "Пользователь был оповещен";
+        private const string _errorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
 
         #endregion
 
@@ -227,11 +199,11 @@ namespace ModuleMainModule.ViewModels
             catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException("MovieViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -244,15 +216,15 @@ namespace ModuleMainModule.ViewModels
         private void RaiseNotification()
         {
             this.NotificationRequest.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void RaiseNotificationNull()
         {
             this.NotificationRequestNull.Raise(
-               new Notification { Content = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз.", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _errorLoadingData, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void ShowTrailler()
@@ -264,7 +236,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -277,7 +249,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -297,7 +269,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -311,7 +283,6 @@ namespace ModuleMainModule.ViewModels
                 DirectMovie = movie;
                 Crew = new ObservableCollection<MediaCrew>(crews);
                 Cast = new ObservableCollection<MediaCast>(casts);
-
                 MovieDTO movieFromDb = MovieService.GetMovie(DirectMovie.Id);
                 if (movieFromDb == null)
                 {
@@ -330,7 +301,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -338,7 +309,6 @@ namespace ModuleMainModule.ViewModels
         {
             MovieDTO movie = new MovieDTO() { Name = DirectMovie.OriginalTitle, ExternalId = DirectMovie.Id };           
             MovieService.TakeMovie(movie);
-
             CanDelFromDb = true;
             CanAddToDb = false;
         }
@@ -346,7 +316,6 @@ namespace ModuleMainModule.ViewModels
         private void DelFromDb()
         {            
             MovieService.DelMovie(DirectMovie.Id);
-
             CanDelFromDb = false;
             CanAddToDb = true;
         }

@@ -49,8 +49,6 @@ d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\EntityFramewo
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\EntityFramework.SqlServer.xml
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\MovieForYou.DAL.pdb
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\AutoMapper.xml
-d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\LocalDatabase.mdf
-d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\LocalDatabase_log.ldf
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\NLog.config
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\NLog.dll
 d:\Курсы\стажировка\TestModule\TestModule\bin\Debug\NLog.xml

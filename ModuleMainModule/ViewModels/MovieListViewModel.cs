@@ -17,9 +17,9 @@ namespace ModuleMainModule.ViewModels
     class MoviesListViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        static readonly GetData Data = new GetData();
+        private  static readonly GetData Data = new GetData();
         private Logger logger = LogManager.GetCurrentClassLogger();
-        static readonly IMovieService MovieService = new MovieService();
+        private static readonly IMovieService MovieService = new MovieService();
 
         public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
@@ -47,7 +47,7 @@ namespace ModuleMainModule.ViewModels
 
             Page = 1;
             _best = true;
-            Title = "Лучшие фильмы";
+            Title = _bestMovies;
             GetBestMovies(Page);
         }
 
@@ -55,17 +55,34 @@ namespace ModuleMainModule.ViewModels
 
         private const string _next = "Следуюшая";
         public string Next
-        {
-            get { return _next; }
-        }
+        {   get { return _next; }   }
 
         private const string _privious = "Предыдущая";
         public string Privious
-        {
-            get { return _privious; }
-        }
+        {   get { return _privious; }   }
+
+        private const string _readMore = "Подробнее";
+        public string ReadMore
+        { get { return _readMore; } }
+
+        private const string selectedMovies = "Избранные фильмы";
+        private const string searchingResults = "Результаты поиска";
+        private const string _forExceptions = "MovieListViewModel";
+        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
+        private const string _error = "Ошибка";
+        private const string _userNotified = "Пользователь был оповещен";
+        private const string _errorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
+        private const string _bestMovies = "Лучшие фильмы";
+        private const string _popularMovies = "Популярные фильмы";
+        private const string _nowPlayingMovies = "Сейчас в кино";
+        private const string _futureMovies = "Скоро в кино";
+
+        private const int _minPage = 1;
+        private const int _maxPage = 5;
 
         #endregion
+
+        #region Properties
 
         private Movie _selectedMovie;
         public Movie SelectedMovie
@@ -81,7 +98,7 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _page, value); }
         }
 
-        private string _title = "not null";
+        private string _title;
         public string Title
         {
             get { return _title; }
@@ -104,12 +121,13 @@ namespace ModuleMainModule.ViewModels
 
         public string InteractionResultMessage { get; private set; }
 
+        #endregion
+
         #region Methods
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {            
             Page = 1;
-
             try
             {
                 var type = navigationContext.Parameters["type"] as string;
@@ -124,7 +142,7 @@ namespace ModuleMainModule.ViewModels
                         _genre = false;
                         _company = false;
                         GetBestMovies(Page);
-                        Title = "Лучшие фильмы";
+                        Title = _bestMovies;
                     }
                     if (type == "Popular")
                     {
@@ -135,7 +153,7 @@ namespace ModuleMainModule.ViewModels
                         _genre = false;
                         _company = false;
                         GetPopularMovies(Page);
-                        Title = "Популярные фильмы";
+                        Title = _popularMovies;
                     }
                     if (type == "Future")
                     {
@@ -146,7 +164,7 @@ namespace ModuleMainModule.ViewModels
                         _genre = false;
                         _company = false;
                         GetUpComingMovies(Page);
-                        Title = "Скоро в кино";
+                        Title = _futureMovies;
                     }
                     if (type == "Now")
                     {
@@ -157,7 +175,7 @@ namespace ModuleMainModule.ViewModels
                         _genre = false;
                         _company = false;
                         GetNowPlayingMovies(Page);
-                        Title = "Сейчас в кино";
+                        Title = _nowPlayingMovies;
                     }
                     if (type == "Favorite")
                     {
@@ -168,7 +186,7 @@ namespace ModuleMainModule.ViewModels
                         _genre = false;
                         _company = false;
                         GetFavoriteMovies();
-                        Title = "Избранные фильмы";
+                        Title = selectedMovies;
                     }
                 }
 
@@ -183,7 +201,7 @@ namespace ModuleMainModule.ViewModels
                     _genre = true;
                     _company = false;
                     GetMoviesByGenre(_selectedGenre, Page);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }
 
                 _selectedCompany = null;
@@ -197,17 +215,16 @@ namespace ModuleMainModule.ViewModels
                     _genre = false;
                     _company = true;
                     GetMoviesByCompany(_selectedCompany, Page);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }
 
                 var name = navigationContext.Parameters["name"] as string;
                 if (name != null)
                 {
                     GetMoviesByName(name);
-                    Title = "Результаты поиска";
+                    Title = searchingResults;
                 }
-
-            
+                            
                 var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
                 var selectedFirstYear = (int)navigationContext.Parameters["SelectedFirstYear"];
                 var selectedLastYear = (int)navigationContext.Parameters["SelectedLastYear"];
@@ -216,40 +233,40 @@ namespace ModuleMainModule.ViewModels
                     if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
                     {
                         GetMoviesByOnlyRating(selectedRating);
-                        Title = "Результаты поиска";
+                        Title = searchingResults;
                     }
                     else if (selectedYear != 0)
                     {
                         GetMoviesByYearAndRating(selectedYear, selectedRating);
-                        Title = "Результаты поиска";
+                        Title = searchingResults;
                     }
                     else if (selectedFirstYear != 0 && selectedLastYear != 0)
                     {
                         GetMoviesByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
-                        Title = "Результаты поиска";
+                        Title = searchingResults;
                     }
                     else if (selectedFirstYear == 0 || selectedLastYear == 0)
                     {
                         if (selectedFirstYear != 0 && selectedLastYear == 0)
                         {
                             GetMoviesByFirstYearAndRating(selectedFirstYear, selectedRating);
-                            Title = "Результаты поиска";
+                            Title = searchingResults;
                         }
                         else if (selectedFirstYear == 0 && selectedLastYear != 0)
                         {
                             GetMoviesByFLastYearAndRating(selectedLastYear, selectedRating);
-                            Title = "Результаты поиска";
+                            Title = searchingResults;
                         }
                     }
             }
             catch (NullReferenceException ex)
             {
                 //RaiseNotificationNull();
-                logger.ErrorException("MovieListViewModel", ex);
+                logger.ErrorException(_forExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -262,15 +279,15 @@ namespace ModuleMainModule.ViewModels
         private void RaiseNotificationServer()
         {
             this.NotificationRequestServer.Raise(
-               new Notification { Content = "Превышено число запросов к серверу", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _exceededNumberRequests, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void RaiseNotificationNull()
         {
             this.NotificationRequestNull.Raise(
-               new Notification { Content = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз.", Title = "Ошибка" },
-               n => { InteractionResultMessage = "The user was notified."; });
+               new Notification { Content = _errorLoadingData, Title = _error },
+               n => { InteractionResultMessage = _userNotified; });
         }
 
         private void NavigateShowDirectMovie()
@@ -282,7 +299,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -304,37 +321,32 @@ namespace ModuleMainModule.ViewModels
 
         private void ShowPriviousPage()
         {
-            if (_popular && Page > 1)
+            if (_popular && Page > _minPage)
             {
                 Page--;
                GetPopularMovies(Page);
             }
-
-            if (_best && Page > 1)
+            if (_best && Page > _minPage)
             {
                 Page--;
                 GetBestMovies(Page);
             }
-
-            if (_future && Page > 1)
+            if (_future && Page > _minPage)
             {
                 Page--;
                 GetUpComingMovies(Page);
             }
-
-            if (_now && Page > 1)
+            if (_now && Page > _minPage)
             {
                 Page--;
                 GetNowPlayingMovies(Page);
             }
-
-            if (_company && Page > 1)
+            if (_company && Page > _minPage)
             {
                 Page--;
                 GetMoviesByCompany(_selectedCompany, Page);
             }
-
-            if (_genre && Page > 1)
+            if (_genre && Page > _minPage)
             {
                 Page--;
                 GetMoviesByGenre(_selectedGenre, Page);
@@ -343,37 +355,32 @@ namespace ModuleMainModule.ViewModels
 
         private void ShowNextPage()
         {
-            if (_popular && Page < 5)
+            if (_popular && Page < _maxPage)
             {
                 Page++;
                 GetPopularMovies(Page);
             }
-
-            if (_best && Page < 5)
+            if (_best && Page < _maxPage)
             {
                 Page++;
                 GetBestMovies(Page);
             }
-
-            if (_future && Page < 5)
+            if (_future && Page < _maxPage)
             {
                 Page++;
                 GetUpComingMovies(Page);
             }
-
-            if (_now && Page < 5)
+            if (_now && Page < _maxPage)
             {
                 Page++;
                 GetNowPlayingMovies(Page);
             }
-
-            if (_company && Page < 5)
+            if (_company && Page < _maxPage)
             {
                 Page++;
                 GetMoviesByCompany(_selectedCompany, Page);
             }
-
-            if (_genre && Page < 5)
+            if (_genre && Page < _maxPage)
             {
                 Page++;
                 GetMoviesByGenre(_selectedGenre, Page);
@@ -385,11 +392,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Movie> moviesTest = await Data.GetSearchedMoviesLastYear(selectedLastYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -397,7 +400,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }     
         }
 
@@ -406,11 +409,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Movie> moviesTest = await Data.GetSearchedMoviesFirstYear(selectedFirstYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -418,7 +417,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -427,11 +426,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Movie> moviesTest = await Data.GetSearchedMovies(selectedFirstYear, selectedLastYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -439,7 +434,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -448,11 +443,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Movie> moviesTest = await Data.GetSearchedMovies(selectedYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -460,7 +451,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -469,11 +460,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Movie> moviesTest = await Data.GetSearchedMovies(selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -481,7 +468,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -490,11 +477,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 List<Movie> moviesTest = await Data.GetMoviesByName(name);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -502,7 +485,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -512,11 +495,7 @@ namespace ModuleMainModule.ViewModels
             {
                 var genreNumber = RepositoryGenres.GetGenreId(genre);
                 List<Movie> moviesTest = await Data.GetListOfMoviesByGenre(genreNumber, page);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -524,7 +503,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -534,11 +513,7 @@ namespace ModuleMainModule.ViewModels
             {
                 var companyNumber = RepositoryCompanies.GetCompanyId(company);
                 List<Movie> moviesTest = await Data.GetListOfMoviesByCompany(companyNumber, page);
-                Movies = new ObservableCollection<Movie>(moviesTest);
-                if (moviesTest == null)
-                {
-                    NotFound = "not null";
-                }
+                Movies = new ObservableCollection<Movie>(moviesTest);                
             }
             catch (ServiceRequestException)
             {
@@ -546,7 +521,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -563,7 +538,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -580,7 +555,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -597,7 +572,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -614,7 +589,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
 
@@ -642,10 +617,10 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException("MovieListViewModel", e);
+                logger.ErrorException(_forExceptions, e);
             }
         }
     }
-        #endregion
 
+    #endregion
 }

@@ -1,5 +1,3 @@
-d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\LocalDatabase.mdf
-d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\LocalDatabase_log.ldf
 d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\MovieForYou.DAL.dll.config
 d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\MovieForYou.DAL.dll
 d:\Курсы\стажировка\TestModule\MovieForYou.DAL\bin\Debug\MovieForYou.DAL.pdb

@@ -136,9 +136,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\DataCast.cs" />
-    <Compile Include="Model\DataCrew.cs" />
-    <Compile Include="Model\GetData.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -172,6 +169,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Images\BackgroundList.jpg" />
+    <Resource Include="Images\BackgroundMain.jpg" />
+    <Resource Include="Images\best.png" />
+    <Resource Include="Images\Find.png" />
+    <Resource Include="Images\future.png" />
+    <Resource Include="Images\oncinema.png" />
+    <Resource Include="Images\ontv.png" />
+    <Resource Include="Images\popular.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -201,24 +206,9 @@
     <Resource Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\MainBackground.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\MenuBackground.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\ActorSearch.jpg" />
     <Resource Include="Images\MovieSearch.jpg" />
     <Resource Include="Images\ShowSearch.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\MovieBest.jpg" />
-    <Resource Include="Images\MovieFuture.jpg" />
-    <Resource Include="Images\MovieNow.jpg" />
-    <Resource Include="Images\MoviePopular.jpg" />
-    <Resource Include="Images\ShowBest.jpg" />
-    <Resource Include="Images\ShowNow.jpg" />
-    <Resource Include="Images\ShowPopular.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.jpg" />
