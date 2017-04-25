@@ -53,7 +53,7 @@
                     <ribbon:RibbonButton Label="{Binding Popular}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding PopularPath}" Command="{Binding NavigateCommandListShow}" CommandParameter="Popular"/>
                 </ribbon:RibbonGroup>
                 <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding NowOnTV}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding NowShowPath}"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
+                    <ribbon:RibbonButton Label="{Binding NowOnTv}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding NowShowPath}"  Command="{Binding NavigateCommandListShow}" CommandParameter="Now"/>
                 </ribbon:RibbonGroup>
             </ribbon:RibbonTab>
             <ribbon:RibbonTab Header="{Binding Search}">

@@ -19,32 +19,17 @@ namespace MovieForYou.DAL.Repositories
         }
         public IRepository<Movie> Movies
         {
-            get
-            {
-                if (_movieRepository == null)
-                    _movieRepository = new MovieRepository(_db);
-                return _movieRepository;
-            }
+            get { return _movieRepository ?? (_movieRepository = new MovieRepository(_db)); }
         }
 
         public IRepository<Show> Shows
         {
-            get
-            {
-                if (_showRepository == null)
-                    _showRepository = new ShowRepository(_db);
-                return _showRepository;
-            }
+            get { return _showRepository ?? (_showRepository = new ShowRepository(_db)); }
         }
 
         public IRepository<Actor> Actors
         {
-            get
-            {
-                if (_actorRepository == null)
-                    _actorRepository = new ActorRepository(_db);
-                return _actorRepository;
-            }
+            get { return _actorRepository ?? (_actorRepository = new ActorRepository(_db)); }
         }
 
         public void Save()

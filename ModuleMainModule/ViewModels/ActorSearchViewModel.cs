@@ -1,28 +1,29 @@
-﻿using System.Net.TMDb;
-using MainModule;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Regions;
-using NLog;
-using Prism.Interactivity.InteractionRequest;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 using System.Linq;
+using System.Net.TMDb;
+using MainModule;
+using NLog;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
+using Prism.Mvvm;
+using Prism.Regions;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
     class ActorSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
-        private static readonly GetData Data = new GetData();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
         public DelegateCommand<string> NavigateCommandSearch { get; private set; }      
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
 
         public ActorSearchViewModel(RegionManager regionManager)
         {
@@ -37,32 +38,30 @@ namespace ModuleMainModule.ViewModels
         #region Constants
 
         private const string _find = "Найти";
-        public string Find
-        { get { return _find; }  }
+        public string Find => _find;
 
         private const string _regulations = "Можно использовать только буквы, цифрры и символ '-'";
-        public string Regulations
-        { get { return _regulations; } }
+        public string Regulations => _regulations;
 
-        private const string _forExceptions = "ActorSearchViewModel";
-        private const string _invalidPropertyName = "Некорретное имя свойства";
-        private const string _exceededNumberRequests  = "Превышено число запросов к серверу";
-        private const string _error = "Ошибка";
-        private const string _waitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами актеру";
-        private const string _userNotified = "Пользователь был оповещен";
+        private const string ForExceptions = "ActorSearchViewModel";
+        private const string InvalidPropertyName = "Некорретное имя свойства";
+        private const string ExceededNumberRequests  = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";
+        private const string WaitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами актеру";
+        private const string UserNotified = "Пользователь был оповещен";
 
-        private const int _watsonId = 10990;
-        private const int _johanssonId = 1245;
-        private const int _lawrenceId = 72129;
-        private const int _hathawayId = 1813;
-        private const int _jackmanId = 6968;
-        private const int _deppId = 85;
-        private const int _dieselId = 12835;
-        private const int _diCaprioId = 6193;
-        private const int _hardyId = 2524;
-        private const int _pittId = 287;
-        private const int _downeyId = 3223;
-        private const int _robbieId = 234352;
+        private const int WatsonId = 10990;
+        private const int JohanssonId = 1245;
+        private const int LawrenceId = 72129;
+        private const int HathawayId = 1813;
+        private const int JackmanId = 6968;
+        private const int DeppId = 85;
+        private const int DieselId = 12835;
+        private const int DiCaprioId = 6193;
+        private const int HardyId = 2524;
+        private const int PittId = 287;
+        private const int DowneyId = 3223;
+        private const int RobbieId = 234352;
 
         #endregion
 
@@ -185,23 +184,23 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                Watson = await Data.GetActor(_watsonId);
-                Johansson = await Data.GetActor(_johanssonId);
-                Lawrence = await Data.GetActor(_lawrenceId);
-                Hathaway = await Data.GetActor(_hathawayId);
-                Jackman = await Data.GetActor(_jackmanId);
-                Depp = await Data.GetActor(_deppId);
-                Diesel = await Data.GetActor(_dieselId);
-                DiCaprio = await Data.GetActor(_diCaprioId);
-                Hardy = await Data.GetActor(_hardyId);
-                Pitt = await Data.GetActor(_pittId);
-                Downey = await Data.GetActor(_downeyId);
-                Robbie = await Data.GetActor(_robbieId);
+                Watson = await DataService.GetActor(WatsonId);
+                Johansson = await DataService.GetActor(JohanssonId);
+                Lawrence = await DataService.GetActor(LawrenceId);
+                Hathaway = await DataService.GetActor(HathawayId);
+                Jackman = await DataService.GetActor(JackmanId);
+                Depp = await DataService.GetActor(DeppId);
+                Diesel = await DataService.GetActor(DieselId);
+                DiCaprio = await DataService.GetActor(DiCaprioId);
+                Hardy = await DataService.GetActor(HardyId);
+                Pitt = await DataService.GetActor(PittId);
+                Downey = await DataService.GetActor(DowneyId);
+                Robbie = await DataService.GetActor(RobbieId);
             }
             catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             catch (ServiceRequestException)
             {
@@ -209,22 +208,22 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
         private void RaiseNotification()
         {
-            this.NotificationRequest.Raise(
-               new Notification { Content = _exceededNumberRequests, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequest.Raise(
+               new Notification { Content = ExceededNumberRequests, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void RaiseNotificationNull()
         {
-            this.NotificationRequestNull.Raise(
-               new Notification { Content = _waitFullDownload, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequestNull.Raise(
+               new Notification { Content = WaitFullDownload, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void Search(string obj)
@@ -236,7 +235,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -248,30 +247,27 @@ namespace ModuleMainModule.ViewModels
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
             }
-            catch (System.NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
-        string IDataErrorInfo.this[string propertyName]
-        {
-            get { return OnValidate(propertyName); }
-        }
+        string IDataErrorInfo.this[string propertyName] => OnValidate(propertyName);
 
         protected virtual string OnValidate(string propertyName)
         {
-            string error = string.Empty;
+            string error = String.Empty;
             try
             {
                 if (string.IsNullOrEmpty(propertyName))
-                    throw new ArgumentException(_invalidPropertyName, propertyName);
-                var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
+                    throw new ArgumentException(InvalidPropertyName, propertyName);
+                var value = GetType().GetProperty(propertyName).GetValue(this, null);
                 var results = new List<ValidationResult>(1);
                 var context = new ValidationContext(this, null, null) { MemberName = propertyName };
                 var result = Validator.TryValidateProperty(value, context, results);
@@ -284,7 +280,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
             return error;
         }

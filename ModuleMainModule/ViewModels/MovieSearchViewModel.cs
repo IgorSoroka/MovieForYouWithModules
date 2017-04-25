@@ -1,21 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using ModuleMainModule.Model;
-using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
-using NLog;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using ModuleMainModule.Model;
+using NLog;
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
     class MovieSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandGenreSearch { get; private set; }
@@ -42,54 +43,43 @@ namespace ModuleMainModule.ViewModels
         #region Constants
 
         private const string _find = "Найти";
-        public string Find
-        {  get { return _find; }   }
+        public string Find => _find;
 
         private const string _resetAll = "Сбросить";
-        public string ResetAll
-        {  get { return _resetAll; }   }
+        public string ResetAll => _resetAll;
 
         private const string _nameSearching = "Поиск по названию";
-        public string NameSearching
-        {  get { return _nameSearching; }   }
+        public string NameSearching => _nameSearching;
 
         private const string _year = "Год создания";
-        public string Year
-        {  get { return _year; }  }
+        public string Year => _year;
 
         private const string _interval = "Интервал годов";
-        public string Interval
-        {  get { return _interval; }  }
+        public string Interval => _interval;
 
         private const string _from = "С";
-        public string From
-        {  get { return _from; }  }
+        public string From => _from;
 
         private const string _to = "по";
-        public string To
-        {  get { return _to; }  }
+        public string To => _to;
 
         private const string _raiting = "Рейтинг";
-        public string Raiting
-        {  get { return _raiting; }  }
+        public string Raiting => _raiting;
 
         private const string _genreSearching = "Поиск по жанру";
-        public string GenreSearching
-        {  get { return _genreSearching; }  }
+        public string GenreSearching => _genreSearching;
 
         private const string _companySearching = "Поиск по компинии";
-        public string CompanySearching
-        {   get { return _companySearching; }  }
+        public string CompanySearching => _companySearching;
 
         private const string _regulations = "Можно использовать только буквы, цифрры и символы '!', '?', '-', '(', ')'";
-        public string Regulations
-        { get { return _regulations; } }
+        public string Regulations => _regulations;
 
-        private const string _forExceptions = "MovieSearchViewModel";
-        private const string _invalidPropertyName = "Некорретное имя свойства";
+        private const string ForExceptions = "MovieSearchViewModel";
+        private const string InvalidPropertyName = "Некорретное имя свойства";
 
-        private const int _minYear = 1990;
-        private const int _maxYear = 2017;
+        private const int MinYear = 1990;
+        private const int MaxYear = 2017;
 
         #endregion
 
@@ -203,7 +193,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -216,7 +206,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -235,7 +225,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -248,24 +238,21 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
         private ObservableCollection<int> GetYearsList()
         {
             ObservableCollection<int> years = new ObservableCollection<int>();
-            for (int i = _maxYear; i >= _minYear; i--)
+            for (int i = MaxYear; i >= MinYear; i--)
             {
                 years.Add(i);
             }
             return years;
         }      
 
-        string IDataErrorInfo.this[string propertyName]
-        {
-            get { return OnValidate(propertyName); }
-        }
+        string IDataErrorInfo.this[string propertyName] => OnValidate(propertyName);
 
         protected virtual string OnValidate(string propertyName)
         {
@@ -273,10 +260,10 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 if (string.IsNullOrEmpty(propertyName))
-                    throw new ArgumentException(_invalidPropertyName, propertyName);
+                    throw new ArgumentException(InvalidPropertyName, propertyName);
 
 
-                var value = this.GetType().GetProperty(propertyName).GetValue(this, null);
+                var value = GetType().GetProperty(propertyName).GetValue(this, null);
                 var results = new List<ValidationResult>(1);
 
                 var context = new ValidationContext(this, null, null) { MemberName = propertyName };
@@ -292,7 +279,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
             return error;
         }

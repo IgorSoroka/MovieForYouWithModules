@@ -3,6 +3,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using NLog;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
@@ -10,7 +11,7 @@ namespace ModuleMainModule.ViewModels
     {
         private readonly IRegionManager _regionManager;
         private IRegionNavigationJournal _journal;
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand GoBackCommand { get; set; }
 
@@ -21,10 +22,9 @@ namespace ModuleMainModule.ViewModels
         }
 
         private const string _backDescription = "Назад к описанию";
-        public string BackDescription
-        {   get { return _backDescription; }   }
+        public string BackDescription => _backDescription;
 
-        private const string _forExceptions = "PlayerViewModel";
+        private const string ForExceptions = "PlayerViewModel";
 
         private Uri _video;
         public Uri Video
@@ -43,7 +43,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 

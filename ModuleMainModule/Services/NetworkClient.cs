@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace ModuleMainModule.Model
+namespace ModuleMainModule.Services
 {
     public class NetworkClient
     {

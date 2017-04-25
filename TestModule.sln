@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "TestModule\Test.csproj", "{520CCB29-7B74-4EC3-95F2-82AA44579B2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieForYou", "TestModule\MovieForYou.csproj", "{520CCB29-7B74-4EC3-95F2-82AA44579B2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainModule", "ModuleMainModule\MainModule.csproj", "{03B29A22-E017-4477-94A5-81ED76B20787}"
 EndProject

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ModuleMainModule.Model
+namespace ModuleMainModule.Services
 {
     public static class WebBrowserUtility
     {

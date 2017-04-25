@@ -1,30 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
 using ModuleMainModule.Services;
+using NLog;
 using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Prism.Regions;
-using NLog;
-using Prism.Interactivity.InteractionRequest;
-using System;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
     public class ActorViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private static readonly GetData Data = new GetData();
+        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
         private static readonly IActorService ActorService = new ActorService();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
         public DelegateCommand NavigateCommandAddToDb { get; private set; }
         public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; }
 
         public ActorViewModel(RegionManager regionManager)
         {
@@ -38,45 +39,36 @@ namespace ModuleMainModule.ViewModels
         #region StringConstants
 
         private const string _delFavorites = "Удалить из избранного";
-        public string DelFavorites
-        {   get { return _delFavorites; }  }
+        public string DelFavorites => _delFavorites;
 
         private const string _addFavorites = "Добавить в избранное";
-        public string AddFavorites
-        {   get { return _addFavorites; }  }        
+        public string AddFavorites => _addFavorites;
 
         private const string _homePage = "Домашняя страница";
-        public string ActorHomePage
-        {   get { return _homePage; }  }
+        public string ActorHomePage => _homePage;
 
         private const string _aboutActor = "Об актере";
-        public string AboutActor
-        {   get { return _aboutActor; }   }
+        public string AboutActor => _aboutActor;
 
         private const string _biography = "Биография";
-        public string Biography
-        {   get { return _biography; }   }
+        public string Biography => _biography;
 
         private const string _readMore = "Подробнее";
-        public string ReadMore
-        { get { return _readMore; } }
+        public string ReadMore => _readMore;
 
         private const string _birthday = "Дата рождения";
-        public string ActorBirthday
-        {   get { return _birthday; }   }
+        public string ActorBirthday => _birthday;
 
         private const string _filmography = "Фильмография";
-        public string Filmography
-        {   get { return _filmography; }  }
+        public string Filmography => _filmography;
 
         private const string _birthPlace = "Место рождения";
-        public string ActorBirthPlace
-        {   get { return _birthPlace; }   }
+        public string ActorBirthPlace => _birthPlace;
 
-        private const string _forExceptions = "ActorViewModel";
-        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
-        private const string _error = "Ошибка";        
-        private const string _userNotified = "Пользователь был оповещен";
+        private const string ForExceptions = "ActorViewModel";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";        
+        private const string UserNotified = "Пользователь был оповещен";
 
         #endregion
 
@@ -132,7 +124,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -146,17 +138,17 @@ namespace ModuleMainModule.ViewModels
 
         private void RaiseNotification()
         {
-            this.NotificationRequest.Raise(
-               new Notification { Content = _exceededNumberRequests, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequest.Raise(
+               new Notification { Content = ExceededNumberRequests, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private async void GetDirectActorInfo(int id)
         {
             try
             {
-                var actor = await Data.GetDirectActorData(id);               
-                List<PersonCredit> movies = await Data.GetDirectActorMoviesList(id);
+                var actor = await DataService.GetDirectActorData(id);               
+                List<PersonCredit> movies = await DataService.GetDirectActorMoviesList(id);
                 DirectActor = actor;
                 ActorMovies = new ObservableCollection<PersonCredit>(movies);
                 ActorDTO personFromDb = ActorService.GetActor(DirectActor.Id);
@@ -171,13 +163,13 @@ namespace ModuleMainModule.ViewModels
                     CanAddToDb = false;
                 }
             }
-            catch (ServiceRequestException ex)
+            catch (ServiceRequestException)
             {                
                 RaiseNotification();
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -190,13 +182,13 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
         private void AddToDb()
         {
-            ActorDTO actor = new ActorDTO() { Name = DirectActor.Name, ExternalId = DirectActor.Id};           
+            ActorDTO actor = new ActorDTO { Name = DirectActor.Name, ExternalId = DirectActor.Id};           
             ActorService.TakeActor(actor);
             CanDelFromDb = true;
             CanAddToDb = false;

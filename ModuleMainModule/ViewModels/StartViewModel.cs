@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.TMDb;
 using MainModule;
+using NLog;
 using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Prism.Regions;
-using Prism.Interactivity.InteractionRequest;
-using NLog;
-using System;
-using ModuleMainModule.Model;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
     class StartViewModel : BindableBase
     {
         private readonly IRegionManager _regionManager;
-        private static readonly GetData Data = new GetData();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand<Movie> NavigateCommandMovie { get; private set; }
         public DelegateCommand<Show> NavigateCommandShow { get; private set; }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
 
         public StartViewModel(RegionManager regionManager)
         {
@@ -35,11 +35,11 @@ namespace ModuleMainModule.ViewModels
 
         #region StringConstants
 
-        private const string _forExceptions = "StartViewModel";
-        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
-        private const string _error = "Ошибка";
-        private const string _waitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами сериалу или актеру";
-        private const string _userNotified = "Пользователь был оповещен";       
+        private const string ForExceptions = "StartViewModel";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";
+        private const string WaitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами сериалу или актеру";
+        private const string UserNotified = "Пользователь был оповещен";       
 
         #endregion
 
@@ -94,16 +94,16 @@ namespace ModuleMainModule.ViewModels
 
         private void RaiseNotification()
         {
-            this.NotificationRequest.Raise(
-               new Notification { Content = _exceededNumberRequests, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequest.Raise(
+               new Notification { Content = ExceededNumberRequests, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void RaiseNotificationNull()
         {
-            this.NotificationRequestNull.Raise(
-               new Notification { Content = _waitFullDownload, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequestNull.Raise(
+               new Notification { Content = WaitFullDownload, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void ShowDirectMovie(Movie movie)
@@ -114,14 +114,14 @@ namespace ModuleMainModule.ViewModels
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
             }
-            catch (System.NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -133,14 +133,14 @@ namespace ModuleMainModule.ViewModels
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
             }
-            catch (System.NullReferenceException ex)
+            catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -148,8 +148,8 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Movie> moviesTest = await Data.GetPopularMoviesData(1);
-                List<Show> showsTest = await Data.GetPopularShowsData(1);
+                List<Movie> moviesTest = await DataService.GetPopularMoviesData(1);
+                List<Show> showsTest = await DataService.GetPopularShowsData(1);
                 BestMovie = moviesTest.First();
                 SecondMovie = moviesTest[1];
                 ThirdMovie = moviesTest[2];
@@ -163,7 +163,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 

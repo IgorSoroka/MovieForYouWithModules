@@ -3,29 +3,30 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
 using MainModule;
+using ModuleMainModule.Interfaces;
+using ModuleMainModule.Model;
+using ModuleMainModule.Services;
+using NLog;
 using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Prism.Regions;
-using NLog;
-using Prism.Interactivity.InteractionRequest;
-using ModuleMainModule.Interfaces;
-using ModuleMainModule.Services;
-using ModuleMainModule.Model;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
     class ShowsListViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private readonly GetData Data = new GetData();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly TheMovieDBDataService _dataService = new TheMovieDBDataService();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private static readonly IShowService ShowService = new ShowService();
 
         public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
         public DelegateCommand NavigateCommandShowPriviousPage { get; private set; }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
 
         private bool _best;
         private bool _popular;
@@ -44,30 +45,27 @@ namespace ModuleMainModule.ViewModels
         #region Constants
 
         private const string _next = "Следуюшая";
-        public string Next
-        {   get { return _next; }   }
+        public string Next => _next;
 
         private const string _privious = "Предыдущая";
-        public string Privious
-        {   get { return _privious; }   }
+        public string Privious => _privious;
 
         private const string _readMore = "Подробнее";
-        public string ReadMore
-        { get { return _readMore; } }
+        public string ReadMore => _readMore;
 
-        private const string selectedShows = "Избранные сериалы";
-        private const string searchingResults = "Результаты поиска";
-        private const string _forExceptions = "ShowListViewModel";
-        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
-        private const string _error = "Ошибка";
-        private const string _userNotified = "Пользователь был оповещен";
-        private const string _errorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
-        private const string _bestShows = "Лучшие сериалы";
-        private const string _popularShows = "Популярные сериалы";
-        private const string _onTvShows = "Сейчас на ТВ";
+        private const string SelectedShows = "Избранные сериалы";
+        private const string SearchingResults = "Результаты поиска";
+        private const string ForExceptions = "ShowListViewModel";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";
+        private const string UserNotified = "Пользователь был оповещен";
+        private const string ErrorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
+        private const string BestShows = "Лучшие сериалы";
+        private const string PopularShows = "Популярные сериалы";
+        private const string OnTvShows = "Сейчас на ТВ";
 
-        private const int _minPage = 1;
-        private const int _maxPage = 5;
+        private const int MinPage = 1;
+        private const int MaxPage = 5;
 
         #endregion
 
@@ -121,7 +119,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = false;
                         _now = false;
                         GetBestShows(Page);
-                        Title = _bestShows;
+                        Title = BestShows;
                     }
                     if (type == "Popular")
                     {
@@ -129,7 +127,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = true;
                         _now = false;
                         GetPopularShows(Page);
-                        Title = _popularShows;
+                        Title = PopularShows;
                     }
                     if (type == "Now")
                     {
@@ -137,7 +135,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = false;
                         _now = true;
                         GetNowPlayingShows(Page);
-                        Title = _onTvShows;
+                        Title = OnTvShows;
                     }
                     if (type == "Favorite")
                     {
@@ -145,7 +143,7 @@ namespace ModuleMainModule.ViewModels
                         _popular = false;
                         _now = false;
                         GetFavoriteShows();
-                        Title = selectedShows;
+                        Title = SelectedShows;
                     }
                 }
 
@@ -153,7 +151,7 @@ namespace ModuleMainModule.ViewModels
                 if (name != null)
                 {
                     GetShowsByName(name);
-                    Title = searchingResults;
+                    Title = SearchingResults;
                 }
                            
                 var selectedYear = (int)navigationContext.Parameters["SelectedYear"];
@@ -164,40 +162,40 @@ namespace ModuleMainModule.ViewModels
                 if (selectedFirstYear == 0 && selectedLastYear == 0 && selectedYear == 0)
                 {
                     GetShowsByOnlyRating(selectedRating);
-                    Title = searchingResults;
+                    Title = SearchingResults;
                 }
                 else if (selectedYear != 0)
                 {
                     GetShowsByYearAndRating(selectedYear, selectedRating);
-                    Title = searchingResults;
+                    Title = SearchingResults;
                 }
                 else if (selectedFirstYear != 0 && selectedLastYear != 0)
                 {
                     GetShowsByFirstLastYearAndRating(selectedFirstYear, selectedLastYear, selectedRating);
-                    Title = searchingResults;
+                    Title = SearchingResults;
                 }
                 else if (selectedFirstYear == 0 || selectedLastYear == 0)
                 {
                     if (selectedFirstYear != 0 && selectedLastYear == 0)
                     {
                         GetShowsByFirstYearAndRating(selectedFirstYear, selectedRating);
-                        Title = searchingResults;
+                        Title = SearchingResults;
                     }
                     else if (selectedFirstYear == 0 && selectedLastYear != 0)
                     {
                         GetShowsByLastYearAndRating(selectedLastYear, selectedRating);
-                        Title = searchingResults;
+                        Title = SearchingResults;
                     }
                 }
             }
             catch (NullReferenceException ex)
             {
                 //RaiseNotificationNull();
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -209,16 +207,16 @@ namespace ModuleMainModule.ViewModels
 
         private void RaiseNotification()
         {
-            this.NotificationRequest.Raise(
-               new Notification { Content = _exceededNumberRequests, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequest.Raise(
+               new Notification { Content = ExceededNumberRequests, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void RaiseNotificationNull()
         {
-            this.NotificationRequestNull.Raise(
-               new Notification { Content = _errorLoadingData, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequestNull.Raise(
+               new Notification { Content = ErrorLoadingData, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         //private bool CanExecutePriviousPage()
@@ -239,17 +237,17 @@ namespace ModuleMainModule.ViewModels
 
         private void ShowPriviousPage()
         {
-            if (_popular && Page > _minPage)
+            if (_popular && Page > MinPage)
             {
                 Page--;
                 GetPopularShows(Page);
             }
-            if (_best && Page > _minPage)
+            if (_best && Page > MinPage)
             {
                 Page--;
                 GetBestShows(Page);
             }
-            if (_now && Page > _minPage)
+            if (_now && Page > MinPage)
             {
                 Page--;
                 GetNowPlayingShows(Page);
@@ -259,17 +257,17 @@ namespace ModuleMainModule.ViewModels
         private void ShowNextPage()
         {
 
-            if (_popular && Page < _maxPage)
+            if (_popular && Page < MaxPage)
             {
                 Page++;
                 GetPopularShows(Page);
             }
-            if (_best && Page < _maxPage)
+            if (_best && Page < MaxPage)
             {
                 Page++;
                 GetBestShows(Page);
             }            
-            if (_now && Page < _maxPage)
+            if (_now && Page < MaxPage)
             {
                 Page++;
                 GetNowPlayingShows(Page);
@@ -285,7 +283,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -293,7 +291,7 @@ namespace ModuleMainModule.ViewModels
         {            
             try
             {
-                List<Show> showsTest = await Data.GetPopularShowsData(page);
+                List<Show> showsTest = await _dataService.GetPopularShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -302,7 +300,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -310,7 +308,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetTopRatedShowsData(page);
+                List<Show> showsTest = await _dataService.GetTopRatedShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -319,7 +317,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -327,7 +325,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetNowShowsData(page);
+                List<Show> showsTest = await _dataService.GetNowShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -336,7 +334,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -344,7 +342,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetSearchedShowsLastYear(selectedLastYear, selectedRating);
+                List<Show> showsTest = await _dataService.GetSearchedShowsLastYear(selectedLastYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -353,7 +351,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -361,7 +359,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetSearchedShowsFirstYear(selectedFirstYear, selectedRating);
+                List<Show> showsTest = await _dataService.GetSearchedShowsFirstYear(selectedFirstYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -370,7 +368,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -378,7 +376,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetSearchedShows(selectedFirstYear, selectedLastYear, selectedRating);
+                List<Show> showsTest = await _dataService.GetSearchedShows(selectedFirstYear, selectedLastYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -387,7 +385,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -395,7 +393,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetSearchedShows(selectedYear, selectedRating);
+                List<Show> showsTest = await _dataService.GetSearchedShows(selectedYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -404,7 +402,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -412,7 +410,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetSearchedShows(selectedRating);
+                List<Show> showsTest = await _dataService.GetSearchedShows(selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -421,7 +419,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -429,7 +427,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Show> showsTest = await Data.GetShowsByName(name);
+                List<Show> showsTest = await _dataService.GetShowsByName(name);
                 Shows = new ObservableCollection<Show>(showsTest);
             }
             catch (ServiceRequestException)
@@ -438,7 +436,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -455,7 +453,7 @@ namespace ModuleMainModule.ViewModels
                 List<Show> favoriteShowsFromSite = new List<Show>();
                 foreach (var item in showsId)
                 {
-                    Show show = await Data.GetDirectShowData(item);
+                    Show show = await _dataService.GetDirectShowData(item);
                     favoriteShowsFromSite.Add(show);
                 }               
                 Shows = new ObservableCollection<Show>(favoriteShowsFromSite);
@@ -466,7 +464,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 

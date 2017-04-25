@@ -1,5 +1,4 @@
-﻿using ModuleMainModule.Model;
-using NLog;
+﻿using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,27 +7,30 @@ using System.Linq;
 using System.Net.TMDb;
 using System.Threading;
 using System.Threading.Tasks;
+#pragma warning disable 618
 
 namespace MainModule
 {
-    public class GetData
+    public class TheMovieDBDataService
     {
         private readonly ServiceClient _client = new ServiceClient(ApiKey);
         private readonly CancellationToken _token = new CancellationToken();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         #region Constants
 
         private const string ApiKey = "fa314d1331397149188e07fbec92930d";
-        private const string _forExceptions = "GetData";
+        private const string ForExceptions = "TheMovieDBDataService";
 
-        private const int _firstMonth = 1;
-        private const int _lastMonth = 12;
-        private const int _firstDayOfMonth = 1;
-        private const int _lastDayOfMonth = 31;
-        private const int _pageForSearching = 1;
+        private const int FirstMonth = 1;
+        private const int LastMonth = 12;
+        private const int FirstDayOfMonth = 1;
+        private const int LastDayOfMonth = 31;
+        private const int PageForSearching = 1;
 
         #endregion
+
+        #region Methods
 
         public async Task<List<Movie>> GetPopularMoviesData(int page)
         {
@@ -44,7 +46,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }            
             return popularMovies;
         }
@@ -63,7 +65,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return newMovies;
         }
@@ -82,7 +84,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return topMovies;
         }
@@ -101,7 +103,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return upcomingMovies;
         }
@@ -119,7 +121,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return movie;
         }
@@ -130,10 +132,6 @@ namespace MainModule
             try
             {
                 var shows = await _client.Shows.GetPopularAsync(Thread.CurrentThread.CurrentCulture.Name, page, _token);
-                if (shows == null)
-                {
-                    bool internetConnection = NetworkClient.CheckForInternetConnection();
-                }
                 popularShows = shows.Results.ToList();
             }
             catch (ServiceRequestException)
@@ -142,7 +140,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return popularShows;
         }
@@ -161,7 +159,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return nowShows;
         }
@@ -180,7 +178,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return topRatedShows;
         }
@@ -198,7 +196,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return show;
         }
@@ -216,7 +214,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return actor;
         }
@@ -240,7 +238,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return moviesTest;
         }
@@ -262,7 +260,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return stringGenres;
         }
@@ -305,7 +303,7 @@ namespace MainModule
             List<Movie> searchrMovies = new List<Movie>();
             try
             {
-                var movies = await _client.Movies.SearchAsync(name, Thread.CurrentThread.CurrentCulture.Name, true, null, true, _pageForSearching, _token);
+                var movies = await _client.Movies.SearchAsync(name, Thread.CurrentThread.CurrentCulture.Name, true, null, true, PageForSearching, _token);
                 searchrMovies = movies.Results.ToList();
             }
             catch (ServiceRequestException)
@@ -314,7 +312,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return searchrMovies;
         }
@@ -324,7 +322,7 @@ namespace MainModule
             List<Person> popularPersons = new List<Person>();
             try
             {
-                var firstPerson = await _client.People.SearchAsync("Diesel", true, true, _pageForSearching, _token);
+                var firstPerson = await _client.People.SearchAsync("Diesel", true, true, PageForSearching, _token);
                 popularPersons.Add(firstPerson.Results.FirstOrDefault());
             }
             catch (ServiceRequestException)
@@ -333,7 +331,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return popularPersons;
         }
@@ -343,7 +341,7 @@ namespace MainModule
             List<Person> list = new List<Person>();
             try
             {
-                var searchPeople = await _client.People.SearchAsync(actorName, true, true, _pageForSearching, _token);
+                var searchPeople = await _client.People.SearchAsync(actorName, true, true, PageForSearching, _token);
                 list = searchPeople.Results.ToList();
             }
             catch (ServiceRequestException)
@@ -352,7 +350,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -362,7 +360,7 @@ namespace MainModule
             List<Movie> list = new List<Movie>();
             try
             {
-                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, null, null, null, selectedRating, null, null, _pageForSearching, _token);
+                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, null, null, null, selectedRating, null, null, PageForSearching, _token);
                 list = searchedMovies.Results.ToList();
             }
             catch (ServiceRequestException)
@@ -371,7 +369,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -382,7 +380,7 @@ namespace MainModule
             List<Movie> list = new List<Movie>();
             try
             {
-                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, selectedYear, null, null, null, selectedRating, null, null, _pageForSearching, _token);
+                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, selectedYear, null, null, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value.Year == selectedYear)).ToList();
             }
             catch (ServiceRequestException)
@@ -391,7 +389,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -401,8 +399,8 @@ namespace MainModule
             List<Movie> list = new List<Movie>();
             try
             {
-                var firstTime = new DateTime((int)selectedYear, _firstMonth, _firstDayOfMonth);
-                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, firstTime, null, null, selectedRating, null, null, _pageForSearching, _token);
+                var firstTime = new DateTime((int)selectedYear, FirstMonth, FirstDayOfMonth);
+                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, firstTime, null, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value.Year > selectedYear)).ToList();
             }
             catch (ServiceRequestException)
@@ -411,7 +409,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -421,8 +419,8 @@ namespace MainModule
             List<Movie> list = new List<Movie>();
             try
             {
-                var lastTime = new DateTime((int)selectedYear, _lastMonth, _lastDayOfMonth);
-                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, null, lastTime, null, selectedRating, null, null, _pageForSearching, _token);
+                var lastTime = new DateTime((int)selectedYear, LastMonth, LastDayOfMonth);
+                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, null, lastTime, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value.Year < selectedYear)).ToList();
             }
             catch (ServiceRequestException)
@@ -431,7 +429,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -441,9 +439,9 @@ namespace MainModule
             List<Movie> list = new List<Movie>();
             try
             {                
-                var firstTime = new DateTime((int)selectedFirstYear, _firstMonth, _firstDayOfMonth);
-                var secondTime = new DateTime((int)selectedLastYear, _lastMonth, _lastDayOfMonth);
-                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, firstTime, secondTime, null, selectedRating, null, null, _pageForSearching, _token);
+                var firstTime = new DateTime((int)selectedFirstYear, FirstMonth, FirstDayOfMonth);
+                var secondTime = new DateTime((int)selectedLastYear, LastMonth, LastDayOfMonth);
+                var searchedMovies = await _client.Movies.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, true, null, firstTime, secondTime, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchedMovies.Results.Where(item => item.ReleaseDate.Value > firstTime && item.ReleaseDate.Value < secondTime)).ToList();
             }
             catch (ServiceRequestException)
@@ -452,7 +450,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -471,7 +469,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -490,7 +488,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -526,7 +524,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return searched;
         }
@@ -536,7 +534,7 @@ namespace MainModule
             List<Show> searchrShows = new List<Show>();
             try
             {
-                var shows = await _client.Shows.SearchAsync(name, Thread.CurrentThread.CurrentCulture.Name, null, true, _pageForSearching, _token);
+                var shows = await _client.Shows.SearchAsync(name, Thread.CurrentThread.CurrentCulture.Name, null, true, PageForSearching, _token);
                 searchrShows = shows.Results.ToList();
             }
             catch (ServiceRequestException)
@@ -545,7 +543,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return searchrShows;
         }
@@ -555,7 +553,7 @@ namespace MainModule
             List<Show> list = new List<Show>();
             try
             {
-                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, null, null, null, selectedRating, null, null, _pageForSearching, _token);
+                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, null, null, null, selectedRating, null, null, PageForSearching, _token);
                 list = searchrShows.Results.ToList();
             }
             catch (ServiceRequestException)
@@ -564,7 +562,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -574,7 +572,7 @@ namespace MainModule
             List<Show> list = new List<Show>();
             try
             {
-                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, selectedYear, null, null, null, selectedRating, null, null, _pageForSearching, _token);
+                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, selectedYear, null, null, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchrShows.Results.Where(item => item.FirstAirDate.Value.Year == selectedYear)).ToList();
             }
             catch (ServiceRequestException)
@@ -583,7 +581,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -593,8 +591,8 @@ namespace MainModule
             List<Show> list = new List<Show>();
             try
             {
-                var firstTime = new DateTime((int)selectedYear, _firstMonth, _firstDayOfMonth);
-                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, firstTime, null, null, selectedRating, null, null, _pageForSearching, _token);
+                var firstTime = new DateTime((int)selectedYear, FirstMonth, FirstDayOfMonth);
+                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, firstTime, null, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchrShows.Results.Where(item => item.FirstAirDate.Value.Year > selectedYear)).ToList();
             }
             catch (ServiceRequestException)
@@ -603,7 +601,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -613,8 +611,8 @@ namespace MainModule
             List<Show> list = new List<Show>();
             try
             {
-                var lastTime = new DateTime((int)selectedYear, _lastMonth, _lastDayOfMonth);
-                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, null, lastTime, null, selectedRating, null, null, _pageForSearching, _token);
+                var lastTime = new DateTime((int)selectedYear, LastMonth, LastDayOfMonth);
+                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, null, lastTime, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchrShows.Results.Where(item => item.FirstAirDate.Value.Year < selectedYear)).ToList();
             }
             catch (ServiceRequestException)
@@ -623,7 +621,7 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
@@ -633,9 +631,9 @@ namespace MainModule
             List<Show> list = new List<Show>();
             try
             {
-                var firstTime = new DateTime((int)selectedFirstYear, _firstMonth, _firstDayOfMonth);
-                var secondTime = new DateTime((int)selectedLastYear, _lastMonth, _lastDayOfMonth);
-                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, firstTime, secondTime, null, selectedRating, null, null, _pageForSearching, _token);
+                var firstTime = new DateTime((int)selectedFirstYear, FirstMonth, FirstDayOfMonth);
+                var secondTime = new DateTime((int)selectedLastYear, LastMonth, LastDayOfMonth);
+                var searchrShows = await _client.Shows.DiscoverAsync(Thread.CurrentThread.CurrentCulture.Name, null, firstTime, secondTime, null, selectedRating, null, null, PageForSearching, _token);
                 list = (searchrShows.Results.Where(item => item.FirstAirDate.Value > firstTime && item.FirstAirDate.Value < secondTime)).ToList();
             }
             catch (ServiceRequestException)
@@ -644,9 +642,11 @@ namespace MainModule
             }
             catch (Exception ex)
             {
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return list;
         }
+
+        #endregion
     }
 }

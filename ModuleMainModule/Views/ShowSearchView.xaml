@@ -6,7 +6,6 @@
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:eo="http://schemas.essentialobjects.com/wpf/"
              mc:Ignorable="d" 
              Width="auto" MaxWidth="500" Height="auto" MaxHeight="600">

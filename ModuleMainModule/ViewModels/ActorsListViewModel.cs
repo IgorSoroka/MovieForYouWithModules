@@ -1,30 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.TMDb;
 using System.Threading.Tasks;
 using MainModule;
+using ModuleMainModule.Interfaces;
+using ModuleMainModule.Model;
+using ModuleMainModule.Services;
+using NLog;
 using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Prism.Regions;
-using NLog;
-using Prism.Interactivity.InteractionRequest;
-using System;
-using ModuleMainModule.Interfaces;
-using ModuleMainModule.Services;
-using ModuleMainModule.Model;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
     class ActorsListViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private static readonly GetData Data = new GetData();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private static readonly IActorService ActorService = new ActorService();
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
 
         public ActorsListViewModel(RegionManager regionManager)
         {
@@ -71,16 +72,15 @@ namespace ModuleMainModule.ViewModels
         #region StringConstants
 
         private const string _readMore = "Подробнее";
-        public string ReadMore
-        { get { return _readMore; } }
+        public string ReadMore => _readMore;
 
-        private const string _forExceptions = "ActorListViewModel";
-        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
-        private const string _error = "Ошибка";
-        private const string _errorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
-        private const string _userNotified = "Пользователь был оповещен";
-        private const string selectedActors = "Избранные актеры";
-        private const string searchingResults = "Результаты поиска";
+        private const string ForExceptions = "ActorListViewModel";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";
+        private const string ErrorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
+        private const string UserNotified = "Пользователь был оповещен";
+        private const string SelectedActors = "Избранные актеры";
+        private const string SearchingResults = "Результаты поиска";
 
         #endregion
 
@@ -94,24 +94,24 @@ namespace ModuleMainModule.ViewModels
                 if (type != null)
                 {     
                     GetFavoriteActors();
-                    Title = selectedActors;                    
+                    Title = SelectedActors;                    
                 }
 
                 var name = navigationContext.Parameters["name"] as string;
                 if (name != null)
                 {
                     await GetSearchedActors(name);
-                    Title = searchingResults;
+                    Title = SearchingResults;
                 }                  
             }
             catch (NullReferenceException ex)
             {
                 RaiseNotificationNull();
-                logger.ErrorException(_forExceptions, ex);
+                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -127,7 +127,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                List<Person> actorsTest = await Data.GetActorsByName(name);
+                List<Person> actorsTest = await DataService.GetActorsByName(name);
                 ActorsList = new ObservableCollection<Person>(actorsTest);                           
             }
             catch (ServiceRequestException)
@@ -136,22 +136,22 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
         private void RaiseNotification()
         {
-            this.NotificationRequest.Raise(
-               new Notification { Content = _exceededNumberRequests, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequest.Raise(
+               new Notification { Content = ExceededNumberRequests, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void RaiseNotificationNull()
         {
-            this.NotificationRequestNull.Raise(
-               new Notification { Content = _errorLoadingData, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequestNull.Raise(
+               new Notification { Content = ErrorLoadingData, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void ShowDirectActor()
@@ -163,7 +163,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -180,7 +180,7 @@ namespace ModuleMainModule.ViewModels
                 List<Person> favoriteActorsFromSite = new List<Person>();
                 foreach (var item in actorsId)
                 {
-                    Person actor = await Data.GetDirectActorData(item);
+                    Person actor = await DataService.GetDirectActorData(item);
                     favoriteActorsFromSite.Add(actor);
                 }
                 ActorsList = new ObservableCollection<Person>(favoriteActorsFromSite);
@@ -191,7 +191,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 

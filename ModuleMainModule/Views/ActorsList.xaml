@@ -11,7 +11,6 @@
              Height="auto" Width="auto" MaxWidth="350" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
-        <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
     </UserControl.Resources>
     <DockPanel LastChildFill="True" x:Name="DockPanelMain">
         <i:Interaction.Triggers>
@@ -26,7 +25,7 @@
             <Label FontSize="15" FontWeight="Heavy" HorizontalContentAlignment="Center" Content="{Binding Title}"/>
         </Border>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" CanContentScroll="True">
-            <ListBox  x:Name="lbMain" ItemsSource="{Binding ActorsList}" SelectedItem="{Binding Path=SelectedSearchedActor, Mode=TwoWay}" Background="#4C000000">
+            <ListBox  x:Name="LbMain" ItemsSource="{Binding ActorsList}" SelectedItem="{Binding Path=SelectedSearchedActor, Mode=TwoWay}" Background="#4C000000">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Background" Value="#4C000000"/>

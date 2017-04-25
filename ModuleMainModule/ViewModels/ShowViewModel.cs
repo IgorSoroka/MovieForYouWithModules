@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
@@ -6,27 +7,27 @@ using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
 using ModuleMainModule.Services;
+using NLog;
 using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 using Prism.Regions;
-using NLog;
-using Prism.Interactivity.InteractionRequest;
-using System;
+#pragma warning disable 618
 
 namespace ModuleMainModule.ViewModels
 {
     class ShowViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private static readonly GetData Data = new GetData();
+        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
         private static readonly IShowService ShowService = new ShowService();
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public DelegateCommand NavigateCommandShowTrailler { get; private set; }
         public DelegateCommand NavigateCommandAddToDb { get; private set; }
         public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
-        public InteractionRequest<INotification> NotificationRequest { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; }
 
         public ShowViewModel(RegionManager regionManager)
         {
@@ -41,94 +42,73 @@ namespace ModuleMainModule.ViewModels
         #region Constants
 
         private const string _plot = "Сюжет";
-        public string Plot
-        {   get { return _plot; }   }
+        public string Plot => _plot;
 
         private const string _readMore = "Подробнее";
-        public string ReadMore
-        { get { return _readMore; } }
+        public string ReadMore => _readMore;
 
         private const string _delFavorites = "Удалить из избранного";
-        public string DelFavorites
-        {   get { return _delFavorites; }    }
+        public string DelFavorites => _delFavorites;
 
         private const string _addFavorites = "Добавить в избранное";
-        public string AddFavorites
-        {   get { return _addFavorites; }    }
+        public string AddFavorites => _addFavorites;
 
         private const string _trailer = "Смотреть трейлер";
-        public string Trailer
-        {   get { return _trailer; }   }
+        public string Trailer => _trailer;
 
         private const string _showCast = "Состав";
-        public string ShowCast
-        {   get { return _showCast; }   }
+        public string ShowCast => _showCast;
 
         private const string _mainRoles = "В главных ролях";
-        public string MainRoles
-        {   get { return _mainRoles; }   }
+        public string MainRoles => _mainRoles;
 
         private const string _originalName = "Оригинальное название";
-        public string OriginalName
-        {   get { return _originalName; }   }
+        public string OriginalName => _originalName;
 
         private const string _seasonsNumber = "Количество сезонов";
-        public string SeasonsNumber
-        {   get { return _seasonsNumber; }   }
+        public string SeasonsNumber => _seasonsNumber;
 
         private const string _seriesNumber = "Количество вышедших серий";
-        public string SeriesNumber
-        {   get { return _seriesNumber; }   }
+        public string SeriesNumber => _seriesNumber;
 
         private const string _raiting = "Рейтинг";
-        public string Raiting
-        {   get { return _raiting; }   }
+        public string Raiting => _raiting;
 
         private const string _voteCount = "Количество голосов";
-        public string VoteCount
-        {   get { return _voteCount; }  }
+        public string VoteCount => _voteCount;
 
         private const string _genres = "Жанры";
-        public string Genres
-        {   get { return _genres; }   }
+        public string Genres => _genres;
 
         private const string _networks = "Сети производители";
-        public string Networks
-        {   get { return _networks; }   }
+        public string Networks => _networks;
 
         private const string _countries = "Страны производители";
-        public string Countries
-        {   get { return _countries; }   }
+        public string Countries => _countries;
 
         private const string _keywords = "Ключевые слова";
-        public string Keywords
-        {   get { return _keywords; }   }
+        public string Keywords => _keywords;
 
         private const string _status = "Статус";
-        public string Status
-        {   get { return _status; }   }
+        public string Status => _status;
 
         private const string _homePage = "Домашняя страница";
-        public string HomePage
-        {   get { return _homePage; }   }
+        public string HomePage => _homePage;
 
         private const string _premiere = "Премьера первой серии";
-        public string Premiere
-        {   get { return _premiere; }   }
+        public string Premiere => _premiere;
 
         private const string _lastSeries = "Последняя вышедшая серия";
-        public string LastSeries
-        {   get { return _lastSeries; }   }
+        public string LastSeries => _lastSeries;
 
         private const string _aboutShow = "О сериале";
-        public string AboutShow
-        {   get { return _aboutShow; }  }
+        public string AboutShow => _aboutShow;
 
 
-        private const string _forExceptions = "ShowViewModel";
-        private const string _exceededNumberRequests = "Превышено число запросов к серверу";
-        private const string _error = "Ошибка";
-        private const string _userNotified = "Пользователь был оповещен";
+        private const string ForExceptions = "ShowViewModel";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";
+        private const string UserNotified = "Пользователь был оповещен";
 
         #endregion
 
@@ -200,7 +180,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -214,7 +194,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                var video = await Data.GetTraillerShow(id);
+                var video = await DataService.GetTraillerShow(id);
                 if (video != null)
                 { VideoUrl = video.Key; }
             }
@@ -224,15 +204,15 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }            
         }
 
         private void RaiseNotification()
         {
-            this.NotificationRequest.Raise(
-               new Notification { Content = _exceededNumberRequests, Title = _error },
-               n => { InteractionResultMessage = _userNotified; });
+            NotificationRequest.Raise(
+               new Notification { Content = ExceededNumberRequests, Title = WarningError },
+               n => { InteractionResultMessage = UserNotified; });
         }
 
         private void ShowTrailler()
@@ -244,7 +224,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -257,7 +237,7 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
@@ -265,7 +245,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                var show = await Data.GetDirectShowData(id);
+                var show = await DataService.GetDirectShowData(id);
                 List<MediaCrew> crews = (show.Credits.Crew).Take(10).ToList();
                 List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList();
                 DirectShow = show;
@@ -290,13 +270,13 @@ namespace ModuleMainModule.ViewModels
             }
             catch (Exception e)
             {
-                logger.ErrorException(_forExceptions, e);
+                _logger.ErrorException(ForExceptions, e);
             }
         }
 
         private void AddToDb()
         {
-            ShowDTO show = new ShowDTO() { Name = DirectShow.Name, ExternalId = DirectShow.Id };          
+            ShowDTO show = new ShowDTO { Name = DirectShow.Name, ExternalId = DirectShow.Id };          
             ShowService.TakeShow(show);
             CanDelFromDb = true;
             CanAddToDb = false;
