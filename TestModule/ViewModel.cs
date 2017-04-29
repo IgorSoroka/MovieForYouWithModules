@@ -114,25 +114,25 @@ namespace TestModule
         private const string _mainPagePath = "/Images/icon.jpg";
         public string MainPagePath => _mainPagePath;
 
-        private const string _searchMoviePath = "/Images/MovieSearch.jpg";
+        private const string _searchMoviePath = "/Images/MovieSearch.png";
         public string SearchMoviePath => _searchMoviePath;
 
-        private const string _searchShowPath = "/Images/ShowSearch.jpg";
+        private const string _searchShowPath = "/Images/ShowSearch.png";
         public string SearchShowPath => _searchShowPath;
 
-        private const string _searchActorPath = "/Images/ActorSearch.jpg";
+        private const string _searchActorPath = "/Images/ActorSearch.png";
         public string SearchActorPath => _searchActorPath;
 
-        private const string _favoriteMoviePath = "/Images/MovieSearch.jpg";
+        private const string _favoriteMoviePath = "/Images/MovieFavorite.png";
         public string FavoriteMoviePath => _favoriteMoviePath;
 
-        private const string _favoriteShowPath = "/Images/ShowSearch.jpg";
+        private const string _favoriteShowPath = "/Images/ShowFavorite.png";
         public string FavoriteShowPath => _favoriteShowPath;
 
-        private const string _favoritActorPath = "/Images/ActorSearch.jpg";
+        private const string _favoritActorPath = "/Images/ActorFavorite.png";
         public string FavoritActorPath => _favoritActorPath;
 
-        private const string _mainRegionBackgroundPath = "/Images/BackgroundList.jpg";
+        private const string _mainRegionBackgroundPath = "/Images/ListBackground.jpg";
         public string MainRegionBackgroundPath => _mainRegionBackgroundPath;
 
         private const string _listRegionBackgroundPath = "/Images/BackgroundMain.jpg";

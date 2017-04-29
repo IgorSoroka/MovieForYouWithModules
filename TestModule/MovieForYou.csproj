@@ -177,6 +177,13 @@
     <Resource Include="Images\oncinema.png" />
     <Resource Include="Images\ontv.png" />
     <Resource Include="Images\popular.png" />
+    <Resource Include="Images\ListBackground.jpg" />
+    <Resource Include="Images\ActorFavorite.png" />
+    <Resource Include="Images\ActorSearch.png" />
+    <Resource Include="Images\MovieFavorite.png" />
+    <Resource Include="Images\MovieSearch.png" />
+    <Resource Include="Images\ShowFavorite.png" />
+    <Resource Include="Images\ShowSearch.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -204,11 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="favicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\ActorSearch.jpg" />
-    <Resource Include="Images\MovieSearch.jpg" />
-    <Resource Include="Images\ShowSearch.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.jpg" />

@@ -14,7 +14,8 @@ namespace MainModule
     public class TheMovieDBDataService
     {
         private readonly ServiceClient _client = new ServiceClient(ApiKey);
-        private readonly CancellationToken _token = new CancellationToken();
+        private static readonly CancellationTokenSource CancelTokenSource = new CancellationTokenSource();
+        private readonly CancellationToken _token = CancelTokenSource.Token;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         #region Constants
