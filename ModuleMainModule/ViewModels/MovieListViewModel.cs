@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.TMDb;
+using System.Windows.Controls;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -63,6 +65,9 @@ namespace ModuleMainModule.ViewModels
         private const string _readMore = "Подробнее";
         public string ReadMore => _readMore;
 
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
+
         private const string SelectedMovies = "Избранные фильмы";
         private const string SearchingResults = "Результаты поиска";
         private const string ForExceptions = "MovieListViewModel";
@@ -108,6 +113,13 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _notFound; }
             set { SetProperty(ref _notFound, value); }
+        }
+
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
         }
 
         private ObservableCollection<Movie> _movies;
@@ -294,6 +306,7 @@ namespace ModuleMainModule.ViewModels
             { 
                 var parameters = new NavigationParameters { { "id", SelectedMovie.Id } };
                 _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
+                //SetNullVideoUrl();
             }
             catch (Exception e)
             {
@@ -389,8 +402,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetSearchedMoviesLastYear(selectedLastYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -406,8 +421,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetSearchedMoviesFirstYear(selectedFirstYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -423,8 +440,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetSearchedMovies(selectedFirstYear, selectedLastYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -440,8 +459,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetSearchedMovies(selectedYear, selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -457,8 +478,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetSearchedMovies(selectedRating);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -474,8 +497,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetMoviesByName(name);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -491,9 +516,11 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 var genreNumber = RepositoryGenres.GetGenreId(genre);
                 List<Movie> moviesTest = await DataService.GetListOfMoviesByGenre(genreNumber, page);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -509,9 +536,11 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 var companyNumber = RepositoryCompanies.GetCompanyId(company);
                 List<Movie> moviesTest = await DataService.GetListOfMoviesByCompany(companyNumber, page);
-                Movies = new ObservableCollection<Movie>(moviesTest);                
+                Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -527,8 +556,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetPopularMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -544,8 +575,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetTopRatedMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -561,8 +594,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetUpCommingMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -578,8 +613,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetNewMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
@@ -595,6 +632,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 IEnumerable<MovieDTO> favoriteMoviesFromDb = MovieService.GetMovies();
                 List<int> moviesId = new List<int>();
                 foreach (var item in favoriteMoviesFromDb)
@@ -608,10 +646,25 @@ namespace ModuleMainModule.ViewModels
                     favoriteMoviesFromSite.Add(movie);
                 }
                 Movies = new ObservableCollection<Movie>(favoriteMoviesFromSite);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {
                 RaiseNotificationServer();
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException(ForExceptions, e);
+            }
+        }
+
+
+
+        private void SetNullVideoUrl()
+        {
+            try
+            {
+                _regionManager.Regions["MainRegion"].Deactivate("Player");
             }
             catch (Exception e)
             {

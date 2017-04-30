@@ -152,7 +152,7 @@ namespace ModuleMainModule.ViewModels
 
         private string _name;
         [Required]
-        [RegularExpression(@"^[а-яА-Яa-zA-Z0-9\-''-'!?,.()\s]{2,40}$")]
+        [RegularExpression(@"^[а-яА-Яa-zA-Z0-9\-''-'!?,.()\s]{1,40}$")]
         public string Name
         {
             get { return _name; }
@@ -188,8 +188,11 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                var parameters = new NavigationParameters { { "name", Name } };
-                _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+                if (CanSave)
+                {
+                    var parameters = new NavigationParameters {{"name", Name}};
+                    _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+                }
             }
             catch (Exception e)
             {

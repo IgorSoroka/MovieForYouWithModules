@@ -39,7 +39,10 @@ namespace ModuleMainModule.ViewModels
         private const string ExceededNumberRequests = "Превышено число запросов к серверу";
         private const string WarningError = "Ошибка";
         private const string WaitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами сериалу или актеру";
-        private const string UserNotified = "Пользователь был оповещен";       
+        private const string UserNotified = "Пользователь был оповещен";
+
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
 
         #endregion
 
@@ -85,6 +88,13 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _thirdShow; }
             set { SetProperty(ref _thirdShow, value); }
+        }
+
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
         }
 
         public string InteractionResultMessage { get; private set; }
@@ -148,6 +158,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Movie> moviesTest = await DataService.GetPopularMoviesData(1);
                 List<Show> showsTest = await DataService.GetPopularShowsData(1);
                 BestMovie = moviesTest.First();
@@ -156,6 +167,9 @@ namespace ModuleMainModule.ViewModels
                 BestShow = showsTest.First();
                 SecondShow = showsTest[1];
                 ThirdShow = showsTest[2];
+
+
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                

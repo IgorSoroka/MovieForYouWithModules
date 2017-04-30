@@ -23,16 +23,20 @@ namespace ModuleMainModule.ViewModels
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private static readonly IActorService ActorService = new ActorService();
 
-        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
+        //public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public InteractionRequest<INotification> NotificationRequest { get; }
         public InteractionRequest<INotification> NotificationRequestNull { get; }
+
+        public DelegateCommand<int?> NavigateCommandShowDirectActor { get; private set; }
 
         public ActorsListViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
-            NavigateCommandShowDirectActor = new DelegateCommand(ShowDirectActor);
+            //NavigateCommandShowDirectActor = new DelegateCommand(ShowDirectActor);
             NotificationRequest = new InteractionRequest<INotification>();
             NotificationRequestNull = new InteractionRequest<INotification>();
+
+            NavigateCommandShowDirectActor = new DelegateCommand<int?>(ShowDirectActor);
         }
 
         #region Properties
@@ -58,6 +62,13 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _notFound, value); }
         }
 
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
+        }
+
         private ObservableCollection<Person> _actorsList;
         public ObservableCollection<Person> ActorsList
         {
@@ -73,6 +84,9 @@ namespace ModuleMainModule.ViewModels
 
         private const string _readMore = "Подробнее";
         public string ReadMore => _readMore;
+
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
 
         private const string ForExceptions = "ActorListViewModel";
         private const string ExceededNumberRequests = "Превышено число запросов к серверу";
@@ -127,8 +141,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Person> actorsTest = await DataService.GetActorsByName(name);
-                ActorsList = new ObservableCollection<Person>(actorsTest);                           
+                ActorsList = new ObservableCollection<Person>(actorsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                
@@ -154,11 +170,24 @@ namespace ModuleMainModule.ViewModels
                n => { InteractionResultMessage = UserNotified; });
         }
 
-        private void ShowDirectActor()
+        ////private void ShowDirectActor()
+        ////{
+        ////    try
+        ////    {
+        ////        var parameters = new NavigationParameters { { "id", SelectedSearchedActor.Id } };
+        ////        _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
+        ////    }
+        ////    catch (Exception e)
+        ////    {
+        ////        _logger.ErrorException(ForExceptions, e);
+        ////    }
+        ////}
+
+        private void ShowDirectActor(int? id)
         {
             try
             {
-                var parameters = new NavigationParameters { { "id", SelectedSearchedActor.Id } };
+                var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
             }
             catch (Exception e)
@@ -171,6 +200,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 IEnumerable<ActorDTO> favoriteActorsFromDb = ActorService.GetActors();
                 List<int> actorsId = new List<int>();
                 foreach (var item in favoriteActorsFromDb)
@@ -184,6 +214,7 @@ namespace ModuleMainModule.ViewModels
                     favoriteActorsFromSite.Add(actor);
                 }
                 ActorsList = new ObservableCollection<Person>(favoriteActorsFromSite);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {

@@ -4,15 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:behavior="clr-namespace:ModuleMainModule.Behavior"
              mc:Ignorable="d" 
-             Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" Margin="20">
+             Width="auto" MaxWidth="1100" Height="auto" MinWidth="300" MaxHeight="1000">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Visible">
+    <xctk:BusyIndicator IsBusy="{Binding BusyIndicatorValue, UpdateSourceTrigger=PropertyChanged}" BusyContent="{Binding LoadingData}">
+        <ScrollViewer VerticalScrollBarVisibility="Visible">
     <Grid Background="#4C000000" x:Name="GridMain">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -25,47 +28,48 @@
                     <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
                 </prism:InteractionRequestTrigger>
             </i:Interaction.Triggers>
-            <Border BorderThickness="1" BorderBrush="Black">
+        <Border BorderThickness="1" BorderBrush="Black">
             <Grid DataContext="{Binding Path=DirectActor}" MinHeight="150" MaxHeight="300">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition MinWidth="150" Width="*"/>
+                    <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
                 <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Margin="3" Orientation="Vertical">
-                        <TextBlock FontSize="20" Foreground="Honeydew" Text="{Binding Name}"/>
+                            <TextBlock FontSize="20" Foreground="Honeydew" Text="{Binding Name}"/>
+                            <Label Foreground="Honeydew" FontSize="16" Content="{Binding AboutActor}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                            <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorBirthday}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                            <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
+                            <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorBirthPlace}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                            <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding BirthPlace}"/>
+                            <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorHomePage}"
+                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                            <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding HomePage}"/>
+                        </StackPanel>
+                    </Grid>
+        </Border>
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1">
+            <StackPanel  DataContext="{Binding DirectActor}">
                         <Label FontSize="16" Foreground="Honeydew" Content="{Binding Biography}"
                                DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200" >
                         <TextBlock Foreground="Honeydew" Margin="3" TextWrapping="Wrap" FontSize="14" Text="{Binding Biography}"/>
-                    </ScrollViewer>
-                        <StackPanel Orientation="Horizontal">
-                            <Button FontSize="16" Height="35" Content="{Binding AddFavorites}" Command="{Binding NavigateCommandAddToDb}" IsEnabled="{Binding CanAddToDb, UpdateSourceTrigger=PropertyChanged}"
-                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                            <Button FontSize="16" Height="35" Content="{Binding DelFavorites}" Command="{Binding NavigateCommandDellFromDb}" IsEnabled="{Binding CanDelFromDb, UpdateSourceTrigger=PropertyChanged}"
-                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                        </StackPanel>                        
-                    </StackPanel>
-            </Grid>
-        </Border>
-        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
-            <StackPanel  DataContext="{Binding DirectActor}">
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="20" Text="{Binding Name}"/>
-                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding AboutActor}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorBirthday}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding BirthDay, StringFormat=D, ConverterCulture=ru-RU}"/>
-                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorBirthPlace}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding BirthPlace}"/>
-                    <Label Foreground="Honeydew" FontSize="16" Content="{Binding ActorHomePage}"
-                           DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                <TextBlock Foreground="Honeydew" Margin="3" FontSize="14" Text="{Binding HomePage}"/>
             </StackPanel>
         </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                   <ColumnDefinition Width="*"></ColumnDefinition>
+                   <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" FontSize="16" Height="35" Content="{Binding AddFavorites}" Command="{Binding NavigateCommandAddToDb}" IsEnabled="{Binding CanAddToDb, UpdateSourceTrigger=PropertyChanged}"
+                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                    <Button Grid.Column="1" FontSize="16" Height="35" Content="{Binding DelFavorites}" Command="{Binding NavigateCommandDellFromDb}" IsEnabled="{Binding CanDelFromDb, UpdateSourceTrigger=PropertyChanged}"
+                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
+                </Grid>
         <DockPanel Grid.Row="3" >
-                <Label FontSize="16" DockPanel.Dock="Top" Foreground="Honeydew" Content="{Binding Filmography}"/>
+            <Label FontSize="16" DockPanel.Dock="Top" Foreground="Honeydew" Content="{Binding Filmography}"/>
             <ListBox ItemsSource="{Binding Path = ActorMovies}" SelectedItem="{Binding Path=SelectedActorMovie, Mode=TwoWay}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
@@ -75,7 +79,9 @@
                             <Setter Property="Padding" Value="1"/>
                             <Setter Property="BorderThickness" Value="1"/>
                             <Setter Property="BorderBrush" Value="Black"/>
-                            <Style.Triggers>
+                            <Setter Property="behavior:MouseDoubleClick.Command" Value="{Binding DataContext.NavigateCommandShowDirectMovie, RelativeSource={RelativeSource FindAncestor,  AncestorType={x:Type UserControl}}}"/>
+                            <Setter Property="behavior:MouseDoubleClick.CommandParameter" Value="{Binding DataContext.SelectedActorMovie.Id, RelativeSource={RelativeSource FindAncestor,  AncestorType={x:Type UserControl}}}"/>
+                                <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Foreground" Value="White"/>
                                     <Setter Property="BorderThickness" Value="1"/>
@@ -85,31 +91,17 @@
                         </Style>
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical"/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid MaxWidth="1090" MinWidth="540" ClipToBounds="True" Columns="3"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="3">
-                                <Image Height="70" Width="70" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
+                            <StackPanel Orientation="Horizontal" Margin="1" MinWidth="180" MaxWidth="330">
+                                <Image Height="70" Width="50" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Margin="3" FontSize="12" Text="{Binding Title}"/>
-                                    <TextBlock Margin="3" FontSize="12" Text="{Binding ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
-                                    <Button FontSize="12" Width="150" Content="{Binding ReadMore}" Command="{Binding Path=NavigateCommandShowDirectMovie}" HorizontalAlignment="Left" 
-                                            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}">
-                                            <Button.Style>
-                                            <Style TargetType="{x:Type Button}">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
-                                                    AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                    <TextBlock Margin="1" FontSize="12" Text="{Binding Title}"/>
+                                    <TextBlock Margin="1" FontSize="12" Text="{Binding ReleaseDate, StringFormat=D, ConverterCulture=ru-RU}"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
@@ -118,4 +110,5 @@
         </DockPanel>
     </Grid>
     </ScrollViewer>
+    </xctk:BusyIndicator>
 </UserControl>

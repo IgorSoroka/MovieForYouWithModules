@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
+using System.Windows.Controls;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -42,6 +43,9 @@ namespace ModuleMainModule.ViewModels
         }
 
         #region Constants
+
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
 
         private const string _plot = "Сюжет";
         public string Plot => _plot;
@@ -162,6 +166,13 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _canDelFromDb, value); }
         }
 
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
+        }
+
         public string InteractionResultMessage { get; private set; }
 
         #endregion
@@ -258,6 +269,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 var movie = await DataService.GetDirectMoveData(id);
                 List<MediaCrew> crews = (movie.Credits.Crew).Take(10).ToList();
                 List<MediaCast> casts = (movie.Credits.Cast).Take(10).ToList();
@@ -275,6 +287,9 @@ namespace ModuleMainModule.ViewModels
                     CanDelFromDb = true;
                     CanAddToDb = false;
                 }
+                BusyIndicatorValue = false;
+
+             
             }
             catch (ServiceRequestException)
             {                
@@ -292,6 +307,8 @@ namespace ModuleMainModule.ViewModels
             MovieService.TakeMovie(movie);
             CanDelFromDb = true;
             CanAddToDb = false;
+
+            RefreshFavoriteView();
         }
 
         private void DelFromDb()
@@ -299,6 +316,31 @@ namespace ModuleMainModule.ViewModels
             MovieService.DelMovie(DirectMovie.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
+
+            RefreshFavoriteView();
+        }
+
+        private void RefreshFavoriteView()
+        {
+            try
+            {
+                UserControl singleView = (UserControl)_regionManager.Regions["ListRegion"].ActiveViews.FirstOrDefault();
+                MoviesListViewModel movieViewModel = (MoviesListViewModel)singleView.DataContext;
+
+                if (movieViewModel.Title == "Избранные фильмы")
+                {
+                    var parameters = new NavigationParameters { { "type", "Favorite" } };
+                    _regionManager.RequestNavigate("ListRegion", "MoviesList", parameters);
+                }
+            }
+            catch (ServiceRequestException)
+            {
+                RaiseNotification();
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException(ForExceptions, e);
+            }
         }
 
         #endregion

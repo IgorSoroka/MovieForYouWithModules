@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.TMDb;
+using System.Windows.Controls;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -65,6 +67,9 @@ namespace ModuleMainModule.ViewModels
         private const string _birthPlace = "Место рождения";
         public string ActorBirthPlace => _birthPlace;
 
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
+
         private const string ForExceptions = "ActorViewModel";
         private const string ExceededNumberRequests = "Превышено число запросов к серверу";
         private const string WarningError = "Ошибка";        
@@ -109,6 +114,13 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _canDelFromDb, value); }
         }
 
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
+        }
+
         public string InteractionResultMessage { get; private set; }
 
         #endregion
@@ -147,6 +159,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 var actor = await DataService.GetDirectActorData(id);               
                 List<PersonCredit> movies = await DataService.GetDirectActorMoviesList(id);
                 DirectActor = actor;
@@ -162,6 +175,7 @@ namespace ModuleMainModule.ViewModels
                     CanDelFromDb = true;
                     CanAddToDb = false;
                 }
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                
@@ -192,13 +206,40 @@ namespace ModuleMainModule.ViewModels
             ActorService.TakeActor(actor);
             CanDelFromDb = true;
             CanAddToDb = false;
+
+            RefreshFavoriteView();
         }
 
         private void DelFromDb()
         {            
             ActorService.DelActor(DirectActor.Id);
             CanDelFromDb = false;
-            CanAddToDb = true;           
+            CanAddToDb = true;
+
+            RefreshFavoriteView();
+        }
+
+        private void RefreshFavoriteView()
+        {
+            try
+            {
+                UserControl singleView = (UserControl)_regionManager.Regions["ListRegion"].ActiveViews.FirstOrDefault();
+                ActorsListViewModel actorViewModel = (ActorsListViewModel)singleView.DataContext;
+
+                if (actorViewModel.Title == "Избранные актеры")
+                {
+                    var parameters = new NavigationParameters { { "type", "Favorite" } };
+                    _regionManager.RequestNavigate("ListRegion", "ActorsList", parameters);
+                }
+            }
+            catch (ServiceRequestException)
+            {
+                RaiseNotification();
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException(ForExceptions, e);
+            }
         }
 
         #endregion

@@ -43,6 +43,9 @@ namespace ModuleMainModule.ViewModels
         private const string _regulations = "Можно использовать только буквы, цифрры и символ '-'";
         public string Regulations => _regulations;
 
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
+
         private const string ForExceptions = "ActorSearchViewModel";
         private const string InvalidPropertyName = "Некорретное имя свойства";
         private const string ExceededNumberRequests  = "Превышено число запросов к серверу";
@@ -70,7 +73,7 @@ namespace ModuleMainModule.ViewModels
         private string _name;
 
         [Required]
-        [RegularExpression(@"^[а-яА-Яa-zA-Z0-9\-''-'\s]{2,40}$")]
+        [RegularExpression(@"^[а-яА-Яa-zA-Z0-9\-''-'\s]{1,40}$")]
         public string Name
         {
             get { return _name; }
@@ -169,6 +172,13 @@ namespace ModuleMainModule.ViewModels
             set { SetProperty(ref _canSave, value); }
         }
 
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
+        }
+
         public string InteractionResultMessage { get; private set; }
 
         public string Error
@@ -184,6 +194,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 Watson = await DataService.GetActor(WatsonId);
                 Johansson = await DataService.GetActor(JohanssonId);
                 Lawrence = await DataService.GetActor(LawrenceId);
@@ -196,6 +207,7 @@ namespace ModuleMainModule.ViewModels
                 Pitt = await DataService.GetActor(PittId);
                 Downey = await DataService.GetActor(DowneyId);
                 Robbie = await DataService.GetActor(RobbieId);
+                BusyIndicatorValue = false;
             }
             catch (NullReferenceException ex)
             {
@@ -230,8 +242,11 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                var parameters = new NavigationParameters { { "name", Name } };
-                _regionManager.RequestNavigate("ListRegion", "ActorsList", parameters);
+                if (CanSave)
+                {
+                    var parameters = new NavigationParameters {{"name", Name}};
+                    _regionManager.RequestNavigate("ListRegion", "ActorsList", parameters);
+                }
             }
             catch (Exception e)
             {

@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
-             Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" Margin="20">
+             Width="auto" MaxWidth="1100" Height="auto" MaxHeight="1000" MinWidth="300">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
         <converters:NullToTrueConverter x:Key="NullToTrueConverter"/>
@@ -17,9 +18,11 @@
         <converters:KeywordsConverter x:Key="KeywordsConverter"/>
         <converters:CountiesConverter x:Key="CountriesConverter"/>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Visible">
+    <xctk:BusyIndicator IsBusy="{Binding BusyIndicatorValue, UpdateSourceTrigger=PropertyChanged}" BusyContent="{Binding LoadingData}">
+        <ScrollViewer VerticalScrollBarVisibility="Visible">
         <Grid Background="#4C000000" x:Name="GridMain">
             <Grid.RowDefinitions>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -35,10 +38,10 @@
             </i:Interaction.Triggers>
             <Grid DataContext="{Binding DirectMovie}" MinHeight="150" MaxHeight="300">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition MinWidth="100" Width="*"/>
                     <ColumnDefinition Width="5*"/>
                 </Grid.ColumnDefinitions>
-                <Image Margin="3" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
+                <Image MinWidth="100" Margin="3" Source="{Binding Poster, Converter={StaticResource PathConverter}}"/>
                 <StackPanel Grid.Column="1" Orientation="Vertical">
                     <TextBlock Foreground="Honeydew" FontSize="20" Text="{Binding Title}"/>
                     <TextBlock Foreground="Honeydew" FontSize="14" Text="{Binding TagLine}"/>
@@ -47,6 +50,9 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200" >
                         <TextBlock Foreground="Honeydew" TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
                     </ScrollViewer>
+                </StackPanel>
+            </Grid>
+            <StackPanel Grid.Row="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -61,8 +67,7 @@
                             DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"
                             IsEnabled="{Binding VideoUrl, Converter={StaticResource NullToTrueConverter}}"/>
                 </StackPanel>
-            </Grid>
-            <StackPanel Grid.Row="1">
+            <StackPanel Grid.Row="2">
                 <Label FontSize="16" Foreground="Honeydew" Content="{Binding ShowCast}"/>
                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Crew}">
                     <ListBox.ItemContainerStyle>
@@ -113,7 +118,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </StackPanel>
-            <StackPanel Grid.Row="2">
+            <StackPanel Grid.Row="3">
                 <Label FontSize="16" Foreground="Honeydew" Content="{Binding MainRoles}"/>
                 <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Cast}" 
                          SelectedItem="{Binding Path=SelectedActor, Mode=TwoWay}">
@@ -179,7 +184,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </StackPanel>
-            <StackPanel Grid.Row="3" DataContext="{Binding DirectMovie}">
+            <StackPanel Grid.Row="4" DataContext="{Binding DirectMovie}">
                 <StackPanel.Style>
                     <Style>                        
                         <Setter Property="TextBlock.Foreground" Value="Honeydew"/>
@@ -239,4 +244,5 @@
             </StackPanel>
         </Grid>
     </ScrollViewer>
+    </xctk:BusyIndicator>
 </UserControl>

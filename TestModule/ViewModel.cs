@@ -19,6 +19,11 @@ namespace TestModule
         public DelegateCommand<string> NavigateCommandListShow { get; private set; }
         public DelegateCommand<string> NavigateCommandListMovie { get; private set; }
         public DelegateCommand<string> NavigateCommandListActor { get; private set; }
+
+        //public DelegateCommand<string> ApplicationCommandMinimize { get; private set; }
+        //public DelegateCommand<string> ApplicationCommandMaximaze { get; private set; }
+        //public DelegateCommand<string> ApplicationCommandClose { get; private set; }
+
         public InteractionRequest<INotification> NotificationRequestConnection { get; }
 
         public MainWindowViewModel(IRegionManager regionManager)
@@ -28,6 +33,11 @@ namespace TestModule
             NavigateCommandListShow = new DelegateCommand<string>(NavigateListShow);
             NavigateCommandListMovie = new DelegateCommand<string>(NavigateListMovie);
             NavigateCommandListActor = new DelegateCommand<string>(NavigateListActor);
+
+            //ApplicationCommandMinimize = new DelegateCommand<string>(Minimize);
+            //ApplicationCommandMaximaze = new DelegateCommand<string>(Maximize);
+            //ApplicationCommandClose = new DelegateCommand<string>(Close);
+
             NotificationRequestConnection = new InteractionRequest<INotification>();
             Timer();
         }
@@ -132,7 +142,7 @@ namespace TestModule
         private const string _favoritActorPath = "/Images/ActorFavorite.png";
         public string FavoritActorPath => _favoritActorPath;
 
-        private const string _mainRegionBackgroundPath = "/Images/ListBackground.jpg";
+        private const string _mainRegionBackgroundPath = "/Images/ListBackground.png";
         public string MainRegionBackgroundPath => _mainRegionBackgroundPath;
 
         private const string _listRegionBackgroundPath = "/Images/BackgroundMain.jpg";

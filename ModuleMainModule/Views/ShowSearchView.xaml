@@ -22,13 +22,16 @@
             <StackPanel Orientation="Vertical">
                     <Label Foreground="Honeydew" Margin="3" FontSize="17" HorizontalContentAlignment="Center" Content="{Binding NameSearching}"/>
                 <DockPanel LastChildFill="True" Margin="10">
-                        <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding Path = NavigateCommandNameSearch}" IsEnabled="{Binding CanSave}" Content="{Binding Find}"/>
+                        <Button DockPanel.Dock="Right" FontSize="14" Command="{Binding NavigateCommandNameSearch}" IsEnabled="{Binding CanSave}" Content="{Binding Find}"/>
                         <TextBox FontSize="14" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
-                        <TextBox.ToolTip>
+                            <TextBox.ToolTip>
                             <ToolTip>
                                 <TextBlock Text="{Binding Regulations}"/>
                             </ToolTip>
-                        </TextBox.ToolTip>
+                            </TextBox.ToolTip>
+                            <TextBox.InputBindings>
+                                <KeyBinding Command="{Binding NavigateCommandNameSearch}" Key="Return" />
+                            </TextBox.InputBindings>
                         </TextBox>
                     </DockPanel>
             </StackPanel>

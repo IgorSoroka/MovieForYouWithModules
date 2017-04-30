@@ -4,18 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converters="clr-namespace:ModuleMainModule.Converters"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Height="auto" Width="auto">
+             Height="auto" MinWidth="300" Width="auto">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
-    </UserControl.Resources>    
-    <Grid>
+    </UserControl.Resources>
+    <xctk:BusyIndicator IsBusy="{Binding BusyIndicatorValue, UpdateSourceTrigger=PropertyChanged}" BusyContent="{Binding LoadingData}">
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="20*"/>
+            <RowDefinition MinHeight="300" Height="20*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -147,4 +149,5 @@
         </Grid>
         </Grid>
     </Grid>
+    </xctk:BusyIndicator>
 </UserControl>

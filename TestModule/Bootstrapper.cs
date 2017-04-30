@@ -21,7 +21,7 @@ namespace TestModule
         protected override void ConfigureModuleCatalog()
         {
             var catalog = (ModuleCatalog)ModuleCatalog;
-            catalog.AddModule(typeof(ModuleAModule));
+            catalog.AddModule(typeof(MovieForYouMainModule));
         }
     }
 }

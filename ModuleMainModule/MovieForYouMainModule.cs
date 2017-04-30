@@ -6,12 +6,12 @@ using Prism.Unity;
 
 namespace MainModule
 {
-    public class ModuleAModule : IModule
+    public class MovieForYouMainModule : IModule
     {
         private  readonly IRegionManager _regionManager;
         private readonly IUnityContainer _container;
 
-        public ModuleAModule(RegionManager regionManager, IUnityContainer container)
+        public MovieForYouMainModule(RegionManager regionManager, IUnityContainer container)
         {
             _regionManager = regionManager;
             _container = container;

@@ -9,7 +9,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         mc:Ignorable="d"
-        Title="{Binding Title}" MinWidth="300" Height="800" Width="1200" WindowStartupLocation="CenterScreen">    
+        Title="{Binding Title}" MinWidth="475" MinHeight="475" Height="800" Width="1200" WindowStartupLocation="CenterScreen">    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -17,20 +17,23 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition MaxWidth="450" Width="*"/>
+            <ColumnDefinition MinWidth="300" Width="9*"/>
+            <ColumnDefinition MinWidth="150" MaxWidth="450" Width="4*"/>
         </Grid.ColumnDefinitions>
         <i:Interaction.Triggers>
             <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequestConnection, Mode=OneWay}">
                 <prism:PopupWindowAction IsModal="True" WindowStartupLocation="CenterOwner" CenterOverAssociatedObject="False"/>
             </prism:InteractionRequestTrigger>           
         </i:Interaction.Triggers>
-        <ribbon:Ribbon Grid.ColumnSpan="2" Foreground="Snow" Background="#FF595959">            
-            <ribbon:RibbonTab Header="{Binding MainView}">
-               <ribbon:RibbonGroup>
-                    <ribbon:RibbonButton Label="{Binding MainView}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding MainPagePath}" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
-                </ribbon:RibbonGroup>
-            </ribbon:RibbonTab>
+        <ribbon:Ribbon Grid.ColumnSpan="2" Foreground="Snow" Background="#FF595959">
+            <ribbon:Ribbon.ApplicationMenu>
+                <ribbon:RibbonApplicationMenu Background="#4C000000" Foreground="#FF000000">
+                    <ribbon:RibbonApplicationMenuItem Header="Свернуть" x:Name="MenuItemMin" Command="{Binding ApplicationCommandMinimize}"/>
+                    <ribbon:RibbonApplicationMenuItem Header="Развернуть" x:Name="MenuItemOpen" Command="{Binding ApplicationCommandMAximaze}"/>
+                    <ribbon:RibbonApplicationMenuItem Header="Закрыть" x:Name="MenuItemClose" Command="{Binding ApplicationCommandClose}"/>
+                </ribbon:RibbonApplicationMenu>
+            </ribbon:Ribbon.ApplicationMenu>
+            <ribbon:RibbonButton Label="{Binding MainView}" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"></ribbon:RibbonButton>
             <ribbon:RibbonTab Header="{Binding Movies}">
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding BestPath}" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>

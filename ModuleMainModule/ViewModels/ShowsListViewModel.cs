@@ -53,6 +53,9 @@ namespace ModuleMainModule.ViewModels
         private const string _readMore = "Подробнее";
         public string ReadMore => _readMore;
 
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
+
         private const string SelectedShows = "Избранные сериалы";
         private const string SearchingResults = "Результаты поиска";
         private const string ForExceptions = "ShowListViewModel";
@@ -97,6 +100,13 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _title; }
             set { SetProperty(ref _title, value); }
+        }
+
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
         }
 
         public string InteractionResultMessage { get; private set; }
@@ -291,8 +301,10 @@ namespace ModuleMainModule.ViewModels
         {            
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetPopularShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                
@@ -308,8 +320,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetTopRatedShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                
@@ -325,8 +339,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetNowShowsData(page);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                
@@ -342,8 +358,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetSearchedShowsLastYear(selectedLastYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {            
@@ -359,8 +377,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetSearchedShowsFirstYear(selectedFirstYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                
@@ -376,8 +396,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetSearchedShows(selectedFirstYear, selectedLastYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {              
@@ -393,8 +415,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetSearchedShows(selectedYear, selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {               
@@ -410,8 +434,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetSearchedShows(selectedRating);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {              
@@ -427,8 +453,10 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 List<Show> showsTest = await _dataService.GetShowsByName(name);
                 Shows = new ObservableCollection<Show>(showsTest);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {             
@@ -444,6 +472,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 IEnumerable<ShowDTO> favoriteShowsFromDb = ShowService.GetShows();
                 List<int> showsId = new List<int>();
                 foreach (var item in favoriteShowsFromDb)
@@ -457,6 +486,7 @@ namespace ModuleMainModule.ViewModels
                     favoriteShowsFromSite.Add(show);
                 }               
                 Shows = new ObservableCollection<Show>(favoriteShowsFromSite);
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {

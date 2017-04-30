@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.TMDb;
+using System.Windows.Controls;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -104,6 +105,8 @@ namespace ModuleMainModule.ViewModels
         private const string _aboutShow = "О сериале";
         public string AboutShow => _aboutShow;
 
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
 
         private const string ForExceptions = "ShowViewModel";
         private const string ExceededNumberRequests = "Превышено число запросов к серверу";
@@ -161,6 +164,13 @@ namespace ModuleMainModule.ViewModels
         {
             get { return _canDelFromDb; }
             set { SetProperty(ref _canDelFromDb, value); }
+        }
+
+        private bool _busyIndicator;
+        public bool BusyIndicatorValue
+        {
+            get { return _busyIndicator; }
+            set { SetProperty(ref _busyIndicator, value); }
         }
 
         public string InteractionResultMessage { get; private set; }
@@ -245,6 +255,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
+                BusyIndicatorValue = true;
                 var show = await DataService.GetDirectShowData(id);
                 List<MediaCrew> crews = (show.Credits.Crew).Take(10).ToList();
                 List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList();
@@ -263,6 +274,7 @@ namespace ModuleMainModule.ViewModels
                     CanDelFromDb = true;
                     CanAddToDb = false;
                 }
+                BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)
             {                
@@ -280,6 +292,8 @@ namespace ModuleMainModule.ViewModels
             ShowService.TakeShow(show);
             CanDelFromDb = true;
             CanAddToDb = false;
+
+            RefreshFavoriteView();
         }
 
         private void DelFromDb()
@@ -287,6 +301,31 @@ namespace ModuleMainModule.ViewModels
             ShowService.DelShow(DirectShow.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
+
+            RefreshFavoriteView();
+        }
+
+        private void RefreshFavoriteView()
+        {
+            try
+            {
+                UserControl singleView = (UserControl)_regionManager.Regions["ListRegion"].ActiveViews.FirstOrDefault();
+                ShowsListViewModel showViewModel = (ShowsListViewModel)singleView.DataContext;
+
+                if (showViewModel.Title == "Избранные сериалы")
+                {
+                    var parameters = new NavigationParameters { { "type", "Favorite" } };
+                    _regionManager.RequestNavigate("ListRegion", "ShowsList", parameters);
+                }
+            }
+            catch (ServiceRequestException)
+            {
+                RaiseNotification();
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException(ForExceptions, e);
+            }
         }
 
         #endregion
