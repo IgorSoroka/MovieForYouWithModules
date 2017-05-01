@@ -15,7 +15,7 @@ namespace ModuleMainModule.ViewModels
     class ShowSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger;
 
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandSearch { get; private set; }
@@ -24,6 +24,8 @@ namespace ModuleMainModule.ViewModels
         public ShowSearchViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandNameSearch = new DelegateCommand(NameSearch);
             NavigateCommandSearch = new DelegateCommand(Search);
             NavigateCommandReset = new DelegateCommand(Reset);

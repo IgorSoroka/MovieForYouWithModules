@@ -92,7 +92,7 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid MaxWidth="1090" MinWidth="540" ClipToBounds="True" Columns="3"/>
+                                <UniformGrid MaxWidth="1090" MinWidth="540" Background="#4C000000" Columns="3"/>
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>

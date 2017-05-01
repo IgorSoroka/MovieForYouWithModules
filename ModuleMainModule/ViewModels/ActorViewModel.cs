@@ -20,18 +20,22 @@ namespace ModuleMainModule.ViewModels
     public class ActorViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
-        private static readonly IActorService ActorService = new ActorService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly TheMovieDBDataService _dataService;
+        private readonly IActorService _actorService;
+        private readonly Logger _logger;
 
         public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
         public DelegateCommand NavigateCommandAddToDb { get; private set; }
         public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
         public InteractionRequest<INotification> NotificationRequest { get; }
 
-        public ActorViewModel(RegionManager regionManager)
+        public ActorViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ActorService actorService)
         {
             _regionManager = regionManager;
+            _dataService = dataService;
+            _actorService = actorService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
             NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
@@ -160,11 +164,11 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                var actor = await DataService.GetDirectActorData(id);               
-                List<PersonCredit> movies = await DataService.GetDirectActorMoviesList(id);
+                var actor = await _dataService.GetDirectActorData(id);               
+                List<PersonCredit> movies = await _dataService.GetDirectActorMoviesList(id);
                 DirectActor = actor;
                 ActorMovies = new ObservableCollection<PersonCredit>(movies);
-                ActorDTO personFromDb = ActorService.GetActor(DirectActor.Id);
+                ActorDTO personFromDb = _actorService.GetActor(DirectActor.Id);
                 if (personFromDb == null)
                 {
                     CanDelFromDb = false;
@@ -203,7 +207,7 @@ namespace ModuleMainModule.ViewModels
         private void AddToDb()
         {
             ActorDTO actor = new ActorDTO { Name = DirectActor.Name, ExternalId = DirectActor.Id};           
-            ActorService.TakeActor(actor);
+            _actorService.TakeActor(actor);
             CanDelFromDb = true;
             CanAddToDb = false;
 
@@ -212,7 +216,7 @@ namespace ModuleMainModule.ViewModels
 
         private void DelFromDb()
         {            
-            ActorService.DelActor(DirectActor.Id);
+            _actorService.DelActor(DirectActor.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
 

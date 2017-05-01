@@ -20,9 +20,9 @@ namespace ModuleMainModule.ViewModels
     class ShowViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
-        private static readonly IShowService ShowService = new ShowService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly TheMovieDBDataService _dataService;
+        private readonly IShowService _showService;
+        private readonly Logger _logger;
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public DelegateCommand NavigateCommandShowTrailler { get; private set; }
@@ -30,9 +30,13 @@ namespace ModuleMainModule.ViewModels
         public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
         public InteractionRequest<INotification> NotificationRequest { get; }
 
-        public ShowViewModel(RegionManager regionManager)
+        public ShowViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ShowService showService)
         {
             _regionManager = regionManager;
+            _dataService = dataService;
+            _showService = showService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
             NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
@@ -204,7 +208,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                var video = await DataService.GetTraillerShow(id);
+                var video = await _dataService.GetTraillerShow(id);
                 if (video != null)
                 { VideoUrl = video.Key; }
             }
@@ -256,14 +260,14 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                var show = await DataService.GetDirectShowData(id);
+                var show = await _dataService.GetDirectShowData(id);
                 List<MediaCrew> crews = (show.Credits.Crew).Take(10).ToList();
                 List<MediaCast> casts = (show.Credits.Cast).Take(10).ToList();
                 DirectShow = show;
                 Crew = new ObservableCollection<MediaCrew>(crews);
                 Cast = new ObservableCollection<MediaCast>(casts);
 
-                ShowDTO showFromDb = ShowService.GetShow(DirectShow.Id);
+                ShowDTO showFromDb = _showService.GetShow(DirectShow.Id);
                 if (showFromDb == null)
                 {
                     CanDelFromDb = false;
@@ -289,7 +293,7 @@ namespace ModuleMainModule.ViewModels
         private void AddToDb()
         {
             ShowDTO show = new ShowDTO { Name = DirectShow.Name, ExternalId = DirectShow.Id };          
-            ShowService.TakeShow(show);
+            _showService.TakeShow(show);
             CanDelFromDb = true;
             CanAddToDb = false;
 
@@ -298,7 +302,7 @@ namespace ModuleMainModule.ViewModels
 
         private void DelFromDb()
         {            
-            ShowService.DelShow(DirectShow.Id);
+            _showService.DelShow(DirectShow.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
 

@@ -15,18 +15,22 @@ namespace ModuleMainModule.ViewModels
     class StartViewModel : BindableBase
     {
         private readonly IRegionManager _regionManager;
-        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly TheMovieDBDataService _dataService;
+        private readonly Logger _logger;
 
         public DelegateCommand<Movie> NavigateCommandMovie { get; private set; }
         public DelegateCommand<Show> NavigateCommandShow { get; private set; }
         public InteractionRequest<INotification> NotificationRequest { get; }
         public InteractionRequest<INotification> NotificationRequestNull { get; }
 
-        public StartViewModel(RegionManager regionManager)
+        public StartViewModel(RegionManager regionManager, TheMovieDBDataService dataService)
         {
             _regionManager = regionManager;
+            _dataService = dataService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             GetAllData();
+
             NavigateCommandMovie = new DelegateCommand<Movie>(ShowDirectMovie);
             NavigateCommandShow = new DelegateCommand<Show>(ShowDirectShow);
             NotificationRequest = new InteractionRequest<INotification>();
@@ -159,8 +163,8 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetPopularMoviesData(1);
-                List<Show> showsTest = await DataService.GetPopularShowsData(1);
+                List<Movie> moviesTest = await _dataService.GetPopularMoviesData(1);
+                List<Show> showsTest = await _dataService.GetPopularShowsData(1);
                 BestMovie = moviesTest.First();
                 SecondMovie = moviesTest[1];
                 ThirdMovie = moviesTest[2];

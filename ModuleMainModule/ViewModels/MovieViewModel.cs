@@ -20,9 +20,9 @@ namespace ModuleMainModule.ViewModels
     class MovieViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
-        private static readonly IMovieService MovieService = new MovieService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly TheMovieDBDataService _dataService;
+        private readonly IMovieService _movieService;
+        private readonly Logger _logger;
 
         public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
         public DelegateCommand NavigateCommandShowTrailler { get; private set; }
@@ -31,9 +31,13 @@ namespace ModuleMainModule.ViewModels
         public InteractionRequest<INotification> NotificationRequest { get; }
         public InteractionRequest<INotification> NotificationRequestNull { get; }
 
-        public MovieViewModel(RegionManager regionManager)
+        public MovieViewModel(RegionManager regionManager, TheMovieDBDataService dataService, MovieService movieService)
         {
             _regionManager = regionManager;
+            _dataService = dataService;
+            _movieService = movieService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
             NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
             NavigateCommandAddToDb = new DelegateCommand(AddToDb);
@@ -249,7 +253,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                var video = await DataService.GetTrailler(id);
+                var video = await _dataService.GetTrailler(id);
                 if (video != null)
                 {
                     VideoUrl = video.Key;
@@ -270,13 +274,13 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                var movie = await DataService.GetDirectMoveData(id);
+                var movie = await _dataService.GetDirectMoveData(id);
                 List<MediaCrew> crews = (movie.Credits.Crew).Take(10).ToList();
                 List<MediaCast> casts = (movie.Credits.Cast).Take(10).ToList();
                 DirectMovie = movie;
                 Crew = new ObservableCollection<MediaCrew>(crews);
                 Cast = new ObservableCollection<MediaCast>(casts);
-                MovieDTO movieFromDb = MovieService.GetMovie(DirectMovie.Id);
+                MovieDTO movieFromDb = _movieService.GetMovie(DirectMovie.Id);
                 if (movieFromDb == null)
                 {
                     CanDelFromDb = false;
@@ -304,7 +308,7 @@ namespace ModuleMainModule.ViewModels
         private void AddToDb()
         {
             MovieDTO movie = new MovieDTO { Name = DirectMovie.OriginalTitle, ExternalId = DirectMovie.Id };           
-            MovieService.TakeMovie(movie);
+            _movieService.TakeMovie(movie);
             CanDelFromDb = true;
             CanAddToDb = false;
 
@@ -313,7 +317,7 @@ namespace ModuleMainModule.ViewModels
 
         private void DelFromDb()
         {            
-            MovieService.DelMovie(DirectMovie.Id);
+            _movieService.DelMovie(DirectMovie.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
 

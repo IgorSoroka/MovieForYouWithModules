@@ -18,9 +18,9 @@ namespace ModuleMainModule.ViewModels
     class ShowsListViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private readonly TheMovieDBDataService _dataService = new TheMovieDBDataService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-        private static readonly IShowService ShowService = new ShowService();
+        private readonly TheMovieDBDataService _dataService;
+        private readonly Logger _logger;
+        private readonly IShowService _showService;
 
         public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
@@ -32,9 +32,13 @@ namespace ModuleMainModule.ViewModels
         private bool _popular;
         private bool _now;
 
-        public ShowsListViewModel(RegionManager regionManager)
+        public ShowsListViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ShowService showService)
         {
             _regionManager = regionManager;
+            _dataService = dataService;
+            _showService = showService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandShowDirectShow = new DelegateCommand(NavigateShowDirectShow);
             NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage);
             NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage);
@@ -473,7 +477,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                IEnumerable<ShowDTO> favoriteShowsFromDb = ShowService.GetShows();
+                IEnumerable<ShowDTO> favoriteShowsFromDb = _showService.GetShows();
                 List<int> showsId = new List<int>();
                 foreach (var item in favoriteShowsFromDb)
                 {

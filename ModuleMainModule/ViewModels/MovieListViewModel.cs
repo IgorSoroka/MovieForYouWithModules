@@ -20,9 +20,9 @@ namespace ModuleMainModule.ViewModels
     class MoviesListViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private  static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-        private static readonly IMovieService MovieService = new MovieService();
+        private readonly TheMovieDBDataService _dataService;
+        private readonly Logger _logger;
+        private readonly IMovieService _movieService;
 
         public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
         public DelegateCommand NavigateCommandShowNextPage { get; private set; }
@@ -39,9 +39,13 @@ namespace ModuleMainModule.ViewModels
         private string _selectedGenre;
         private string _selectedCompany;
 
-        public MoviesListViewModel(RegionManager regionManager)
+        public MoviesListViewModel(RegionManager regionManager, TheMovieDBDataService dataService,  MovieService movieService)
         {
             _regionManager = regionManager;
+            _dataService = dataService;
+            _movieService = movieService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
             NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage);
             NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage);
@@ -314,22 +318,6 @@ namespace ModuleMainModule.ViewModels
             }
         }
 
-        //private bool CanExecutePriviousPage()
-        //{
-        //    if (Page == 1)
-        //        return false;
-        //    else
-        //        return true;
-        //}
-
-        //private bool CanExecuteNextPage()
-        //{
-        //    if (Page == 5)
-        //        return false;
-        //    else
-        //        return true;
-        //}
-
         private void ShowPriviousPage()
         {
             if (_popular && Page > MinPage)
@@ -403,7 +391,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetSearchedMoviesLastYear(selectedLastYear, selectedRating);
+                List<Movie> moviesTest = await _dataService.GetSearchedMoviesLastYear(selectedLastYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -422,7 +410,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetSearchedMoviesFirstYear(selectedFirstYear, selectedRating);
+                List<Movie> moviesTest = await _dataService.GetSearchedMoviesFirstYear(selectedFirstYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -441,7 +429,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetSearchedMovies(selectedFirstYear, selectedLastYear, selectedRating);
+                List<Movie> moviesTest = await _dataService.GetSearchedMovies(selectedFirstYear, selectedLastYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -460,7 +448,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetSearchedMovies(selectedYear, selectedRating);
+                List<Movie> moviesTest = await _dataService.GetSearchedMovies(selectedYear, selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -479,7 +467,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetSearchedMovies(selectedRating);
+                List<Movie> moviesTest = await _dataService.GetSearchedMovies(selectedRating);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -498,7 +486,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetMoviesByName(name);
+                List<Movie> moviesTest = await _dataService.GetMoviesByName(name);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -518,7 +506,7 @@ namespace ModuleMainModule.ViewModels
             {
                 BusyIndicatorValue = true;
                 var genreNumber = RepositoryGenres.GetGenreId(genre);
-                List<Movie> moviesTest = await DataService.GetListOfMoviesByGenre(genreNumber, page);
+                List<Movie> moviesTest = await _dataService.GetListOfMoviesByGenre(genreNumber, page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -538,7 +526,7 @@ namespace ModuleMainModule.ViewModels
             {
                 BusyIndicatorValue = true;
                 var companyNumber = RepositoryCompanies.GetCompanyId(company);
-                List<Movie> moviesTest = await DataService.GetListOfMoviesByCompany(companyNumber, page);
+                List<Movie> moviesTest = await _dataService.GetListOfMoviesByCompany(companyNumber, page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -557,7 +545,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetPopularMoviesData(page);
+                List<Movie> moviesTest = await _dataService.GetPopularMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -576,7 +564,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetTopRatedMoviesData(page);
+                List<Movie> moviesTest = await _dataService.GetTopRatedMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -595,7 +583,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetUpCommingMoviesData(page);
+                List<Movie> moviesTest = await _dataService.GetUpCommingMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -614,7 +602,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Movie> moviesTest = await DataService.GetNewMoviesData(page);
+                List<Movie> moviesTest = await _dataService.GetNewMoviesData(page);
                 Movies = new ObservableCollection<Movie>(moviesTest);
                 BusyIndicatorValue = false;
             }
@@ -633,7 +621,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                IEnumerable<MovieDTO> favoriteMoviesFromDb = MovieService.GetMovies();
+                IEnumerable<MovieDTO> favoriteMoviesFromDb = _movieService.GetMovies();
                 List<int> moviesId = new List<int>();
                 foreach (var item in favoriteMoviesFromDb)
                 {
@@ -642,7 +630,7 @@ namespace ModuleMainModule.ViewModels
                 List<Movie> favoriteMoviesFromSite = new List<Movie>();
                 foreach (var item in moviesId)
                 {
-                    Movie movie = await DataService.GetDirectMoveData(item);
+                    Movie movie = await _dataService.GetDirectMoveData(item);
                     favoriteMoviesFromSite.Add(movie);
                 }
                 Movies = new ObservableCollection<Movie>(favoriteMoviesFromSite);
@@ -664,7 +652,7 @@ namespace ModuleMainModule.ViewModels
         {
             try
             {
-                _regionManager.Regions["MainRegion"].Deactivate("Player");
+                _regionManager.Regions["MainRegion"].Remove("Player");
             }
             catch (Exception e)
             {

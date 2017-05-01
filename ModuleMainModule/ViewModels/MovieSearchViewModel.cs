@@ -16,7 +16,7 @@ namespace ModuleMainModule.ViewModels
     class MovieSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger;
 
         public DelegateCommand NavigateCommandNameSearch { get; private set; }
         public DelegateCommand NavigateCommandGenreSearch { get; private set; }
@@ -27,6 +27,8 @@ namespace ModuleMainModule.ViewModels
         public MovieSearchViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandNameSearch = new DelegateCommand(NameSearch);
             NavigateCommandGenreSearch = new DelegateCommand(GenreSearch);
             NavigateCommandSearch = new DelegateCommand(Search);

@@ -17,17 +17,20 @@ namespace ModuleMainModule.ViewModels
     class ActorSearchViewModel : BindableBase, IDataErrorInfo
     {
         private readonly IRegionManager _regionManager;
-        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly TheMovieDBDataService _dataService;
+        private readonly Logger _logger;
 
         public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
         public DelegateCommand<string> NavigateCommandSearch { get; private set; }      
         public InteractionRequest<INotification> NotificationRequest { get; }
         public InteractionRequest<INotification> NotificationRequestNull { get; }
 
-        public ActorSearchViewModel(RegionManager regionManager)
+        public ActorSearchViewModel(RegionManager regionManager, TheMovieDBDataService dataService)
         {
             _regionManager = regionManager;
+            _dataService = dataService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandDirectActor = new DelegateCommand<Person>(DirectActor);
             NavigateCommandSearch = new DelegateCommand<string>(Search);
             NotificationRequest = new InteractionRequest<INotification>();
@@ -195,18 +198,18 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                Watson = await DataService.GetActor(WatsonId);
-                Johansson = await DataService.GetActor(JohanssonId);
-                Lawrence = await DataService.GetActor(LawrenceId);
-                Hathaway = await DataService.GetActor(HathawayId);
-                Jackman = await DataService.GetActor(JackmanId);
-                Depp = await DataService.GetActor(DeppId);
-                Diesel = await DataService.GetActor(DieselId);
-                DiCaprio = await DataService.GetActor(DiCaprioId);
-                Hardy = await DataService.GetActor(HardyId);
-                Pitt = await DataService.GetActor(PittId);
-                Downey = await DataService.GetActor(DowneyId);
-                Robbie = await DataService.GetActor(RobbieId);
+                Watson = await _dataService.GetActor(WatsonId);
+                Johansson = await _dataService.GetActor(JohanssonId);
+                Lawrence = await _dataService.GetActor(LawrenceId);
+                Hathaway = await _dataService.GetActor(HathawayId);
+                Jackman = await _dataService.GetActor(JackmanId);
+                Depp = await _dataService.GetActor(DeppId);
+                Diesel = await _dataService.GetActor(DieselId);
+                DiCaprio = await _dataService.GetActor(DiCaprioId);
+                Hardy = await _dataService.GetActor(HardyId);
+                Pitt = await _dataService.GetActor(PittId);
+                Downey = await _dataService.GetActor(DowneyId);
+                Robbie = await _dataService.GetActor(RobbieId);
                 BusyIndicatorValue = false;
             }
             catch (NullReferenceException ex)

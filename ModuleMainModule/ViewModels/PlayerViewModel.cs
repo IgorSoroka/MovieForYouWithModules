@@ -11,13 +11,14 @@ namespace ModuleMainModule.ViewModels
     {
         private readonly IRegionManager _regionManager;
         private IRegionNavigationJournal _journal;
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger;
 
         public DelegateCommand GoBackCommand { get; set; }
 
         public PlayerViewModel(RegionManager regionManager)
         {
             _regionManager = regionManager;
+            _logger = LogManager.GetCurrentClassLogger();
             GoBackCommand = new DelegateCommand(GoBack);
         }
 

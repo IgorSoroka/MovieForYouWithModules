@@ -10,7 +10,7 @@
              xmlns:behavior="clr-namespace:ModuleMainModule.Behavior"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
-             Height="auto" Width="auto" MaxWidth="350" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+             Height="auto"  MaxWidth="350" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
     <UserControl.Resources>
         <converters:ImageUrlConverter x:Key="PathConverter"/>
     </UserControl.Resources>

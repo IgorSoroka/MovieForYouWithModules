@@ -19,23 +19,23 @@ namespace ModuleMainModule.ViewModels
     class ActorsListViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private static readonly TheMovieDBDataService DataService = new TheMovieDBDataService();
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
-        private static readonly IActorService ActorService = new ActorService();
-
-        //public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
+        private readonly TheMovieDBDataService _dataService;
+        private readonly Logger _logger;
+        private readonly IActorService _actorService;
+        
         public InteractionRequest<INotification> NotificationRequest { get; }
         public InteractionRequest<INotification> NotificationRequestNull { get; }
-
         public DelegateCommand<int?> NavigateCommandShowDirectActor { get; private set; }
 
-        public ActorsListViewModel(RegionManager regionManager)
+        public ActorsListViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ActorService actorService)
         {
             _regionManager = regionManager;
-            //NavigateCommandShowDirectActor = new DelegateCommand(ShowDirectActor);
+            _dataService = dataService;
+            _actorService = actorService;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NotificationRequest = new InteractionRequest<INotification>();
             NotificationRequestNull = new InteractionRequest<INotification>();
-
             NavigateCommandShowDirectActor = new DelegateCommand<int?>(ShowDirectActor);
         }
 
@@ -142,7 +142,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                List<Person> actorsTest = await DataService.GetActorsByName(name);
+                List<Person> actorsTest = await _dataService.GetActorsByName(name);
                 ActorsList = new ObservableCollection<Person>(actorsTest);
                 BusyIndicatorValue = false;
             }
@@ -201,7 +201,7 @@ namespace ModuleMainModule.ViewModels
             try
             {
                 BusyIndicatorValue = true;
-                IEnumerable<ActorDTO> favoriteActorsFromDb = ActorService.GetActors();
+                IEnumerable<ActorDTO> favoriteActorsFromDb = _actorService.GetActors();
                 List<int> actorsId = new List<int>();
                 foreach (var item in favoriteActorsFromDb)
                 {
@@ -210,7 +210,7 @@ namespace ModuleMainModule.ViewModels
                 List<Person> favoriteActorsFromSite = new List<Person>();
                 foreach (var item in actorsId)
                 {
-                    Person actor = await DataService.GetDirectActorData(item);
+                    Person actor = await _dataService.GetDirectActorData(item);
                     favoriteActorsFromSite.Add(actor);
                 }
                 ActorsList = new ObservableCollection<Person>(favoriteActorsFromSite);

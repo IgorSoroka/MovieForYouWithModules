@@ -9,7 +9,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:ribbon="clr-namespace:Microsoft.Windows.Controls.Ribbon;assembly=RibbonControlsLibrary"
         mc:Ignorable="d"
-        Title="{Binding Title}" MinWidth="475" MinHeight="475" Height="800" Width="1200" WindowStartupLocation="CenterScreen">    
+        Title="{Binding Title}" MinWidth="475" MinHeight="475" Height="800" Width="1200" WindowStartupLocation="CenterScreen"> 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -29,11 +29,11 @@
             <ribbon:Ribbon.ApplicationMenu>
                 <ribbon:RibbonApplicationMenu Background="#4C000000" Foreground="#FF000000">
                     <ribbon:RibbonApplicationMenuItem Header="Свернуть" x:Name="MenuItemMin" Command="{Binding ApplicationCommandMinimize}"/>
-                    <ribbon:RibbonApplicationMenuItem Header="Развернуть" x:Name="MenuItemOpen" Command="{Binding ApplicationCommandMAximaze}"/>
+                    <ribbon:RibbonApplicationMenuItem Header="Развернуть" x:Name="MenuItemOpen" Command="{Binding ApplicationCommandMaximaze}"/>
                     <ribbon:RibbonApplicationMenuItem Header="Закрыть" x:Name="MenuItemClose" Command="{Binding ApplicationCommandClose}"/>
                 </ribbon:RibbonApplicationMenu>
             </ribbon:Ribbon.ApplicationMenu>
-            <ribbon:RibbonButton Label="{Binding MainView}" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"></ribbon:RibbonButton>
+            <ribbon:RibbonButton Label="{Binding MainView}" Command="{Binding NavigateCommandMain}" CommandParameter="StartView"/>
             <ribbon:RibbonTab Header="{Binding Movies}">
                 <ribbon:RibbonGroup>
                     <ribbon:RibbonButton Label="{Binding Best}" HorizontalAlignment="Center" Width="100" LargeImageSource="{Binding BestPath}" Command="{Binding NavigateCommandListMovie}" CommandParameter="Best"/>

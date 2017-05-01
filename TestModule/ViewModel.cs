@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Threading;
 using ModuleMainModule.Services;
 using NLog;
@@ -13,30 +14,32 @@ namespace TestModule
     public class MainWindowViewModel : BindableBase
     {
         private readonly IRegionManager _regionManager;
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _logger;
 
         public DelegateCommand<string> NavigateCommandMain { get; private set; }
         public DelegateCommand<string> NavigateCommandListShow { get; private set; }
         public DelegateCommand<string> NavigateCommandListMovie { get; private set; }
         public DelegateCommand<string> NavigateCommandListActor { get; private set; }
 
-        //public DelegateCommand<string> ApplicationCommandMinimize { get; private set; }
-        //public DelegateCommand<string> ApplicationCommandMaximaze { get; private set; }
-        //public DelegateCommand<string> ApplicationCommandClose { get; private set; }
+        public DelegateCommand ApplicationCommandMinimize { get; private set; }
+        public DelegateCommand ApplicationCommandMaximaze { get; private set; }
+        public DelegateCommand ApplicationCommandClose { get; private set; }
 
         public InteractionRequest<INotification> NotificationRequestConnection { get; }
 
         public MainWindowViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
+            _logger = LogManager.GetCurrentClassLogger();
+
             NavigateCommandMain = new DelegateCommand<string>(NavigateMain);
             NavigateCommandListShow = new DelegateCommand<string>(NavigateListShow);
             NavigateCommandListMovie = new DelegateCommand<string>(NavigateListMovie);
             NavigateCommandListActor = new DelegateCommand<string>(NavigateListActor);
 
-            //ApplicationCommandMinimize = new DelegateCommand<string>(Minimize);
-            //ApplicationCommandMaximaze = new DelegateCommand<string>(Maximize);
-            //ApplicationCommandClose = new DelegateCommand<string>(Close);
+            ApplicationCommandMinimize = new DelegateCommand(Minimize);
+            ApplicationCommandMaximaze = new DelegateCommand(Maximize);
+            ApplicationCommandClose = new DelegateCommand(Close);
 
             NotificationRequestConnection = new InteractionRequest<INotification>();
             Timer();
@@ -234,6 +237,21 @@ namespace TestModule
             dispatcherTimer.Tick += CheckConnection;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
             dispatcherTimer.Start();
+        }
+
+        private void Minimize()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
+
+        private void Maximize()
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        }
+
+        private void Close()
+        {
+            Application.Current.MainWindow.Close();
         }
 
         #endregion
