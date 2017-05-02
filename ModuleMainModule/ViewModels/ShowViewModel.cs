@@ -24,26 +24,6 @@ namespace ModuleMainModule.ViewModels
         private readonly IShowService _showService;
         private readonly Logger _logger;
 
-        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
-        public DelegateCommand NavigateCommandShowTrailler { get; private set; }
-        public DelegateCommand NavigateCommandAddToDb { get; private set; }
-        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
-        public InteractionRequest<INotification> NotificationRequest { get; }
-
-        public ShowViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ShowService showService)
-        {
-            _regionManager = regionManager;
-            _dataService = dataService;
-            _showService = showService;
-            _logger = LogManager.GetCurrentClassLogger();
-
-            NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
-            NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
-            NavigateCommandAddToDb = new DelegateCommand(AddToDb);
-            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
-            NotificationRequest = new InteractionRequest<INotification>();
-        }
-
         #region Constants
 
         private const string _plot = "Сюжет";
@@ -118,6 +98,26 @@ namespace ModuleMainModule.ViewModels
         private const string UserNotified = "Пользователь был оповещен";
 
         #endregion
+
+        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
+        public DelegateCommand NavigateCommandShowTrailler { get; private set; }
+        public DelegateCommand NavigateCommandAddToDb { get; private set; }
+        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
+        public InteractionRequest<INotification> NotificationRequest { get; }
+
+        public ShowViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ShowService showService)
+        {
+            _regionManager = regionManager;
+            _dataService = dataService;
+            _showService = showService;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
+            NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
+            NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
+            NotificationRequest = new InteractionRequest<INotification>();
+        }
 
         #region Properties
 
@@ -296,7 +296,6 @@ namespace ModuleMainModule.ViewModels
             _showService.TakeShow(show);
             CanDelFromDb = true;
             CanAddToDb = false;
-
             RefreshFavoriteView();
         }
 
@@ -305,10 +304,11 @@ namespace ModuleMainModule.ViewModels
             _showService.DelShow(DirectShow.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
-
             RefreshFavoriteView();
         }
-
+        /// <summary>
+        /// Метод для обновления списка избранных сериалов при удалении/добавлении в избранное
+        /// </summary>
         private void RefreshFavoriteView()
         {
             try

@@ -1,11 +1,16 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NLog;
+#pragma warning disable 618
 
 namespace ModuleMainModule.Behavior
 {
     public class MouseDoubleClick
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static DependencyProperty CommandProperty =
         DependencyProperty.RegisterAttached("Command",
         typeof(ICommand),
@@ -33,25 +38,39 @@ namespace ModuleMainModule.Behavior
         }
         private static void CommandChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
         {
-            Control control = target as Control;
-            if (control != null)
+            try
             {
-                if ((e.NewValue != null) && (e.OldValue == null))
+                Control control = target as Control;
+                if (control != null)
                 {
-                    control.MouseDoubleClick += OnMouseDoubleClick;
+                    if ((e.NewValue != null) && (e.OldValue == null))
+                    {
+                        control.MouseDoubleClick += OnMouseDoubleClick;
+                    }
+                    else if ((e.NewValue == null) && (e.OldValue != null))
+                    {
+                        control.MouseDoubleClick -= OnMouseDoubleClick;
+                    }
                 }
-                else if ((e.NewValue == null) && (e.OldValue != null))
-                {
-                    control.MouseDoubleClick -= OnMouseDoubleClick;
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorException("Behavior", ex);
             }
         }
         private static void OnMouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            Control control = sender as Control;
-            ICommand command = (ICommand)control.GetValue(CommandProperty);
-            object commandParameter = control.GetValue(CommandParameterProperty);
-            command.Execute(commandParameter);
+            try
+            {
+                Control control = sender as Control;
+                ICommand command = (ICommand)control.GetValue(CommandProperty);
+                object commandParameter = control.GetValue(CommandParameterProperty);
+                command.Execute(commandParameter);
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorException("Behavior", ex);
+            }
         }
     }
 }

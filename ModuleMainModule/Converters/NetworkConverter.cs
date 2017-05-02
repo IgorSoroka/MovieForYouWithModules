@@ -26,9 +26,11 @@ namespace ModuleMainModule.Converters
                 }
                 return result;
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException)
+            { }
+            catch (Exception ex)
             {
-                _logger.ErrorException(ForExceptions, e);
+                _logger.ErrorException(ForExceptions, ex);
             }
             return result;
         }

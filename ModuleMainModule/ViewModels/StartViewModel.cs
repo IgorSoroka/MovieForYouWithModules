@@ -18,6 +18,19 @@ namespace ModuleMainModule.ViewModels
         private readonly TheMovieDBDataService _dataService;
         private readonly Logger _logger;
 
+        #region StringConstants
+
+        private const string ForExceptions = "StartViewModel";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";
+        private const string WaitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами сериалу или актеру";
+        private const string UserNotified = "Пользователь был оповещен";
+
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
+
+        #endregion
+
         public DelegateCommand<Movie> NavigateCommandMovie { get; private set; }
         public DelegateCommand<Show> NavigateCommandShow { get; private set; }
         public InteractionRequest<INotification> NotificationRequest { get; }
@@ -36,19 +49,6 @@ namespace ModuleMainModule.ViewModels
             NotificationRequest = new InteractionRequest<INotification>();
             NotificationRequestNull = new InteractionRequest<INotification>();
         }
-
-        #region StringConstants
-
-        private const string ForExceptions = "StartViewModel";
-        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
-        private const string WarningError = "Ошибка";
-        private const string WaitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами сериалу или актеру";
-        private const string UserNotified = "Пользователь был оповещен";
-
-        private const string _loadingData = "Загрузка данных...";
-        public string LoadingData => _loadingData;
-
-        #endregion
 
         #region Properties
 
@@ -128,10 +128,9 @@ namespace ModuleMainModule.ViewModels
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 RaiseNotificationNull();
-                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
@@ -147,10 +146,9 @@ namespace ModuleMainModule.ViewModels
                 var parameters = new NavigationParameters { { "id", id } };
                 _regionManager.RequestNavigate("MainRegion", "ShowView", parameters);
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 RaiseNotificationNull();
-                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
@@ -171,8 +169,6 @@ namespace ModuleMainModule.ViewModels
                 BestShow = showsTest.First();
                 SecondShow = showsTest[1];
                 ThirdShow = showsTest[2];
-
-
                 BusyIndicatorValue = false;
             }
             catch (ServiceRequestException)

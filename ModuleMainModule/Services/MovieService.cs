@@ -11,9 +11,6 @@ namespace ModuleMainModule.Services
     {
         private readonly EFUnitOfWork _database = new EFUnitOfWork();
 
-        public MovieService()
-        {  }
-
         public void TakeMovie(MovieDTO movieDto)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<MovieDTO, Movie>());

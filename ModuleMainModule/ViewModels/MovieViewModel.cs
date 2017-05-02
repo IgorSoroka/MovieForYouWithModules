@@ -24,28 +24,6 @@ namespace ModuleMainModule.ViewModels
         private readonly IMovieService _movieService;
         private readonly Logger _logger;
 
-        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
-        public DelegateCommand NavigateCommandShowTrailler { get; private set; }
-        public DelegateCommand NavigateCommandAddToDb { get; private set; }
-        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
-        public InteractionRequest<INotification> NotificationRequest { get; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; }
-
-        public MovieViewModel(RegionManager regionManager, TheMovieDBDataService dataService, MovieService movieService)
-        {
-            _regionManager = regionManager;
-            _dataService = dataService;
-            _movieService = movieService;
-            _logger = LogManager.GetCurrentClassLogger();
-
-            NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
-            NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
-            NavigateCommandAddToDb = new DelegateCommand(AddToDb);
-            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
-            NotificationRequest = new InteractionRequest<INotification>();
-            NotificationRequestNull = new InteractionRequest<INotification>();
-        }
-
         #region Constants
 
         private const string _loadingData = "Загрузка данных...";
@@ -118,6 +96,28 @@ namespace ModuleMainModule.ViewModels
         private const string ErrorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
 
         #endregion
+
+        public DelegateCommand NavigateCommandShowDirectActor { get; private set; }
+        public DelegateCommand NavigateCommandShowTrailler { get; private set; }
+        public DelegateCommand NavigateCommandAddToDb { get; private set; }
+        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
+        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
+
+        public MovieViewModel(RegionManager regionManager, TheMovieDBDataService dataService, MovieService movieService)
+        {
+            _regionManager = regionManager;
+            _dataService = dataService;
+            _movieService = movieService;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            NavigateCommandShowDirectActor = new DelegateCommand(NavigateShowDirectActor);
+            NavigateCommandShowTrailler = new DelegateCommand(ShowTrailler);
+            NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
+            NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
+        }
 
         #region Properties
 
@@ -292,8 +292,6 @@ namespace ModuleMainModule.ViewModels
                     CanAddToDb = false;
                 }
                 BusyIndicatorValue = false;
-
-             
             }
             catch (ServiceRequestException)
             {                
@@ -311,7 +309,6 @@ namespace ModuleMainModule.ViewModels
             _movieService.TakeMovie(movie);
             CanDelFromDb = true;
             CanAddToDb = false;
-
             RefreshFavoriteView();
         }
 
@@ -320,10 +317,11 @@ namespace ModuleMainModule.ViewModels
             _movieService.DelMovie(DirectMovie.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
-
             RefreshFavoriteView();
         }
-
+        /// <summary>
+        /// Метод для обновления списка избранных фильмов при удалении/добавлении в избранное
+        /// </summary>
         private void RefreshFavoriteView()
         {
             try

@@ -20,24 +20,6 @@ namespace ModuleMainModule.ViewModels
         private readonly TheMovieDBDataService _dataService;
         private readonly Logger _logger;
 
-        public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
-        public DelegateCommand<string> NavigateCommandSearch { get; private set; }      
-        public InteractionRequest<INotification> NotificationRequest { get; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; }
-
-        public ActorSearchViewModel(RegionManager regionManager, TheMovieDBDataService dataService)
-        {
-            _regionManager = regionManager;
-            _dataService = dataService;
-            _logger = LogManager.GetCurrentClassLogger();
-
-            NavigateCommandDirectActor = new DelegateCommand<Person>(DirectActor);
-            NavigateCommandSearch = new DelegateCommand<string>(Search);
-            NotificationRequest = new InteractionRequest<INotification>();
-            NotificationRequestNull = new InteractionRequest<INotification>();
-            GetActorsData();
-        }
-
         #region Constants
 
         private const string _find = "Найти";
@@ -51,7 +33,7 @@ namespace ModuleMainModule.ViewModels
 
         private const string ForExceptions = "ActorSearchViewModel";
         private const string InvalidPropertyName = "Некорретное имя свойства";
-        private const string ExceededNumberRequests  = "Превышено число запросов к серверу";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
         private const string WarningError = "Ошибка";
         private const string WaitFullDownload = "Для перехода дождитесь полной загрузки данных по выбранному Вами актеру";
         private const string UserNotified = "Пользователь был оповещен";
@@ -70,6 +52,24 @@ namespace ModuleMainModule.ViewModels
         private const int RobbieId = 234352;
 
         #endregion
+
+        public DelegateCommand<Person> NavigateCommandDirectActor { get; private set; }
+        public DelegateCommand<string> NavigateCommandSearch { get; private set; }      
+        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
+
+        public ActorSearchViewModel(RegionManager regionManager, TheMovieDBDataService dataService)
+        {
+            _regionManager = regionManager;
+            _dataService = dataService;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            NavigateCommandDirectActor = new DelegateCommand<Person>(DirectActor);
+            NavigateCommandSearch = new DelegateCommand<string>(Search);
+            NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
+            GetActorsData();
+        }
 
         #region Properties
 

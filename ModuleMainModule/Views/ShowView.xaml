@@ -43,9 +43,7 @@
                     <TextBlock Foreground="Honeydew"  FontSize="20" Text="{Binding Name}"/>
                     <Label FontSize="16" Foreground="Honeydew" Content="{Binding Plot}"
                            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200">
-                        <TextBlock Foreground="Honeydew"  TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Overview}"/>
-                    </ScrollViewer>
+                   <TextBlock Foreground="Honeydew"  TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Overview}"/>
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Row="1">

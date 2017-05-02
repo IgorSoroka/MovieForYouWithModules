@@ -22,7 +22,25 @@ namespace ModuleMainModule.ViewModels
         private readonly TheMovieDBDataService _dataService;
         private readonly Logger _logger;
         private readonly IActorService _actorService;
-        
+
+        #region StringConstants
+
+        private const string _readMore = "Подробнее";
+        public string ReadMore => _readMore;
+
+        private const string _loadingData = "Загрузка данных...";
+        public string LoadingData => _loadingData;
+
+        private const string ForExceptions = "ActorListViewModel";
+        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
+        private const string WarningError = "Ошибка";
+        private const string ErrorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
+        private const string UserNotified = "Пользователь был оповещен";
+        private const string SelectedActors = "Избранные актеры";
+        private const string SearchingResults = "Результаты поиска";
+
+        #endregion
+
         public InteractionRequest<INotification> NotificationRequest { get; }
         public InteractionRequest<INotification> NotificationRequestNull { get; }
         public DelegateCommand<int?> NavigateCommandShowDirectActor { get; private set; }
@@ -80,24 +98,6 @@ namespace ModuleMainModule.ViewModels
 
         #endregion
 
-        #region StringConstants
-
-        private const string _readMore = "Подробнее";
-        public string ReadMore => _readMore;
-
-        private const string _loadingData = "Загрузка данных...";
-        public string LoadingData => _loadingData;
-
-        private const string ForExceptions = "ActorListViewModel";
-        private const string ExceededNumberRequests = "Превышено число запросов к серверу";
-        private const string WarningError = "Ошибка";
-        private const string ErrorLoadingData = "Произошла ошибка загрузки данных. Повторите Ваш запрос еще раз";
-        private const string UserNotified = "Пользователь был оповещен";
-        private const string SelectedActors = "Избранные актеры";
-        private const string SearchingResults = "Результаты поиска";
-
-        #endregion
-
         #region Methods
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
@@ -118,10 +118,9 @@ namespace ModuleMainModule.ViewModels
                     Title = SearchingResults;
                 }                  
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 RaiseNotificationNull();
-                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
@@ -170,19 +169,6 @@ namespace ModuleMainModule.ViewModels
                n => { InteractionResultMessage = UserNotified; });
         }
 
-        ////private void ShowDirectActor()
-        ////{
-        ////    try
-        ////    {
-        ////        var parameters = new NavigationParameters { { "id", SelectedSearchedActor.Id } };
-        ////        _regionManager.RequestNavigate("MainRegion", "ActorView", parameters);
-        ////    }
-        ////    catch (Exception e)
-        ////    {
-        ////        _logger.ErrorException(ForExceptions, e);
-        ////    }
-        ////}
-
         private void ShowDirectActor(int? id)
         {
             try
@@ -195,7 +181,9 @@ namespace ModuleMainModule.ViewModels
                 _logger.ErrorException(ForExceptions, e);
             }
         }
-
+        /// <summary>
+        ///  Метод получения списка избранных актеров из базы даннных
+        /// </summary>
         private async void GetFavoriteActors()
         {
             try

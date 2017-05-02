@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.TMDb;
-using System.Windows.Controls;
 using MainModule;
 using ModuleMainModule.Interfaces;
 using ModuleMainModule.Model;
@@ -24,12 +22,6 @@ namespace ModuleMainModule.ViewModels
         private readonly Logger _logger;
         private readonly IMovieService _movieService;
 
-        public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
-        public DelegateCommand NavigateCommandShowNextPage { get; private set; }
-        public DelegateCommand NavigateCommandShowPriviousPage { get; private set; }
-        public InteractionRequest<INotification> NotificationRequestServer { get; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; }
-
         private bool _best;
         private bool _popular;
         private bool _future;
@@ -38,25 +30,6 @@ namespace ModuleMainModule.ViewModels
         private bool _company;
         private string _selectedGenre;
         private string _selectedCompany;
-
-        public MoviesListViewModel(RegionManager regionManager, TheMovieDBDataService dataService,  MovieService movieService)
-        {
-            _regionManager = regionManager;
-            _dataService = dataService;
-            _movieService = movieService;
-            _logger = LogManager.GetCurrentClassLogger();
-
-            NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
-            NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage);
-            NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage);
-            NotificationRequestServer = new InteractionRequest<INotification>();
-            NotificationRequestNull = new InteractionRequest<INotification>();
-
-            Page = 1;
-            _best = true;
-            Title = BestMovies;
-            GetBestMovies(Page);
-        }
 
         #region Constants
 
@@ -88,6 +61,31 @@ namespace ModuleMainModule.ViewModels
         private const int MaxPage = 5;
 
         #endregion
+
+        public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
+        public DelegateCommand NavigateCommandShowNextPage { get; private set; }
+        public DelegateCommand NavigateCommandShowPriviousPage { get; private set; }
+        public InteractionRequest<INotification> NotificationRequestServer { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
+
+        public MoviesListViewModel(RegionManager regionManager, TheMovieDBDataService dataService,  MovieService movieService)
+        {
+            _regionManager = regionManager;
+            _dataService = dataService;
+            _movieService = movieService;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
+            NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage);
+            NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage);
+            NotificationRequestServer = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
+
+            Page = 1;
+            _best = true;
+            Title = BestMovies;
+            GetBestMovies(Page);
+        }
 
         #region Properties
 
@@ -273,10 +271,9 @@ namespace ModuleMainModule.ViewModels
                         }
                     }
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //RaiseNotificationNull();
-                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
@@ -310,7 +307,6 @@ namespace ModuleMainModule.ViewModels
             { 
                 var parameters = new NavigationParameters { { "id", SelectedMovie.Id } };
                 _regionManager.RequestNavigate("MainRegion", "MovieView", parameters);
-                //SetNullVideoUrl();
             }
             catch (Exception e)
             {
@@ -615,7 +611,9 @@ namespace ModuleMainModule.ViewModels
                 _logger.ErrorException(ForExceptions, e);
             }
         }
-
+        /// <summary>
+        /// Метод получения списка избранных фильмов из базы даннных
+        /// </summary>
         private async void GetFavoriteMovies()
         {
             try
@@ -645,8 +643,6 @@ namespace ModuleMainModule.ViewModels
                 _logger.ErrorException(ForExceptions, e);
             }
         }
-
-
 
         private void SetNullVideoUrl()
         {

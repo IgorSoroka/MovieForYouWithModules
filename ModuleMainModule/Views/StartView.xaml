@@ -51,10 +51,32 @@
                 <Button Background="#4C000000" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  
                         Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridBestMovie, Path=DataContext}">
                     <Grid x:Name="GridBestMovie" DataContext="{Binding BestMovie}">
-                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                            <Image Grid.RowSpan="2" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5" Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top">
+                                <Image.RenderTransform>
+                                    <ScaleTransform x:Name="ScaleTransform" ScaleX="0.97" ScaleY="1.03"/>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
                         <Label Content="{Binding Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                             <Label.Background>
-                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                <SolidColorBrush Color="Azure" Opacity="0.7" />
                             </Label.Background>
                         </Label>
                         <Grid.RowDefinitions>
@@ -65,10 +87,32 @@
             </Button>
                 <Button Background="#4C000000" Grid.Row="1" Grid.Column="0"  Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridSecondMovie, Path=DataContext}">
                     <Grid x:Name="GridSecondMovie" DataContext="{Binding SecondMovie}">
-                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                            <Image Grid.RowSpan="2" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5" Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top">
+                                <Image.RenderTransform>
+                                    <ScaleTransform x:Name="ScaleTransform1" ScaleX="0.97" ScaleY="1.03"/>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform1" Storyboard.TargetProperty="ScaleX" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform1" Storyboard.TargetProperty="ScaleY" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform1" Storyboard.TargetProperty="ScaleX" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform1" Storyboard.TargetProperty="ScaleY" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
                         <Label Content="{Binding Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                             <Label.Background>
-                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                <SolidColorBrush Color="Azure" Opacity="0.7" />
                             </Label.Background>
                         </Label>
                         <Grid.RowDefinitions>
@@ -79,10 +123,32 @@
                 </Button>
                 <Button Background="#4C000000" Grid.Row="1" Grid.Column="1" Command="{Binding NavigateCommandMovie}" CommandParameter="{Binding ElementName=GridThirdMovie, Path=DataContext}">
                     <Grid x:Name="GridThirdMovie" DataContext="{Binding ThirdMovie}">
-                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                            <Image Grid.RowSpan="2" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5" Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top">
+                                <Image.RenderTransform>
+                                    <ScaleTransform x:Name="ScaleTransform2" ScaleX="0.97" ScaleY="1.03"/>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform2" Storyboard.TargetProperty="ScaleX" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform2" Storyboard.TargetProperty="ScaleY" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform2" Storyboard.TargetProperty="ScaleX" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform2" Storyboard.TargetProperty="ScaleY" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
                         <Label Content="{Binding Title}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                             <Label.Background>
-                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                <SolidColorBrush Color="Azure" Opacity="0.7" />
                             </Label.Background>
                         </Label>
                         <Grid.RowDefinitions>
@@ -104,10 +170,32 @@
                 <Button Background="#4C000000" Grid.Row="0" Grid.Column="0" 
                         Command="{Binding NavigateCommandShow}" CommandParameter="{Binding ElementName=GridSecondShow, Path=DataContext}">
                     <Grid x:Name="GridSecondShow" DataContext="{Binding SecondShow}">
-                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                            <Image Grid.RowSpan="2" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5" Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top">
+                                <Image.RenderTransform>
+                                    <ScaleTransform x:Name="ScaleTransform3" ScaleX="0.97" ScaleY="1.03"/>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform3" Storyboard.TargetProperty="ScaleX" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform3" Storyboard.TargetProperty="ScaleY" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform3" Storyboard.TargetProperty="ScaleX" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform3" Storyboard.TargetProperty="ScaleY" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
                         <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                             <Label.Background>
-                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                <SolidColorBrush Color="Azure" Opacity="0.7" />
                             </Label.Background>
                         </Label>
                         <Grid.RowDefinitions>
@@ -119,10 +207,32 @@
                 <Button Background="#4C000000" Grid.Row="0" Grid.Column="1" 
                         Command="{Binding NavigateCommandShow}" CommandParameter="{Binding ElementName=GridThirdShow, Path=DataContext}">
                     <Grid x:Name="GridThirdShow" DataContext="{Binding ThirdShow}">
-                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                            <Image Grid.RowSpan="2" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5" Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top">
+                                <Image.RenderTransform>
+                                    <ScaleTransform x:Name="ScaleTransform4" ScaleX="0.97" ScaleY="1.03"/>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform4" Storyboard.TargetProperty="ScaleX" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform4" Storyboard.TargetProperty="ScaleY" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform4" Storyboard.TargetProperty="ScaleX" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform4" Storyboard.TargetProperty="ScaleY" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
                         <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                             <Label.Background>
-                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                <SolidColorBrush Color="Azure" Opacity="0.7" />
                             </Label.Background>
                         </Label>
                         <Grid.RowDefinitions>
@@ -134,10 +244,32 @@
                 <Button Background="#4C000000" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                         Command="{Binding NavigateCommandShow}" CommandParameter="{Binding ElementName=GridBestShow, Path=DataContext}">
                     <Grid x:Name="GridBestShow" DataContext="{Binding BestShow}">
-                        <Image Grid.RowSpan="2" Stretch="UniformToFill"  Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top"/>
+                            <Image Grid.RowSpan="2" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5" Source="{Binding Poster, Converter={StaticResource PathConverter}}" VerticalAlignment="Top">
+                                <Image.RenderTransform>
+                                    <ScaleTransform x:Name="ScaleTransform5" ScaleX="0.97" ScaleY="1.03"/>
+                                </Image.RenderTransform>
+                                <Image.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform5" Storyboard.TargetProperty="ScaleX" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform5" Storyboard.TargetProperty="ScaleY" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform5" Storyboard.TargetProperty="ScaleX" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                <DoubleAnimation Storyboard.TargetName="ScaleTransform5" Storyboard.TargetProperty="ScaleY" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Image.Triggers>
+                            </Image>
                         <Label Content="{Binding Name}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                             <Label.Background>
-                                <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                <SolidColorBrush Color="Azure" Opacity="0.7" />
                             </Label.Background>
                         </Label>
                         <Grid.RowDefinitions>

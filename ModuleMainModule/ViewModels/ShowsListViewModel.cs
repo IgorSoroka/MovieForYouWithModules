@@ -22,29 +22,9 @@ namespace ModuleMainModule.ViewModels
         private readonly Logger _logger;
         private readonly IShowService _showService;
 
-        public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
-        public DelegateCommand NavigateCommandShowNextPage { get; private set; }
-        public DelegateCommand NavigateCommandShowPriviousPage { get; private set; }
-        public InteractionRequest<INotification> NotificationRequest { get; }
-        public InteractionRequest<INotification> NotificationRequestNull { get; }
-
         private bool _best;
         private bool _popular;
         private bool _now;
-
-        public ShowsListViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ShowService showService)
-        {
-            _regionManager = regionManager;
-            _dataService = dataService;
-            _showService = showService;
-            _logger = LogManager.GetCurrentClassLogger();
-
-            NavigateCommandShowDirectShow = new DelegateCommand(NavigateShowDirectShow);
-            NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage);
-            NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage);
-            NotificationRequest = new InteractionRequest<INotification>();
-            NotificationRequestNull = new InteractionRequest<INotification>();
-        }
 
         #region Constants
 
@@ -75,6 +55,26 @@ namespace ModuleMainModule.ViewModels
         private const int MaxPage = 5;
 
         #endregion
+
+        public DelegateCommand NavigateCommandShowDirectShow { get; private set; }
+        public DelegateCommand NavigateCommandShowNextPage { get; private set; }
+        public DelegateCommand NavigateCommandShowPriviousPage { get; private set; }
+        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> NotificationRequestNull { get; }
+
+        public ShowsListViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ShowService showService)
+        {
+            _regionManager = regionManager;
+            _dataService = dataService;
+            _showService = showService;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            NavigateCommandShowDirectShow = new DelegateCommand(NavigateShowDirectShow);
+            NavigateCommandShowNextPage = new DelegateCommand(ShowNextPage);
+            NavigateCommandShowPriviousPage = new DelegateCommand(ShowPriviousPage);
+            NotificationRequest = new InteractionRequest<INotification>();
+            NotificationRequestNull = new InteractionRequest<INotification>();
+        }
 
         #region Properties
 
@@ -202,10 +202,9 @@ namespace ModuleMainModule.ViewModels
                     }
                 }
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 //RaiseNotificationNull();
-                _logger.ErrorException(ForExceptions, ex);
             }
             catch (Exception e)
             {
@@ -232,23 +231,7 @@ namespace ModuleMainModule.ViewModels
                new Notification { Content = ErrorLoadingData, Title = WarningError },
                n => { InteractionResultMessage = UserNotified; });
         }
-
-        //private bool CanExecutePriviousPage()
-        //{
-        //    if (Page == 1)
-        //        return false;
-        //    else
-        //        return true;
-        //}
-
-        //private bool CanExecuteNextPage()
-        //{
-        //    if (Page == 5)
-        //        return false;
-        //    else
-        //        return true;
-        //}
-
+        
         private void ShowPriviousPage()
         {
             if (_popular && Page > MinPage)
@@ -471,7 +454,9 @@ namespace ModuleMainModule.ViewModels
                 _logger.ErrorException(ForExceptions, e);
             }
         }
-
+        /// <summary>
+        ///  Метод получения списка избранных сериалов из базы даннных
+        /// </summary>
         private async void GetFavoriteShows()
         {
             try

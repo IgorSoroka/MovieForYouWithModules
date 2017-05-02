@@ -24,24 +24,6 @@ namespace ModuleMainModule.ViewModels
         private readonly IActorService _actorService;
         private readonly Logger _logger;
 
-        public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
-        public DelegateCommand NavigateCommandAddToDb { get; private set; }
-        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
-        public InteractionRequest<INotification> NotificationRequest { get; }
-
-        public ActorViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ActorService actorService)
-        {
-            _regionManager = regionManager;
-            _dataService = dataService;
-            _actorService = actorService;
-            _logger = LogManager.GetCurrentClassLogger();
-
-            NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
-            NavigateCommandAddToDb = new DelegateCommand(AddToDb);
-            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
-            NotificationRequest = new InteractionRequest<INotification>();
-        }
-
         #region StringConstants
 
         private const string _delFavorites = "Удалить из избранного";
@@ -76,10 +58,28 @@ namespace ModuleMainModule.ViewModels
 
         private const string ForExceptions = "ActorViewModel";
         private const string ExceededNumberRequests = "Превышено число запросов к серверу";
-        private const string WarningError = "Ошибка";        
+        private const string WarningError = "Ошибка";
         private const string UserNotified = "Пользователь был оповещен";
 
         #endregion
+
+        public DelegateCommand NavigateCommandShowDirectMovie { get; private set; }
+        public DelegateCommand NavigateCommandAddToDb { get; private set; }
+        public DelegateCommand NavigateCommandDellFromDb { get; private set; }    
+        public InteractionRequest<INotification> NotificationRequest { get; }
+
+        public ActorViewModel(RegionManager regionManager, TheMovieDBDataService dataService, ActorService actorService)
+        {
+            _regionManager = regionManager;
+            _dataService = dataService;
+            _actorService = actorService;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            NavigateCommandShowDirectMovie = new DelegateCommand(NavigateShowDirectMovie);
+            NavigateCommandAddToDb = new DelegateCommand(AddToDb);
+            NavigateCommandDellFromDb = new DelegateCommand(DelFromDb);
+            NotificationRequest = new InteractionRequest<INotification>();
+        }
 
         #region Propertises
 
@@ -210,7 +210,6 @@ namespace ModuleMainModule.ViewModels
             _actorService.TakeActor(actor);
             CanDelFromDb = true;
             CanAddToDb = false;
-
             RefreshFavoriteView();
         }
 
@@ -219,10 +218,11 @@ namespace ModuleMainModule.ViewModels
             _actorService.DelActor(DirectActor.Id);
             CanDelFromDb = false;
             CanAddToDb = true;
-
             RefreshFavoriteView();
         }
-
+        /// <summary>
+        /// Метод для обновления списка избранных актеров при удалении/добавлении в избранное
+        /// </summary>
         private void RefreshFavoriteView()
         {
             try

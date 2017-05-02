@@ -54,6 +54,7 @@
                                 <Image Source="{Binding Poster, Converter={StaticResource PathConverter}}" Height="150" Width="150"/>
                                 <StackPanel Orientation="Vertical">
                                 <TextBlock Foreground="Honeydew" Text="{Binding Name}" Margin="3" FontSize="14"/>
+                                <TextBlock Foreground="Honeydew" Text="{Binding BirthDay}" Margin="3" FontSize="14"/>
                             </StackPanel>
                         </StackPanel>
                 </DataTemplate>

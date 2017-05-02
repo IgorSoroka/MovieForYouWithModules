@@ -62,10 +62,32 @@
                     <DataTemplate>
                         <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                             <Grid Height="200" Width="310">
-                                <Image Grid.RowSpan="2" Stretch="Fill"  Source="{Binding Backdrop, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch"/>
+                                    <Image Grid.RowSpan="2" Stretch="Fill" RenderTransformOrigin="0.5,0.5" Source="{Binding Backdrop, Converter={StaticResource PathConverter}}" VerticalAlignment="Stretch">
+                                        <Image.RenderTransform>
+                                            <ScaleTransform x:Name="ScaleTransform" ScaleX="0.97" ScaleY="1.03"/>
+                                        </Image.RenderTransform>
+                                        <Image.Triggers>
+                                            <EventTrigger RoutedEvent="MouseEnter">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                        <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY" From="0.98" To="1.02" Duration="0:0:2" AutoReverse="True" RepeatBehavior="1x"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                            <EventTrigger RoutedEvent="MouseLeave">
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                        <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY" From="1.00" To="1.00" AutoReverse="True" RepeatBehavior="Forever"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Image.Triggers>
+                                    </Image>
                                 <Label Content="{Binding OriginalName}" Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" FontSize="15" Foreground="Black" VerticalAlignment="Bottom">
                                     <Label.Background>
-                                        <SolidColorBrush Color="Azure" Opacity="0.5" />
+                                        <SolidColorBrush Color="Azure" Opacity="0.7" />
                                     </Label.Background>
                                 </Label>
                                 <Grid.RowDefinitions>

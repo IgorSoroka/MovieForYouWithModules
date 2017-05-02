@@ -55,6 +55,9 @@ namespace TestModule
         private const string _movies = "Фильмы";
         public string Movies => _movies;
 
+        private const string _title = "Movie for You";
+        public string Title => _title;
+
         private const string _shows = "Сериалы";
         public string Shows => _shows;
 
@@ -217,10 +220,17 @@ namespace TestModule
 
         private void CheckConnection(object sender, EventArgs e)
         {
-            bool internetConnection = NetworkClient.CheckForInternetConnection();
-            if (internetConnection == false)
+            try
             {
-                RaiseNotificationConnection();
+                bool internetConnection = NetworkClient.CheckForInternetConnection();
+                if (internetConnection == false)
+                {
+                    RaiseNotificationConnection();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorException(ForExceptions, ex);
             }
         }
 
@@ -233,10 +243,17 @@ namespace TestModule
 
         private void Timer()
         {
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += CheckConnection;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
-            dispatcherTimer.Start();
+            try
+            {
+                DispatcherTimer dispatcherTimer = new DispatcherTimer();
+                dispatcherTimer.Tick += CheckConnection;
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 10);
+                dispatcherTimer.Start();
+            }
+            catch (Exception e)
+            {
+                _logger.ErrorException(ForExceptions, e);
+            }
         }
 
         private void Minimize()

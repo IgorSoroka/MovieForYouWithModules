@@ -47,9 +47,7 @@
                     <TextBlock Foreground="Honeydew" FontSize="14" Text="{Binding TagLine}"/>
                     <Label FontSize="16" Foreground="Honeydew" Content="{Binding Plot}"
                            DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext}"/>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True" MinHeight="120" MaxHeight="200" >
-                        <TextBlock Foreground="Honeydew" TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
-                    </ScrollViewer>
+                    <TextBlock Foreground="Honeydew" TextWrapping="Wrap" Margin="3" FontSize="14" Text="{Binding Path = Overview}"/>
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Row="1">

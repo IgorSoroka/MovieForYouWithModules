@@ -18,30 +18,6 @@ namespace ModuleMainModule.ViewModels
         private readonly IRegionManager _regionManager;
         private readonly Logger _logger;
 
-        public DelegateCommand NavigateCommandNameSearch { get; private set; }
-        public DelegateCommand NavigateCommandGenreSearch { get; private set; }
-        public DelegateCommand NavigateCommandCompanySearch { get; private set; }
-        public DelegateCommand NavigateCommandSearch { get; private set; }
-        public DelegateCommand NavigateCommandReset { get; private set; }       
-
-        public MovieSearchViewModel(RegionManager regionManager)
-        {
-            _regionManager = regionManager;
-            _logger = LogManager.GetCurrentClassLogger();
-
-            NavigateCommandNameSearch = new DelegateCommand(NameSearch);
-            NavigateCommandGenreSearch = new DelegateCommand(GenreSearch);
-            NavigateCommandSearch = new DelegateCommand(Search);
-            NavigateCommandCompanySearch = new DelegateCommand(CompanySearch);
-            NavigateCommandReset = new DelegateCommand(Reset);
-
-            YearsList = GetYearsList();
-            List<string> genresList = RepositoryGenres.GetNames();
-            Genres = new ObservableCollection<string>(genresList);
-            List<string> companiesList = RepositoryCompanies.GetNames();
-            Companies = new ObservableCollection<string>(companiesList);
-        }
-
         #region Constants
 
         private const string _find = "Найти";
@@ -84,6 +60,30 @@ namespace ModuleMainModule.ViewModels
         private const int MaxYear = 2017;
 
         #endregion
+
+        public DelegateCommand NavigateCommandNameSearch { get; private set; }
+        public DelegateCommand NavigateCommandGenreSearch { get; private set; }
+        public DelegateCommand NavigateCommandCompanySearch { get; private set; }
+        public DelegateCommand NavigateCommandSearch { get; private set; }
+        public DelegateCommand NavigateCommandReset { get; private set; }       
+
+        public MovieSearchViewModel(RegionManager regionManager)
+        {
+            _regionManager = regionManager;
+            _logger = LogManager.GetCurrentClassLogger();
+
+            NavigateCommandNameSearch = new DelegateCommand(NameSearch);
+            NavigateCommandGenreSearch = new DelegateCommand(GenreSearch);
+            NavigateCommandSearch = new DelegateCommand(Search);
+            NavigateCommandCompanySearch = new DelegateCommand(CompanySearch);
+            NavigateCommandReset = new DelegateCommand(Reset);
+
+            YearsList = GetYearsList();
+            List<string> genresList = RepositoryGenres.GetNames();
+            Genres = new ObservableCollection<string>(genresList);
+            List<string> companiesList = RepositoryCompanies.GetNames();
+            Companies = new ObservableCollection<string>(companiesList);
+        } 
 
         #region Properties
 
@@ -258,7 +258,11 @@ namespace ModuleMainModule.ViewModels
         }      
 
         string IDataErrorInfo.this[string propertyName] => OnValidate(propertyName);
-
+        /// <summary>
+        /// Метод для валидации ввода названия (свойство Name)
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         protected virtual string OnValidate(string propertyName)
         {
             string error = string.Empty;
